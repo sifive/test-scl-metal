@@ -1,7 +1,7 @@
 # Copyright 2019 SiFive, Inc #
 # SPDX-License-Identifier: Apache-2.0 #
 
-PROGRAM ?= example-hca-metal
+PROGRAM ?= test-scl-metal
 
 # ----------------------------------------------------------------------
 # Common def
@@ -35,6 +35,12 @@ override LDFLAGS += -L$(join $(abspath  $(BUILD_DIRECTORY)),/scl/lib)
 # Add custom flags for libcmocka 
 # ----------------------------------------------------------------------
 CMOCKA_METAL_DIR = $(abspath $(CURRENT_DIR)/../../cmocka-metal)
+
+SCL_INCLUDES = $(CMOCKA_METAL_DIR)/include
+override CFLAGS += $(foreach dir,$(SCL_INCLUDES),-I $(dir))
+
+override LDLIBS += -lcmocka
+override LDFLAGS += -L$(join $(abspath  $(BUILD_DIRECTORY)),/cmocka/lib)
 
 # ----------------------------------------------------------------------
 # Update LDLIBS
@@ -72,12 +78,16 @@ libscl.a:
 
 libcmocka.a: 
 	mkdir -p $(join $(abspath  $(BUILD_DIRECTORY)),/cmocka)
-	cd $(join $(abspath  $(BUILD_DIRECTORY)),/cmocka)
-	cmake $(CMOCKA_METAL_DIR) -DWITH_STATIC_LIB=true
-	make
+	cd $(join $(abspath  $(BUILD_DIRECTORY)),/cmocka) && \
+		cmake $(CMOCKA_METAL_DIR) -DWITH_STATIC_LIB=true && \
+		make
+	mkdir -p $(join $(abspath  $(BUILD_DIRECTORY)),/cmocka/lib)
+	cp $(join $(abspath  $(BUILD_DIRECTORY)),/cmocka/src/libcmocka-static.a) \
+		 $(join $(abspath  $(BUILD_DIRECTORY)),/cmocka/lib/libcmocka.a)
 
 $(PROGRAM): \
 	libscl.a \
+	libcmocka.a \
 	$(OBJS)
 	$(CC) $(CFLAGS) $(XCFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $@
 	@echo
