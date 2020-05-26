@@ -38,14 +38,14 @@ TEST_FW_METAL_DIR = $(abspath $(CURRENT_DIR)/../../test-framework-metal)
 BUILD_DIRECTORY_TEST_FW = $(join $(abspath  $(BUILD_DIRECTORY)),/test-framework-metal)
 
 # Unity
-UNITY_DIR = $(join $(TEST_METAL_DIR),/Unity)
+UNITY_DIR = $(join $(TEST_FW_METAL_DIR),/Unity)
 BUILD_DIRECTORY_UNITY = $(join $(BUILD_DIRECTORY_TEST_FW),/Unity)
 
-UNITY_INCLUDES = $(join $(UNITY_DIR),src)
+UNITY_INCLUDES = $(join $(UNITY_DIR),/src)
 override CFLAGS += $(foreach dir,$(UNITY_INCLUDES),-I $(dir))
 
 override LDLIBS += -lunity
-override LDFLAGS += -L$(join $(BUILD_DIRECTORY_UNITY),/lib
+override LDFLAGS += -L$(join $(BUILD_DIRECTORY_UNITY),/lib)
 
 # ----------------------------------------------------------------------
 # Update LDLIBS
@@ -81,28 +81,21 @@ libscl.a:
 	libscl.a \
 	VERBOSE=$(VERBOSE)
 
-   -DCMAKE_C_COMPILER=xt-xcc \
-   -DWITH_STATIC_LIB=ON \
-   -DWITH_SHARED_LIB=OFF \
-   -DWITH_EXAMPLES=OFF \
-   -DWITH_POSITION_INDEPENDENT_CODE=OFF \
-   -DCMAKE_INSTALL_PREFIX=install \
-
 libunity.a: 
+	$(info AR:$(AR))
 	mkdir -p $(BUILD_DIRECTORY_UNITY)
 	cd $(BUILD_DIRECTORY_UNITY) && \
-		cmake $(UNITY_DIR) && \
+		cmake $(UNITY_DIR) -DCMAKE_C_FLAGS="$(CFLAGS)" && \
 		make
 	mkdir -p $(join   $(BUILD_DIRECTORY_UNITY),/lib)
-	cp $(join $(BUILD_DIRECTORY_UNITY),/libunity.a) \
+	$(HIDE) cp $(join $(BUILD_DIRECTORY_UNITY),/libunity.a) \
 		 $(join $(BUILD_DIRECTORY_UNITY),/lib/libunity.a)
 
 $(PROGRAM): \
 	libscl.a \
 	libunity.a \
 	$(OBJS)
-	$(CC) $(CFLAGS) $(XCFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $@
-	@echo
+	$(HIDE) $(CC) $(CFLAGS) $(XCFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $@
 
 clean::
 	rm -rf $(BUILD_DIRECTORY)
