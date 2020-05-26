@@ -32,15 +32,20 @@ override LDLIBS += -lscl
 override LDFLAGS += -L$(join $(abspath  $(BUILD_DIRECTORY)),/scl/lib)
 
 # ----------------------------------------------------------------------
-# Add custom flags for libcmocka 
+# Add custom flags for test
 # ----------------------------------------------------------------------
-CMOCKA_METAL_DIR = $(abspath $(CURRENT_DIR)/../../cmocka-metal)
+TEST_FW_METAL_DIR = $(abspath $(CURRENT_DIR)/../../test-framework-metal)
+BUILD_DIRECTORY_TEST_FW = $(join $(abspath  $(BUILD_DIRECTORY)),/test-framework-metal)
 
-SCL_INCLUDES = $(CMOCKA_METAL_DIR)/include
-override CFLAGS += $(foreach dir,$(SCL_INCLUDES),-I $(dir))
+# Unity
+UNITY_DIR = $(join $(TEST_METAL_DIR),/Unity)
+BUILD_DIRECTORY_UNITY = $(join $(BUILD_DIRECTORY_TEST_FW),/Unity)
 
-override LDLIBS += -lcmocka
-override LDFLAGS += -L$(join $(abspath  $(BUILD_DIRECTORY)),/cmocka/lib)
+UNITY_INCLUDES = $(join $(UNITY_DIR),src)
+override CFLAGS += $(foreach dir,$(UNITY_INCLUDES),-I $(dir))
+
+override LDLIBS += -lunity
+override LDFLAGS += -L$(join $(BUILD_DIRECTORY_UNITY),/lib
 
 # ----------------------------------------------------------------------
 # Update LDLIBS
@@ -76,18 +81,25 @@ libscl.a:
 	libscl.a \
 	VERBOSE=$(VERBOSE)
 
-libcmocka.a: 
-	mkdir -p $(join $(abspath  $(BUILD_DIRECTORY)),/cmocka)
-	cd $(join $(abspath  $(BUILD_DIRECTORY)),/cmocka) && \
-		cmake $(CMOCKA_METAL_DIR) -DWITH_STATIC_LIB=true && \
+   -DCMAKE_C_COMPILER=xt-xcc \
+   -DWITH_STATIC_LIB=ON \
+   -DWITH_SHARED_LIB=OFF \
+   -DWITH_EXAMPLES=OFF \
+   -DWITH_POSITION_INDEPENDENT_CODE=OFF \
+   -DCMAKE_INSTALL_PREFIX=install \
+
+libunity.a: 
+	mkdir -p $(BUILD_DIRECTORY_UNITY)
+	cd $(BUILD_DIRECTORY_UNITY) && \
+		cmake $(UNITY_DIR) && \
 		make
-	mkdir -p $(join $(abspath  $(BUILD_DIRECTORY)),/cmocka/lib)
-	cp $(join $(abspath  $(BUILD_DIRECTORY)),/cmocka/src/libcmocka-static.a) \
-		 $(join $(abspath  $(BUILD_DIRECTORY)),/cmocka/lib/libcmocka.a)
+	mkdir -p $(join   $(BUILD_DIRECTORY_UNITY),/lib)
+	cp $(join $(BUILD_DIRECTORY_UNITY),/libunity.a) \
+		 $(join $(BUILD_DIRECTORY_UNITY),/lib/libunity.a)
 
 $(PROGRAM): \
 	libscl.a \
-	libcmocka.a \
+	libunity.a \
 	$(OBJS)
 	$(CC) $(CFLAGS) $(XCFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $@
 	@echo
