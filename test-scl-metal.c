@@ -1,28 +1,12 @@
-#include "unity.h"
+#include "unity_fixture.h"
 
-void setUp(void) {
-    // set stuff up here
+static void RunAllTests(void)
+{
+  RUN_TEST_GROUP(test_sha_256);
+  RUN_TEST_GROUP(test_sha_384);
 }
 
-void tearDown(void) {
-    // clean stuff up here
-}
-
-void test_success(void) {
-    TEST_ASSERT_TRUE(1 == 1);
-}
-
-void test_fail(void) {
-    //more test stuff
-    TEST_ASSERT_TRUE(0 == 1);
-}
-
-// not needed when using generate_test_runner.rb
-int main(void) {
-    UNITY_BEGIN();
-    RUN_TEST(test_success);
-    RUN_TEST(test_fail);
-    RUN_TEST(test_success);
-    RUN_TEST(test_fail);
-    return UNITY_END();
+int main(int argc, const char * argv[])
+{
+  return UnityMain(argc, argv, RunAllTests);
 }
