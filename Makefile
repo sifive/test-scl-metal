@@ -12,6 +12,7 @@ override SOURCE_DIR = $(CURRENT_DIR)
 
 override SOURCE_DIRS := $(SOURCE_DIR)
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/sha
+override SOURCE_DIRS += $(SOURCE_DIR)/tests/sha/soft
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/test_runners
 
 override C_SOURCES = $(foreach dir,$(SOURCE_DIRS),$(wildcard $(dir)/*.c))
@@ -73,6 +74,8 @@ override CFLAGS += $(foreach dir,$(INCLUDE_DIRS),-I $(dir))
 # override CFLAGS += -I $(CURRENT_DIR)
 override ASFLAGS = $(CFLAGS)
 
+override LDFLAGS  += -Wl,--defsym,__stack_size=0x1000
+
 # ----------------------------------------------------------------------
 # Macro
 # ----------------------------------------------------------------------
@@ -122,7 +125,6 @@ show_conf:
 	
 $(PROGRAM): \
 	libscl.a \
-	show_conf \
 	$(OBJS)
 	$(HIDE) $(CC) $(CFLAGS) $(XCFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $@
 
