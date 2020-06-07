@@ -3,21 +3,36 @@
 
 #include <string.h>
 
-#include <api/soft/hash/soft_sha512.h>
+#include <api/scl_api.h>
+#include <scl/scl_sha.h>
 
-TEST_GROUP(test_sha_512_soft);
+#include <scl/scl_init.h>
 
-TEST_SETUP(test_sha_512_soft)
+#include <api/soft/hash/soft_sha.h>
+
+static const metal_scl_t scl = {
+    .hca_base = 0x20000,
+    .hash_func =  {
+        .sha_init = sha_init_soft,
+        .sha_core = sha_core_soft,
+        .sha_finish = sha_finish_soft,
+    }
+};
+
+TEST_GROUP(test_sha_512_scl);
+
+TEST_SETUP(test_sha_512_scl)
+{
+    (void) scl_init(&scl);
+}
+
+TEST_TEAR_DOWN(test_sha_512_scl)
 {
 }
 
-TEST_TEAR_DOWN(test_sha_512_soft)
-{
-}
-
-TEST(test_sha_512_soft, msg_abc) {
+TEST(test_sha_512_scl, msg_abc) {
     int32_t result = 0;
-    sha512_ctx_t ctx;
+    sha_ctx_t ctx;
 
     const uint8_t message[] = {
         0x61, 0x62, 0x63,
@@ -34,30 +49,27 @@ TEST(test_sha_512_soft, msg_abc) {
         0x21, 0x92, 0x99, 0x2A, 0x27, 0x4F, 0xC1, 0xA8,
         0x36, 0xBA, 0x3C, 0x23, 0xA3, 0xFE, 0xEB, 0xBD,
         0x45, 0x4D, 0x44, 0x23, 0x64, 0x3C, 0xE8, 0x0E,
-        0x2A, 0x9A, 0xC9, 0x4F, 0xA5, 0x4C, 0xA4, 0x9F};
+        0x2A, 0x9A, 0xC9, 0x4F, 0xA5, 0x4C, 0xA4, 0x9F
+    };
 
-    result = sha512_init_soft(&ctx, SCL_BIG_ENDIAN_MODE);
-    TEST_ASSERT_TRUE(0 == result);
-
-    result = sha512_core_soft(&ctx, message, sizeof(message));
-    TEST_ASSERT_TRUE(0 == result);
-
-    result = sha512_finish_soft(&ctx, digest, &digest_len);
+    result = scl_sha(SCL_HASH_SHA512, message,
+                    sizeof(message), digest,
+                    &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 == memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(test_sha_512_soft, msg_2_blocks) {
+TEST(test_sha_512_scl, msg_2_blocks) {
     int32_t result = 0;
-    sha512_ctx_t ctx;
+    sha_ctx_t ctx;
 
     const uint8_t message[] = "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu";
 
     uint8_t digest[SHA512_BYTE_HASHSIZE];
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA512_BYTE_HASHSIZE] = {
+    const uint8_t expected_digest[SHA512_BYTE_HASHSIZE] = { 
         0x8E, 0x95, 0x9B, 0x75, 0xDA, 0xE3, 0x13, 0xDA, 
         0x8C, 0xF4, 0xF7, 0x28, 0x14, 0xFC, 0x14, 0x3F,
         0x8F, 0x77, 0x79, 0xC6, 0xEB, 0x9F, 0x7F, 0xA1,
@@ -68,16 +80,10 @@ TEST(test_sha_512_soft, msg_2_blocks) {
         0x5E, 0x96, 0xE5, 0x5B, 0x87, 0x4B, 0xE9, 0x09
     };
 
-    result = sha512_init_soft(&ctx, SCL_BIG_ENDIAN_MODE);
+    result = scl_sha(SCL_HASH_SHA512, message,
+                    sizeof(message) - 1, digest,
+                    &digest_len);
     TEST_ASSERT_TRUE(0 == result);
-
-    result = sha512_core_soft(&ctx, message, sizeof(message) - 1);
-    TEST_ASSERT_TRUE(0 == result);
-
-    result = sha512_finish_soft(&ctx, digest, &digest_len);
-    TEST_ASSERT_TRUE(0 == result);
-
     TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
-
     TEST_ASSERT_TRUE(0 == memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
