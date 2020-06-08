@@ -75,7 +75,7 @@ override CFLAGS += $(foreach dir,$(INCLUDE_DIRS),-I $(dir))
 # override CFLAGS += -I $(CURRENT_DIR)
 override ASFLAGS = $(CFLAGS)
 
-override LDFLAGS  += -Wl,--defsym,__stack_size=0x1000
+override LDFLAGS  += -Wl,--defsym,__stack_size=0xA00
 
 # ----------------------------------------------------------------------
 # Macro
@@ -128,6 +128,10 @@ $(PROGRAM): \
 	libscl.a \
 	$(OBJS)
 	$(HIDE) $(CC) $(CFLAGS) $(XCFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $@
+
+.PHONY : check-format
+check-format:
+	clang-format -i $(C_SOURCES)
 
 clean::
 	rm -rf $(BUILD_DIRECTORY)
