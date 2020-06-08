@@ -3,19 +3,19 @@
 
 #include <string.h>
 
-#include <api/soft/hash/soft_sha384.h>
+#include <api/software/hash/soft_sha384.h>
 
-TEST_GROUP(test_sha_384_soft);
+TEST_GROUP(soft_test_sha_384);
 
-TEST_SETUP(test_sha_384_soft)
+TEST_SETUP(soft_test_sha_384)
 {
 }
 
-TEST_TEAR_DOWN(test_sha_384_soft)
+TEST_TEAR_DOWN(soft_test_sha_384)
 {
 }
 
-TEST(test_sha_384_soft, msg_abc) {
+TEST(soft_test_sha_384, msg_abc) {
     int32_t result = 0;
     sha512_ctx_t ctx;
 
@@ -35,19 +35,19 @@ TEST(test_sha_384_soft, msg_abc) {
         0x58, 0xBA, 0xEC, 0xA1, 0x34, 0xC8, 0x25, 0xA7
     };
 
-    result = sha384_init_soft(&ctx, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha384_init(&ctx, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = sha384_core_soft(&ctx, message, sizeof(message));
+    result = soft_sha384_core(&ctx, message, sizeof(message));
     TEST_ASSERT_TRUE(0 == result);
 
-    result = sha384_finish_soft(&ctx, digest, &digest_len);
+    result = soft_sha384_finish(&ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 == memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(test_sha_384_soft, msg_2_blocks) {
+TEST(soft_test_sha_384, msg_2_blocks) {
     int32_t result = 0;
     sha512_ctx_t ctx;
 
@@ -65,13 +65,13 @@ TEST(test_sha_384_soft, msg_2_blocks) {
         0x66, 0xC3, 0xE9, 0xFA, 0x91, 0x74, 0x60, 0x39
     };
 
-    result = sha384_init_soft(&ctx, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha384_init(&ctx, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = sha384_core_soft(&ctx, message, sizeof(message) - 1);
+    result = soft_sha384_core(&ctx, message, sizeof(message) - 1);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = sha384_finish_soft(&ctx, digest, &digest_len);
+    result = soft_sha384_finish(&ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
 
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);

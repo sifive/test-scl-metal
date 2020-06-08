@@ -4,23 +4,23 @@
 #include <string.h>
 
 #include <api/scl_api.h>
-#include <api/hardware/hash/hca_sha.h>
+#include <api/hardware/scl_hca.h>
 
 static const struct __metal_scl scl = {
     .hca_base = 0x20000,
 };
 
-TEST_GROUP(test_sha_512_hca);
+TEST_GROUP(hca_test_sha_512);
 
-TEST_SETUP(test_sha_512_hca)
+TEST_SETUP(hca_test_sha_512)
 {
 }
 
-TEST_TEAR_DOWN(test_sha_512_hca)
+TEST_TEAR_DOWN(hca_test_sha_512)
 {
 }
 
-TEST(test_sha_512_hca, msg_abc) {
+TEST(hca_test_sha_512, msg_abc) {
     int32_t result = 0;
     sha_ctx_t ctx;
 
@@ -42,19 +42,19 @@ TEST(test_sha_512_hca, msg_abc) {
         0x2A, 0x9A, 0xC9, 0x4F, 0xA5, 0x4C, 0xA4, 0x9F
     };
 
-    result = sha_init_hca(  &scl,
+    result = hca_sha_init(  &scl,
                             &ctx,
                             SCL_HASH_SHA512,
                             SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = sha_core_hca(  &scl,
+    result = hca_sha_core(  &scl,
                             &ctx,
                             message,
                             sizeof(message));
     TEST_ASSERT_TRUE(0 == result);
 
-    result = sha_finish_hca(&scl,
+    result = hca_sha_finish(&scl,
                             &ctx,
                             digest,
                             &digest_len);
@@ -63,7 +63,7 @@ TEST(test_sha_512_hca, msg_abc) {
     TEST_ASSERT_TRUE(0 == memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(test_sha_512_hca, msg_2_blocks) {
+TEST(hca_test_sha_512, msg_2_blocks) {
     int32_t result = 0;
     sha_ctx_t ctx;
 
@@ -83,19 +83,19 @@ TEST(test_sha_512_hca, msg_2_blocks) {
         0x5E, 0x96, 0xE5, 0x5B, 0x87, 0x4B, 0xE9, 0x09
     };
 
-    result = sha_init_hca(  &scl,
+    result = hca_sha_init(  &scl,
                             &ctx,
                             SCL_HASH_SHA512,
                             SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = sha_core_hca(  &scl,
+    result = hca_sha_core(  &scl,
                             &ctx,
                             message,
                             sizeof(message) - 1);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = sha_finish_hca(&scl,
+    result = hca_sha_finish(&scl,
                             &ctx,
                             digest,
                             &digest_len);

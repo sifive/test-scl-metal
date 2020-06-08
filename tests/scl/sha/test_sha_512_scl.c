@@ -8,29 +8,29 @@
 
 #include <scl/scl_init.h>
 
-#include <api/soft/hash/soft_sha.h>
+#include <api/software/hash/soft_sha.h>
 
 static const metal_scl_t scl = {
     .hca_base = 0x20000,
     .hash_func =  {
-        .sha_init = sha_init_soft,
-        .sha_core = sha_core_soft,
-        .sha_finish = sha_finish_soft,
+        .sha_init = soft_sha_init,
+        .sha_core = soft_sha_core,
+        .sha_finish = soft_sha_finish,
     }
 };
 
-TEST_GROUP(test_sha_512_scl);
+TEST_GROUP(scl_test_sha_512);
 
-TEST_SETUP(test_sha_512_scl)
+TEST_SETUP(scl_test_sha_512)
 {
     (void) scl_init(&scl);
 }
 
-TEST_TEAR_DOWN(test_sha_512_scl)
+TEST_TEAR_DOWN(scl_test_sha_512)
 {
 }
 
-TEST(test_sha_512_scl, msg_abc) {
+TEST(scl_test_sha_512, msg_abc) {
     int32_t result = 0;
     sha_ctx_t ctx;
 
@@ -60,7 +60,7 @@ TEST(test_sha_512_scl, msg_abc) {
     TEST_ASSERT_TRUE(0 == memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(test_sha_512_scl, msg_2_blocks) {
+TEST(scl_test_sha_512, msg_2_blocks) {
     int32_t result = 0;
     sha_ctx_t ctx;
 

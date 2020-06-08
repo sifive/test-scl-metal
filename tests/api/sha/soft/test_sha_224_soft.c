@@ -3,20 +3,20 @@
 
 #include <string.h>
 
-#include <api/soft/hash/soft_sha224.h>
+#include <api/software/hash/soft_sha224.h>
 
 
-TEST_GROUP(test_sha_224_soft);
+TEST_GROUP(soft_test_sha_224);
 
-TEST_SETUP(test_sha_224_soft)
+TEST_SETUP(soft_test_sha_224)
 {
 }
 
-TEST_TEAR_DOWN(test_sha_224_soft)
+TEST_TEAR_DOWN(soft_test_sha_224)
 {
 }
 
-TEST(test_sha_224_soft, msg_abc) {
+TEST(soft_test_sha_224, msg_abc) {
     int32_t result = 0;
     sha256_ctx_t ctx;
 
@@ -34,13 +34,13 @@ TEST(test_sha_224_soft, msg_abc) {
         0xE3, 0x6C, 0x9D, 0xA7
     };
 
-    result = sha224_init_soft(&ctx, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha224_init(&ctx, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = sha224_core_soft(&ctx, message, sizeof(message));
+    result = soft_sha224_core(&ctx, message, sizeof(message));
     TEST_ASSERT_TRUE(0 == result);
 
-    result = sha224_finish_soft(&ctx, digest, &digest_len);
+    result = soft_sha224_finish(&ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
 
     TEST_ASSERT_TRUE(SHA224_BYTE_HASHSIZE == digest_len);
@@ -48,7 +48,7 @@ TEST(test_sha_224_soft, msg_abc) {
     TEST_ASSERT_TRUE(0 == memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(test_sha_224_soft, msg_2_blocks) {
+TEST(soft_test_sha_224, msg_2_blocks) {
     int32_t result = 0;
     sha256_ctx_t ctx;
 
@@ -64,13 +64,13 @@ TEST(test_sha_224_soft, msg_2_blocks) {
         0x52, 0x52, 0x25, 0x25
     };
 
-    result = sha224_init_soft(&ctx, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha224_init(&ctx, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = sha224_core_soft(&ctx, message, sizeof(message) - 1);
+    result = soft_sha224_core(&ctx, message, sizeof(message) - 1);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = sha224_finish_soft(&ctx, digest, &digest_len);
+    result = soft_sha224_finish(&ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
 
     TEST_ASSERT_TRUE(SHA224_BYTE_HASHSIZE == digest_len);

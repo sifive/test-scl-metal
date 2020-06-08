@@ -2,31 +2,31 @@
 #include "unity_fixture.h"
 
 // SHA 256
-TEST_GROUP_RUNNER(test_sha_256_soft)
+TEST_GROUP_RUNNER(soft_test_sha_256)
 {
-    RUN_TEST_CASE(test_sha_256_soft, msg_abc);
-    RUN_TEST_CASE(test_sha_256_soft, msg_2_blocks);
+    RUN_TEST_CASE(soft_test_sha_256, msg_abc);
+    RUN_TEST_CASE(soft_test_sha_256, msg_2_blocks);
 }
 
 // SHA 224
-TEST_GROUP_RUNNER(test_sha_224_soft)
+TEST_GROUP_RUNNER(soft_test_sha_224)
 {
-    RUN_TEST_CASE(test_sha_224_soft, msg_abc);
-    RUN_TEST_CASE(test_sha_224_soft, msg_2_blocks);
+    RUN_TEST_CASE(soft_test_sha_224, msg_abc);
+    RUN_TEST_CASE(soft_test_sha_224, msg_2_blocks);
 }
 
 // SHA 384
-TEST_GROUP_RUNNER(test_sha_384_soft)
+TEST_GROUP_RUNNER(soft_test_sha_384)
 {
-    RUN_TEST_CASE(test_sha_384_soft, msg_abc);
-    RUN_TEST_CASE(test_sha_384_soft, msg_2_blocks);
+    RUN_TEST_CASE(soft_test_sha_384, msg_abc);
+    RUN_TEST_CASE(soft_test_sha_384, msg_2_blocks);
 }
 
 
 // SHA 512
-TEST_GROUP_RUNNER(test_sha_512_soft)
+TEST_GROUP_RUNNER(soft_test_sha_512)
 {
-    RUN_TEST_CASE(test_sha_512_soft, msg_abc);
-    RUN_TEST_CASE(test_sha_512_soft, msg_2_blocks);
+    RUN_TEST_CASE(soft_test_sha_512, msg_abc);
+    RUN_TEST_CASE(soft_test_sha_512, msg_2_blocks);
 }
 
