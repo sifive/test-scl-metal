@@ -21,7 +21,7 @@ static void RunAllTests(void)
     RUN_TEST_GROUP(scl_test_sha_512);
 }
 
-int main(int argc, const char * argv[])
+int main(int argc, const char *argv[])
 {
-  return UnityMain(argc, argv, RunAllTests);
+    return UnityMain(argc, argv, RunAllTests);
 }

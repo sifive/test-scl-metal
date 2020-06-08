@@ -22,11 +22,9 @@ TEST_GROUP_RUNNER(soft_test_sha_384)
     RUN_TEST_CASE(soft_test_sha_384, msg_2_blocks);
 }
 
-
 // SHA 512
 TEST_GROUP_RUNNER(soft_test_sha_512)
 {
     RUN_TEST_CASE(soft_test_sha_512, msg_abc);
     RUN_TEST_CASE(soft_test_sha_512, msg_2_blocks);
 }
-
