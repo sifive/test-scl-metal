@@ -39,8 +39,8 @@ TEST_GROUP_RUNNER(scl_soft_test_sha_512)
 {
     RUN_TEST_CASE(scl_soft_test_sha_512, msg_abc_all_aligned);
     RUN_TEST_CASE(scl_soft_test_sha_512, msg_2_blocks_all_aligned);
-    RUN_TEST_CASE(scl_soft_test_sha_384, msg_abc_msg_not_aligned);
-    RUN_TEST_CASE(scl_soft_test_sha_384, msg_2_blocks_msg_not_aligned);
-    RUN_TEST_CASE(scl_soft_test_sha_384, msg_abc_digest_not_aligned);
-    RUN_TEST_CASE(scl_soft_test_sha_384, msg_2_blocks_digest_not_aligned);
+    RUN_TEST_CASE(scl_soft_test_sha_512, msg_abc_msg_not_aligned);
+    RUN_TEST_CASE(scl_soft_test_sha_512, msg_2_blocks_msg_not_aligned);
+    RUN_TEST_CASE(scl_soft_test_sha_512, msg_abc_digest_not_aligned);
+    RUN_TEST_CASE(scl_soft_test_sha_512, msg_2_blocks_digest_not_aligned);
 }

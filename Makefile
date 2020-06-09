@@ -75,7 +75,7 @@ override CFLAGS += $(foreach dir,$(INCLUDE_DIRS),-I $(dir))
 # override CFLAGS += -I $(CURRENT_DIR)
 override ASFLAGS = $(CFLAGS)
 
-override LDFLAGS  += -Wl,--defsym,__stack_size=0xA00
+override LDFLAGS  += -Wl,--defsym,__stack_size=0xC00
 
 # ----------------------------------------------------------------------
 # Macro
@@ -110,19 +110,6 @@ libscl.a:
 	BUILD_DIR=$(join $(abspath  $(BUILD_DIRECTORY)),/scl) \
 	libscl.a \
 	VERBOSE=$(VERBOSE)
-
-# libunity.a: 
-# 	mkdir -p $(BUILD_DIRECTORY_UNITY)
-# 	cd $(BUILD_DIRECTORY_UNITY) && \
-# 		cmake $(UNITY_DIR) -DCMAKE_C_FLAGS="$(CFLAGS)" && \
-# 		make
-# 	mkdir -p $(join   $(BUILD_DIRECTORY_UNITY),/lib)
-# 	$(HIDE) cp $(join $(BUILD_DIRECTORY_UNITY),/libunity.a) \
-# 		 $(join $(BUILD_DIRECTORY_UNITY),/lib/libunity.a)
-
-show_conf: 
-	$(info C_SOURCES:$(C_SOURCES))
-	$(info OBJS:$(OBJS))
 	
 $(PROGRAM): \
 	libscl.a \
