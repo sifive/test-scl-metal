@@ -8,25 +8,28 @@
 
 #include <scl/scl_init.h>
 
-#include <api/software/hash/soft_sha.h>
+#include <api/software/scl_soft.h>
+#include <api/scl_api.h>
+#include <api/hash/sha.h>
 
-static const metal_scl_t scl = {.hca_base = 0x20000,
-                                .hash_func = {
-                                    .sha_init = soft_sha_init,
-                                    .sha_core = soft_sha_core,
-                                    .sha_finish = soft_sha_finish,
-                                }};
+static const metal_scl_t scl = {
+    .hca_base = 0,
+    .hash_func =  {
+        .sha_init   = soft_sha_init,
+        .sha_core   = soft_sha_core,
+        .sha_finish = soft_sha_finish,
+    }
+};
 
 TEST_GROUP(scl_soft_test_sha_384);
 
-TEST_SETUP(scl_soft_test_sha_384) { (void)scl_init(&scl); }
+TEST_SETUP(scl_soft_test_sha_384) {}
 
 TEST_TEAR_DOWN(scl_soft_test_sha_384) {}
 
 TEST(scl_soft_test_sha_384, msg_abc_all_aligned)
 {
     int32_t result = 0;
-    sha_ctx_t ctx;
 
     const uint8_t message[] __attribute__((aligned(8))) = {
         0x61,
@@ -44,7 +47,7 @@ TEST(scl_soft_test_sha_384, msg_abc_all_aligned)
         0xA1, 0xE7, 0xCC, 0x23, 0x58, 0xBA, 0xEC, 0xA1, 0x34, 0xC8, 0x25, 0xA7};
 
     result =
-        scl_sha(SCL_HASH_SHA384, message, sizeof(message), digest, &digest_len);
+        scl_sha(&scl, SCL_HASH_SHA384, message, sizeof(message), digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
@@ -54,7 +57,6 @@ TEST(scl_soft_test_sha_384, msg_abc_all_aligned)
 TEST(scl_soft_test_sha_384, msg_2_blocks_all_aligned)
 {
     int32_t result = 0;
-    sha_ctx_t ctx;
 
     const uint8_t message[] __attribute__((aligned(8))) =
         "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmn"
@@ -69,7 +71,7 @@ TEST(scl_soft_test_sha_384, msg_2_blocks_all_aligned)
         0x2F, 0xA0, 0x80, 0x86, 0xE3, 0xB0, 0xF7, 0x12, 0xFC, 0xC7, 0xC7, 0x1A,
         0x55, 0x7E, 0x2D, 0xB9, 0x66, 0xC3, 0xE9, 0xFA, 0x91, 0x74, 0x60, 0x39};
 
-    result = scl_sha(SCL_HASH_SHA384, message, sizeof(message) - 1, digest,
+    result = scl_sha(&scl, SCL_HASH_SHA384, message, sizeof(message) - 1, digest,
                      &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
@@ -80,7 +82,6 @@ TEST(scl_soft_test_sha_384, msg_2_blocks_all_aligned)
 TEST(scl_soft_test_sha_384, msg_abc_msg_not_aligned)
 {
     int32_t result = 0;
-    sha_ctx_t ctx;
 
     const uint8_t message[] __attribute__((aligned(8))) = {
         0x00,
@@ -98,7 +99,7 @@ TEST(scl_soft_test_sha_384, msg_abc_msg_not_aligned)
         0x1A, 0x8B, 0x60, 0x5A, 0x43, 0xFF, 0x5B, 0xED, 0x80, 0x86, 0x07, 0x2B,
         0xA1, 0xE7, 0xCC, 0x23, 0x58, 0xBA, 0xEC, 0xA1, 0x34, 0xC8, 0x25, 0xA7};
 
-    result = scl_sha(SCL_HASH_SHA384, &message[1], sizeof(message) - 1, digest,
+    result = scl_sha(&scl, SCL_HASH_SHA384, &message[1], sizeof(message) - 1, digest,
                      &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
@@ -109,7 +110,6 @@ TEST(scl_soft_test_sha_384, msg_abc_msg_not_aligned)
 TEST(scl_soft_test_sha_384, msg_2_blocks_msg_not_aligned)
 {
     int32_t result = 0;
-    sha_ctx_t ctx;
 
     const uint8_t message[] __attribute__((aligned(8))) =
         "aabcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklm"
@@ -124,7 +124,7 @@ TEST(scl_soft_test_sha_384, msg_2_blocks_msg_not_aligned)
         0x2F, 0xA0, 0x80, 0x86, 0xE3, 0xB0, 0xF7, 0x12, 0xFC, 0xC7, 0xC7, 0x1A,
         0x55, 0x7E, 0x2D, 0xB9, 0x66, 0xC3, 0xE9, 0xFA, 0x91, 0x74, 0x60, 0x39};
 
-    result = scl_sha(SCL_HASH_SHA384, &message[1], sizeof(message) - 2, digest,
+    result = scl_sha(&scl, SCL_HASH_SHA384, &message[1], sizeof(message) - 2, digest,
                      &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
@@ -135,7 +135,6 @@ TEST(scl_soft_test_sha_384, msg_2_blocks_msg_not_aligned)
 TEST(scl_soft_test_sha_384, msg_abc_digest_not_aligned)
 {
     int32_t result = 0;
-    sha_ctx_t ctx;
 
     const uint8_t message[] __attribute__((aligned(8))) = {
         0x61,
@@ -152,7 +151,7 @@ TEST(scl_soft_test_sha_384, msg_abc_digest_not_aligned)
         0x1A, 0x8B, 0x60, 0x5A, 0x43, 0xFF, 0x5B, 0xED, 0x80, 0x86, 0x07, 0x2B,
         0xA1, 0xE7, 0xCC, 0x23, 0x58, 0xBA, 0xEC, 0xA1, 0x34, 0xC8, 0x25, 0xA7};
 
-    result = scl_sha(SCL_HASH_SHA384, message, sizeof(message), &digest[1],
+    result = scl_sha(&scl, SCL_HASH_SHA384, message, sizeof(message), &digest[1],
                      &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
@@ -163,7 +162,6 @@ TEST(scl_soft_test_sha_384, msg_abc_digest_not_aligned)
 TEST(scl_soft_test_sha_384, msg_2_blocks_digest_not_aligned)
 {
     int32_t result = 0;
-    sha_ctx_t ctx;
 
     const uint8_t message[] __attribute__((aligned(8))) =
         "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmn"
@@ -178,7 +176,7 @@ TEST(scl_soft_test_sha_384, msg_2_blocks_digest_not_aligned)
         0x2F, 0xA0, 0x80, 0x86, 0xE3, 0xB0, 0xF7, 0x12, 0xFC, 0xC7, 0xC7, 0x1A,
         0x55, 0x7E, 0x2D, 0xB9, 0x66, 0xC3, 0xE9, 0xFA, 0x91, 0x74, 0x60, 0x39};
 
-    result = scl_sha(SCL_HASH_SHA384, message, sizeof(message) - 1, &digest[1],
+    result = scl_sha(&scl, SCL_HASH_SHA384, message, sizeof(message) - 1, &digest[1],
                      &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
