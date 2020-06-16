@@ -36,6 +36,11 @@ override LDLIBS += -lscl
 override LDFLAGS += -L$(join $(abspath  $(BUILD_DIRECTORY)),/scl/lib)
 
 # ----------------------------------------------------------------------
+# Add variable for HCA
+# ----------------------------------------------------------------------0
+export HCA_VERSION ?= 0.5
+
+# ----------------------------------------------------------------------
 # Add custom flags for test
 # ----------------------------------------------------------------------
 TEST_FW_METAL_DIR = $(abspath $(CURRENT_DIR)/../../test-framework-metal)
