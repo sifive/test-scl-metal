@@ -5,9 +5,15 @@
 
 #include <api/hardware/scl_hca.h>
 #include <api/scl_api.h>
+#include <api/hash/sha.h>
 
-static const struct __metal_scl scl = {
-    .hca_base = 0x20000,
+static const metal_scl_t scl = {
+    .hca_base = METAL_SIFIVE_HCA_0_BASE_ADDRESS,
+    .hash_func =  {
+        .sha_init   = hca_sha_init,
+        .sha_core   = hca_sha_core,
+        .sha_finish = hca_sha_finish,
+    }
 };
 
 TEST_GROUP(hca_test_sha_224);
