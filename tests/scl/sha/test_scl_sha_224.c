@@ -21,13 +21,13 @@ static const metal_scl_t scl = {
     }
 };
 
-TEST_GROUP(scl_soft_test_sha_224);
+TEST_GROUP(scl_soft_sha_224);
 
-TEST_SETUP(scl_soft_test_sha_224) {}
+TEST_SETUP(scl_soft_sha_224) {}
 
-TEST_TEAR_DOWN(scl_soft_test_sha_224) {}
+TEST_TEAR_DOWN(scl_soft_sha_224) {}
 
-TEST(scl_soft_test_sha_224, msg_abc_all_aligned)
+TEST(scl_soft_sha_224, msg_abc_all_aligned)
 {
     int32_t result = 0;
 
@@ -53,7 +53,7 @@ TEST(scl_soft_test_sha_224, msg_abc_all_aligned)
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(scl_soft_test_sha_224, msg_2_blocks_all_aligned)
+TEST(scl_soft_sha_224, msg_2_blocks_all_aligned)
 {
     int32_t result = 0;
 
@@ -76,7 +76,7 @@ TEST(scl_soft_test_sha_224, msg_2_blocks_all_aligned)
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(scl_soft_test_sha_224, msg_abc_msg_not_aligned)
+TEST(scl_soft_sha_224, msg_abc_msg_not_aligned)
 {
     int32_t result = 0;
 
@@ -103,7 +103,7 @@ TEST(scl_soft_test_sha_224, msg_abc_msg_not_aligned)
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(scl_soft_test_sha_224, msg_2_blocks_msg_not_aligned)
+TEST(scl_soft_sha_224, msg_2_blocks_msg_not_aligned)
 {
     int32_t result = 0;
 
@@ -126,7 +126,7 @@ TEST(scl_soft_test_sha_224, msg_2_blocks_msg_not_aligned)
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(scl_soft_test_sha_224, msg_abc_digest_not_aligned)
+TEST(scl_soft_sha_224, msg_abc_digest_not_aligned)
 {
     int32_t result = 0;
 
@@ -152,7 +152,7 @@ TEST(scl_soft_test_sha_224, msg_abc_digest_not_aligned)
         0 == memcmp(expected_digest, &digest[1], sizeof(expected_digest)));
 }
 
-TEST(scl_soft_test_sha_224, msg_2_blocks_digest_not_aligned)
+TEST(scl_soft_sha_224, msg_2_blocks_digest_not_aligned)
 {
     int32_t result = 0;
 

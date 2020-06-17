@@ -1,18 +1,18 @@
 #include "unity.h"
 #include "unity_fixture.h"
 
-#include <api/scl_api.h>
 #include <string.h>
 
+#include <api/scl_api.h>
 #include <api/software/hash/soft_sha.h>
 
-TEST_GROUP(soft_test_sha_512);
+TEST_GROUP(soft_sha_256);
 
-TEST_SETUP(soft_test_sha_512) {}
+TEST_SETUP(soft_sha_256) {}
 
-TEST_TEAR_DOWN(soft_test_sha_512) {}
+TEST_TEAR_DOWN(soft_sha_256) {}
 
-TEST(soft_test_sha_512, msg_abc_all_aligned)
+TEST(soft_sha_256, msg_abc_all_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -23,18 +23,15 @@ TEST(soft_test_sha_512, msg_abc_all_aligned)
         0x63,
     };
 
-    uint8_t digest[SHA512_BYTE_HASHSIZE] __attribute__((aligned(8)));
+    uint8_t digest[SHA256_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA512_BYTE_HASHSIZE] = {
-        0xDD, 0xAF, 0x35, 0xA1, 0x93, 0x61, 0x7A, 0xBA, 0xCC, 0x41, 0x73,
-        0x49, 0xAE, 0x20, 0x41, 0x31, 0x12, 0xE6, 0xFA, 0x4E, 0x89, 0xA9,
-        0x7E, 0xA2, 0x0A, 0x9E, 0xEE, 0xE6, 0x4B, 0x55, 0xD3, 0x9A, 0x21,
-        0x92, 0x99, 0x2A, 0x27, 0x4F, 0xC1, 0xA8, 0x36, 0xBA, 0x3C, 0x23,
-        0xA3, 0xFE, 0xEB, 0xBD, 0x45, 0x4D, 0x44, 0x23, 0x64, 0x3C, 0xE8,
-        0x0E, 0x2A, 0x9A, 0xC9, 0x4F, 0xA5, 0x4C, 0xA4, 0x9F};
+    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+        0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA, 0x41, 0x41, 0x40,
+        0xDE, 0x5D, 0xAE, 0x22, 0x23, 0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17,
+        0x7A, 0x9C, 0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD};
 
-    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA512, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA256, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
     result = soft_sha_core(NULL, &ctx, message, sizeof(message));
@@ -42,32 +39,28 @@ TEST(soft_test_sha_512, msg_abc_all_aligned)
 
     result = soft_sha_finish(NULL, &ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
-    TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
+    TEST_ASSERT_TRUE(SHA256_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(soft_test_sha_512, msg_2_blocks_all_aligned)
+TEST(soft_sha_256, msg_2_blocks_all_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
 
     const uint8_t message[] __attribute__((aligned(8))) =
-        "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmn"
-        "opjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu";
+        "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
 
-    uint8_t digest[SHA512_BYTE_HASHSIZE] __attribute__((aligned(8)));
+    uint8_t digest[SHA256_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA512_BYTE_HASHSIZE] = {
-        0x8E, 0x95, 0x9B, 0x75, 0xDA, 0xE3, 0x13, 0xDA, 0x8C, 0xF4, 0xF7,
-        0x28, 0x14, 0xFC, 0x14, 0x3F, 0x8F, 0x77, 0x79, 0xC6, 0xEB, 0x9F,
-        0x7F, 0xA1, 0x72, 0x99, 0xAE, 0xAD, 0xB6, 0x88, 0x90, 0x18, 0x50,
-        0x1D, 0x28, 0x9E, 0x49, 0x00, 0xF7, 0xE4, 0x33, 0x1B, 0x99, 0xDE,
-        0xC4, 0xB5, 0x43, 0x3A, 0xC7, 0xD3, 0x29, 0xEE, 0xB6, 0xDD, 0x26,
-        0x54, 0x5E, 0x96, 0xE5, 0x5B, 0x87, 0x4B, 0xE9, 0x09};
+    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+        0x24, 0x8D, 0x6A, 0x61, 0xD2, 0x06, 0x38, 0xB8, 0xE5, 0xC0, 0x26,
+        0x93, 0x0C, 0x3E, 0x60, 0x39, 0xA3, 0x3C, 0xE4, 0x59, 0x64, 0xFF,
+        0x21, 0x67, 0xF6, 0xEC, 0xED, 0xD4, 0x19, 0xDB, 0x06, 0xC1};
 
-    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA512, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA256, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
     result = soft_sha_core(NULL, &ctx, message, sizeof(message) - 1);
@@ -75,12 +68,12 @@ TEST(soft_test_sha_512, msg_2_blocks_all_aligned)
 
     result = soft_sha_finish(NULL, &ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
-    TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
+    TEST_ASSERT_TRUE(SHA256_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(soft_test_sha_512, msg_abc_msg_not_aligned)
+TEST(soft_sha_256, msg_abc_msg_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -92,18 +85,15 @@ TEST(soft_test_sha_512, msg_abc_msg_not_aligned)
         0x63,
     };
 
-    uint8_t digest[SHA512_BYTE_HASHSIZE] __attribute__((aligned(8)));
+    uint8_t digest[SHA256_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA512_BYTE_HASHSIZE] = {
-        0xDD, 0xAF, 0x35, 0xA1, 0x93, 0x61, 0x7A, 0xBA, 0xCC, 0x41, 0x73,
-        0x49, 0xAE, 0x20, 0x41, 0x31, 0x12, 0xE6, 0xFA, 0x4E, 0x89, 0xA9,
-        0x7E, 0xA2, 0x0A, 0x9E, 0xEE, 0xE6, 0x4B, 0x55, 0xD3, 0x9A, 0x21,
-        0x92, 0x99, 0x2A, 0x27, 0x4F, 0xC1, 0xA8, 0x36, 0xBA, 0x3C, 0x23,
-        0xA3, 0xFE, 0xEB, 0xBD, 0x45, 0x4D, 0x44, 0x23, 0x64, 0x3C, 0xE8,
-        0x0E, 0x2A, 0x9A, 0xC9, 0x4F, 0xA5, 0x4C, 0xA4, 0x9F};
+    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+        0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA, 0x41, 0x41, 0x40,
+        0xDE, 0x5D, 0xAE, 0x22, 0x23, 0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17,
+        0x7A, 0x9C, 0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD};
 
-    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA512, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA256, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
     result = soft_sha_core(NULL, &ctx, &message[1], sizeof(message) - 1);
@@ -111,32 +101,28 @@ TEST(soft_test_sha_512, msg_abc_msg_not_aligned)
 
     result = soft_sha_finish(NULL, &ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
-    TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
+    TEST_ASSERT_TRUE(SHA256_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(soft_test_sha_512, msg_2_blocks_msg_not_aligned)
+TEST(soft_sha_256, msg_2_blocks_msg_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
 
     const uint8_t message[] __attribute__((aligned(8))) =
-        "aabcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklm"
-        "nopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu";
+        "aabcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
 
-    uint8_t digest[SHA512_BYTE_HASHSIZE] __attribute__((aligned(8)));
+    uint8_t digest[SHA256_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA512_BYTE_HASHSIZE] = {
-        0x8E, 0x95, 0x9B, 0x75, 0xDA, 0xE3, 0x13, 0xDA, 0x8C, 0xF4, 0xF7,
-        0x28, 0x14, 0xFC, 0x14, 0x3F, 0x8F, 0x77, 0x79, 0xC6, 0xEB, 0x9F,
-        0x7F, 0xA1, 0x72, 0x99, 0xAE, 0xAD, 0xB6, 0x88, 0x90, 0x18, 0x50,
-        0x1D, 0x28, 0x9E, 0x49, 0x00, 0xF7, 0xE4, 0x33, 0x1B, 0x99, 0xDE,
-        0xC4, 0xB5, 0x43, 0x3A, 0xC7, 0xD3, 0x29, 0xEE, 0xB6, 0xDD, 0x26,
-        0x54, 0x5E, 0x96, 0xE5, 0x5B, 0x87, 0x4B, 0xE9, 0x09};
+    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+        0x24, 0x8D, 0x6A, 0x61, 0xD2, 0x06, 0x38, 0xB8, 0xE5, 0xC0, 0x26,
+        0x93, 0x0C, 0x3E, 0x60, 0x39, 0xA3, 0x3C, 0xE4, 0x59, 0x64, 0xFF,
+        0x21, 0x67, 0xF6, 0xEC, 0xED, 0xD4, 0x19, 0xDB, 0x06, 0xC1};
 
-    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA512, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA256, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
     result = soft_sha_core(NULL, &ctx, &message[1], sizeof(message) - 2);
@@ -144,12 +130,12 @@ TEST(soft_test_sha_512, msg_2_blocks_msg_not_aligned)
 
     result = soft_sha_finish(NULL, &ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
-    TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
+    TEST_ASSERT_TRUE(SHA256_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(soft_test_sha_512, msg_abc_digest_not_aligned)
+TEST(soft_sha_256, msg_abc_digest_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -160,18 +146,15 @@ TEST(soft_test_sha_512, msg_abc_digest_not_aligned)
         0x63,
     };
 
-    uint8_t digest[SHA512_BYTE_HASHSIZE + 1] __attribute__((aligned(8)));
+    uint8_t digest[SHA256_BYTE_HASHSIZE + 1] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest) - 1;
 
-    const uint8_t expected_digest[SHA512_BYTE_HASHSIZE] = {
-        0xDD, 0xAF, 0x35, 0xA1, 0x93, 0x61, 0x7A, 0xBA, 0xCC, 0x41, 0x73,
-        0x49, 0xAE, 0x20, 0x41, 0x31, 0x12, 0xE6, 0xFA, 0x4E, 0x89, 0xA9,
-        0x7E, 0xA2, 0x0A, 0x9E, 0xEE, 0xE6, 0x4B, 0x55, 0xD3, 0x9A, 0x21,
-        0x92, 0x99, 0x2A, 0x27, 0x4F, 0xC1, 0xA8, 0x36, 0xBA, 0x3C, 0x23,
-        0xA3, 0xFE, 0xEB, 0xBD, 0x45, 0x4D, 0x44, 0x23, 0x64, 0x3C, 0xE8,
-        0x0E, 0x2A, 0x9A, 0xC9, 0x4F, 0xA5, 0x4C, 0xA4, 0x9F};
+    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+        0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA, 0x41, 0x41, 0x40,
+        0xDE, 0x5D, 0xAE, 0x22, 0x23, 0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17,
+        0x7A, 0x9C, 0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD};
 
-    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA512, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA256, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
     result = soft_sha_core(NULL, &ctx, message, sizeof(message));
@@ -179,32 +162,28 @@ TEST(soft_test_sha_512, msg_abc_digest_not_aligned)
 
     result = soft_sha_finish(NULL, &ctx, &digest[1], &digest_len);
     TEST_ASSERT_TRUE(0 == result);
-    TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
+    TEST_ASSERT_TRUE(SHA256_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(
         0 == memcmp(expected_digest, &digest[1], sizeof(expected_digest)));
 }
 
-TEST(soft_test_sha_512, msg_2_blocks_digest_not_aligned)
+TEST(soft_sha_256, msg_2_blocks_digest_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
 
     const uint8_t message[] __attribute__((aligned(8))) =
-        "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmn"
-        "opjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu";
+        "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
 
-    uint8_t digest[SHA512_BYTE_HASHSIZE + 1] __attribute__((aligned(8)));
+    uint8_t digest[SHA256_BYTE_HASHSIZE + 1] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest) - 1;
 
-    const uint8_t expected_digest[SHA512_BYTE_HASHSIZE] = {
-        0x8E, 0x95, 0x9B, 0x75, 0xDA, 0xE3, 0x13, 0xDA, 0x8C, 0xF4, 0xF7,
-        0x28, 0x14, 0xFC, 0x14, 0x3F, 0x8F, 0x77, 0x79, 0xC6, 0xEB, 0x9F,
-        0x7F, 0xA1, 0x72, 0x99, 0xAE, 0xAD, 0xB6, 0x88, 0x90, 0x18, 0x50,
-        0x1D, 0x28, 0x9E, 0x49, 0x00, 0xF7, 0xE4, 0x33, 0x1B, 0x99, 0xDE,
-        0xC4, 0xB5, 0x43, 0x3A, 0xC7, 0xD3, 0x29, 0xEE, 0xB6, 0xDD, 0x26,
-        0x54, 0x5E, 0x96, 0xE5, 0x5B, 0x87, 0x4B, 0xE9, 0x09};
+    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+        0x24, 0x8D, 0x6A, 0x61, 0xD2, 0x06, 0x38, 0xB8, 0xE5, 0xC0, 0x26,
+        0x93, 0x0C, 0x3E, 0x60, 0x39, 0xA3, 0x3C, 0xE4, 0x59, 0x64, 0xFF,
+        0x21, 0x67, 0xF6, 0xEC, 0xED, 0xD4, 0x19, 0xDB, 0x06, 0xC1};
 
-    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA512, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA256, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
     result = soft_sha_core(NULL, &ctx, message, sizeof(message) - 1);
@@ -212,12 +191,12 @@ TEST(soft_test_sha_512, msg_2_blocks_digest_not_aligned)
 
     result = soft_sha_finish(NULL, &ctx, &digest[1], &digest_len);
     TEST_ASSERT_TRUE(0 == result);
-    TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
+    TEST_ASSERT_TRUE(SHA256_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(
         0 == memcmp(expected_digest, &digest[1], sizeof(expected_digest)));
 }
 
-TEST(soft_test_sha_512, msg_1024_bytes_aligned)
+TEST(soft_sha_256, msg_1024_bytes_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -310,18 +289,15 @@ TEST(soft_test_sha_512, msg_1024_bytes_aligned)
         0xDF, 0x6E, 0x8E, 0x29, 0xFF, 0xB5, 0x9A, 0x35, 0xD6, 0x5B, 0x4D, 0x59,
         0x12, 0x2A, 0xC5, 0x5E};
 
-    uint8_t digest[SHA512_BYTE_HASHSIZE] __attribute__((aligned(8)));
+    uint8_t digest[SHA256_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA512_BYTE_HASHSIZE] = {
-        0x22, 0xBF, 0x04, 0xB0, 0xA2, 0x8F, 0x35, 0x66, 0xBF, 0x2C, 0x2D,
-        0xF7, 0x00, 0x96, 0xFC, 0x15, 0x50, 0xCC, 0x11, 0xDF, 0xDB, 0x4B,
-        0xD7, 0x23, 0x1C, 0x54, 0x6F, 0xDF, 0xE1, 0x1C, 0x88, 0x06, 0x05,
-        0x8D, 0x2C, 0xD4, 0x86, 0xF4, 0xC4, 0xF3, 0xDA, 0xBC, 0xD7, 0x00,
-        0xDB, 0xFC, 0x02, 0x03, 0xF4, 0x23, 0xD4, 0x08, 0x5F, 0x5D, 0xB6,
-        0x32, 0x20, 0x88, 0x09, 0xCB, 0x22, 0xAB, 0xC2, 0xA1};
+    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+        0x5A, 0x15, 0xA8, 0x53, 0xCE, 0xEC, 0x2E, 0xA7, 0xE0, 0x96, 0x30,
+        0x69, 0x52, 0x29, 0x09, 0x17, 0xF8, 0x3A, 0x0F, 0x47, 0x37, 0x14,
+        0x6D, 0x60, 0xA3, 0x55, 0x39, 0x4C, 0xFB, 0xAA, 0xDF, 0x5D};
 
-    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA512, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA256, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
     result = soft_sha_core(NULL, &ctx, message, sizeof(message));
@@ -329,12 +305,12 @@ TEST(soft_test_sha_512, msg_1024_bytes_aligned)
 
     result = soft_sha_finish(NULL, &ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
-    TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
+    TEST_ASSERT_TRUE(SHA256_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(soft_test_sha_512, msg_1024_bytes_not_aligned)
+TEST(soft_sha_256, msg_1024_bytes_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -427,18 +403,15 @@ TEST(soft_test_sha_512, msg_1024_bytes_not_aligned)
         0xE1, 0xDF, 0x6E, 0x8E, 0x29, 0xFF, 0xB5, 0x9A, 0x35, 0xD6, 0x5B, 0x4D,
         0x59, 0x12, 0x2A, 0xC5, 0x5E};
 
-    uint8_t digest[SHA512_BYTE_HASHSIZE] __attribute__((aligned(8)));
+    uint8_t digest[SHA256_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA512_BYTE_HASHSIZE] = {
-        0x22, 0xBF, 0x04, 0xB0, 0xA2, 0x8F, 0x35, 0x66, 0xBF, 0x2C, 0x2D,
-        0xF7, 0x00, 0x96, 0xFC, 0x15, 0x50, 0xCC, 0x11, 0xDF, 0xDB, 0x4B,
-        0xD7, 0x23, 0x1C, 0x54, 0x6F, 0xDF, 0xE1, 0x1C, 0x88, 0x06, 0x05,
-        0x8D, 0x2C, 0xD4, 0x86, 0xF4, 0xC4, 0xF3, 0xDA, 0xBC, 0xD7, 0x00,
-        0xDB, 0xFC, 0x02, 0x03, 0xF4, 0x23, 0xD4, 0x08, 0x5F, 0x5D, 0xB6,
-        0x32, 0x20, 0x88, 0x09, 0xCB, 0x22, 0xAB, 0xC2, 0xA1};
+    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+        0x5A, 0x15, 0xA8, 0x53, 0xCE, 0xEC, 0x2E, 0xA7, 0xE0, 0x96, 0x30,
+        0x69, 0x52, 0x29, 0x09, 0x17, 0xF8, 0x3A, 0x0F, 0x47, 0x37, 0x14,
+        0x6D, 0x60, 0xA3, 0x55, 0x39, 0x4C, 0xFB, 0xAA, 0xDF, 0x5D};
 
-    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA512, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA256, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
     result = soft_sha_core(NULL, &ctx, &message[1], sizeof(message) - 1);
@@ -446,7 +419,7 @@ TEST(soft_test_sha_512, msg_1024_bytes_not_aligned)
 
     result = soft_sha_finish(NULL, &ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
-    TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
+    TEST_ASSERT_TRUE(SHA256_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
