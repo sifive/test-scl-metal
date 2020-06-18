@@ -5,7 +5,7 @@
 
 #include <api/hardware/scl_hca.h>
 #include <api/scl_api.h>
-#include <api/blockcipher/aes.h>
+#include <api/blockcipher/aes/aes.h>
 
 static const metal_scl_t scl = {
     .hca_base = METAL_SIFIVE_HCA_0_BASE_ADDRESS,
@@ -64,17 +64,17 @@ TEST(hca_aes_192, ecb_F_1_34)
     uint8_t tmp[64] __attribute__ ((aligned (8))) = {0};
     int32_t result = 0;
 
-    result = hca_aes_setkey(scl, SCL_AES_KEY192, key192);
+    result = hca_aes_setkey(&scl, SCL_AES_KEY192, key192, SCL_ENCRYPT);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     /* F.1.3 ECB-AES192.Encrypt */
-    result = hca_aes_cipher(scl, SCL_AES_ECB, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, sizeof(plaintext_be), plaintext_be, tmp);
+    result = hca_aes_cipher(&scl, SCL_AES_ECB, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, sizeof(plaintext_be), plaintext_be, tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
 
     memset(tmp,0,sizeof(tmp));
     /* F.1.4 ECB-AES192.Decrypt */
-    result = hca_aes_cipher(scl, SCL_AES_ECB, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE, sizeof(ciphertext_be), ciphertext_be, tmp);
+    result = hca_aes_cipher(&scl, SCL_AES_ECB, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE, sizeof(ciphertext_be), ciphertext_be, tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
 }
@@ -126,20 +126,20 @@ TEST(hca_aes_192, cbc_F_2_34)
     uint8_t tmp[64] __attribute__ ((aligned (8))) = {0};
     int32_t result = 0;
 
-    result = hca_aes_setkey(scl, SCL_AES_KEY192, key192);
+    result = hca_aes_setkey(&scl, SCL_AES_KEY192, key192, SCL_ENCRYPT);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_setiv(scl, IV);
+    result = hca_aes_setiv(&scl, IV);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     /* F.2.3 CBC-AES192.Encrypt */
-    result = hca_aes_cipher(scl, SCL_AES_CBC, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, sizeof(plaintext_be), plaintext_be, tmp);
+    result = hca_aes_cipher(&scl, SCL_AES_CBC, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, sizeof(plaintext_be), plaintext_be, tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
 
     /* F.2.4 CBC-AES192.Decrypt */
     memset(tmp,0,sizeof(tmp));
-    result = hca_aes_cipher(scl, SCL_AES_CBC, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE, sizeof(ciphertext_be), ciphertext_be, tmp);
+    result = hca_aes_cipher(&scl, SCL_AES_CBC, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE, sizeof(ciphertext_be), ciphertext_be, tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
 }

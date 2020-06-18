@@ -5,7 +5,7 @@
 
 #include <api/hardware/scl_hca.h>
 #include <api/scl_api.h>
-#include <api/blockcipher/aes.h>
+#include <api/blockcipher/aes/aes.h>
 
 static const metal_scl_t scl = {
     .hca_base = METAL_SIFIVE_HCA_0_BASE_ADDRESS,
@@ -64,17 +64,17 @@ TEST(hca_aes_128, ecb_F_1_12)
     uint8_t tmp[64] __attribute__ ((aligned (8))) = {0};
     int32_t result = 0;
 
-    result = hca_aes_setkey(scl, SCL_AES_KEY128, key128);
+    result = hca_aes_setkey(&scl, SCL_AES_KEY128, key128, SCL_ENCRYPT);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     /* F.1.1 ECB-AES128.Encrypt */
-    result = hca_aes_cipher(scl, SCL_AES_ECB, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, sizeof(plaintext_be), plaintext_be, tmp);
+    result = hca_aes_cipher(&scl, SCL_AES_ECB, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, sizeof(plaintext_be), plaintext_be, tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
 
     memset(tmp,0,sizeof(tmp));
     /* F.1.2 ECB-AES128.Decrypt */
-    result = hca_aes_cipher(scl, SCL_AES_ECB, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE, sizeof(ciphertext_be), ciphertext_be, tmp);
+    result = hca_aes_cipher(&scl, SCL_AES_ECB, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE, sizeof(ciphertext_be), ciphertext_be, tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
 }
@@ -122,17 +122,17 @@ TEST(hca_aes_128, ecb_F_1_12_not_aligned)
     uint8_t tmp[64] __attribute__ ((aligned (8))) = {0};
     int32_t result = 0;
 
-    result = hca_aes_setkey(scl, SCL_AES_KEY128, key128);
+    result = hca_aes_setkey(&scl, SCL_AES_KEY128, key128, SCL_ENCRYPT);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     /* F.1.1 ECB-AES128.Encrypt */
-    result = hca_aes_cipher(scl, SCL_AES_ECB, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, sizeof(plaintext_be)-1, &plaintext_be[1], tmp);
+    result = hca_aes_cipher(&scl, SCL_AES_ECB, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, sizeof(plaintext_be)-1, &plaintext_be[1], tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(&ciphertext_be[1], tmp, sizeof(ciphertext_be)-1));
 
     memset(tmp,0,sizeof(tmp));
     /* F.1.2 ECB-AES128.Decrypt */
-    result = hca_aes_cipher(scl, SCL_AES_ECB, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE, sizeof(ciphertext_be)-1, &ciphertext_be[1], tmp);
+    result = hca_aes_cipher(&scl, SCL_AES_ECB, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE, sizeof(ciphertext_be)-1, &ciphertext_be[1], tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(&plaintext_be[1], tmp, sizeof(plaintext_be)-1));
 }
@@ -183,20 +183,20 @@ TEST(hca_aes_128, cbc_F_2_12)
     uint8_t tmp[64] __attribute__ ((aligned (8))) = {0};
     int32_t result = 0;
 
-    result = hca_aes_setkey(scl, SCL_AES_KEY128, key128);
+    result = hca_aes_setkey(&scl, SCL_AES_KEY128, key128, SCL_ENCRYPT);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_setiv(scl, IV);
+    result = hca_aes_setiv(&scl, IV);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     /* F.2.1 CBC-AES128.Encrypt */
-    result = hca_aes_cipher(scl, SCL_AES_CBC, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, sizeof(plaintext_be), plaintext_be, tmp);
+    result = hca_aes_cipher(&scl, SCL_AES_CBC, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, sizeof(plaintext_be), plaintext_be, tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
 
     /* F.2.2 CBC-AES128.Decrypt */
     memset(tmp,0,sizeof(tmp));
-    result = hca_aes_cipher(scl, SCL_AES_CBC, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE, sizeof(ciphertext_be), ciphertext_be, tmp);
+    result = hca_aes_cipher(&scl, SCL_AES_CBC, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE, sizeof(ciphertext_be), ciphertext_be, tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
 }
