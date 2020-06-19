@@ -3,26 +3,16 @@
 
 #include <string.h>
 
-#include <api/hardware/scl_hca.h>
 #include <api/scl_api.h>
-#include <api/hash/sha.h>
+#include <api/software/hash/soft_sha.h>
 
-static const metal_scl_t scl = {
-    .hca_base = METAL_SIFIVE_HCA_0_BASE_ADDRESS,
-    .hash_func =  {
-        .sha_init   = hca_sha_init,
-        .sha_core   = hca_sha_core,
-        .sha_finish = hca_sha_finish,
-    }
-};
+TEST_GROUP(soft_sha_384);
 
-TEST_GROUP(hca_test_sha_384);
+TEST_SETUP(soft_sha_384) {}
 
-TEST_SETUP(hca_test_sha_384) {}
+TEST_TEAR_DOWN(soft_sha_384) {}
 
-TEST_TEAR_DOWN(hca_test_sha_384) {}
-
-TEST(hca_test_sha_384, msg_abc_all_aligned)
+TEST(soft_sha_384, msg_abc_all_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -42,20 +32,20 @@ TEST(hca_test_sha_384, msg_abc_all_aligned)
         0x1A, 0x8B, 0x60, 0x5A, 0x43, 0xFF, 0x5B, 0xED, 0x80, 0x86, 0x07, 0x2B,
         0xA1, 0xE7, 0xCC, 0x23, 0x58, 0xBA, 0xEC, 0xA1, 0x34, 0xC8, 0x25, 0xA7};
 
-    result = hca_sha_init(&scl, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_core(&scl, &ctx, message, sizeof(message));
+    result = soft_sha_core(NULL, &ctx, message, sizeof(message));
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_finish(&scl, &ctx, digest, &digest_len);
+    result = soft_sha_finish(NULL, &ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(hca_test_sha_384, msg_2_blocks_all_aligned)
+TEST(soft_sha_384, msg_2_blocks_all_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -73,20 +63,20 @@ TEST(hca_test_sha_384, msg_2_blocks_all_aligned)
         0x2F, 0xA0, 0x80, 0x86, 0xE3, 0xB0, 0xF7, 0x12, 0xFC, 0xC7, 0xC7, 0x1A,
         0x55, 0x7E, 0x2D, 0xB9, 0x66, 0xC3, 0xE9, 0xFA, 0x91, 0x74, 0x60, 0x39};
 
-    result = hca_sha_init(&scl, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_core(&scl, &ctx, message, sizeof(message) - 1);
+    result = soft_sha_core(NULL, &ctx, message, sizeof(message) - 1);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_finish(&scl, &ctx, digest, &digest_len);
+    result = soft_sha_finish(NULL, &ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(hca_test_sha_384, msg_abc_msg_not_aligned)
+TEST(soft_sha_384, msg_abc_msg_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -107,20 +97,20 @@ TEST(hca_test_sha_384, msg_abc_msg_not_aligned)
         0x1A, 0x8B, 0x60, 0x5A, 0x43, 0xFF, 0x5B, 0xED, 0x80, 0x86, 0x07, 0x2B,
         0xA1, 0xE7, 0xCC, 0x23, 0x58, 0xBA, 0xEC, 0xA1, 0x34, 0xC8, 0x25, 0xA7};
 
-    result = hca_sha_init(&scl, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_core(&scl, &ctx, &message[1], sizeof(message) - 1);
+    result = soft_sha_core(NULL, &ctx, &message[1], sizeof(message) - 1);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_finish(&scl, &ctx, digest, &digest_len);
+    result = soft_sha_finish(NULL, &ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(hca_test_sha_384, msg_2_blocks_msg_not_aligned)
+TEST(soft_sha_384, msg_2_blocks_msg_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -138,20 +128,20 @@ TEST(hca_test_sha_384, msg_2_blocks_msg_not_aligned)
         0x2F, 0xA0, 0x80, 0x86, 0xE3, 0xB0, 0xF7, 0x12, 0xFC, 0xC7, 0xC7, 0x1A,
         0x55, 0x7E, 0x2D, 0xB9, 0x66, 0xC3, 0xE9, 0xFA, 0x91, 0x74, 0x60, 0x39};
 
-    result = hca_sha_init(&scl, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_core(&scl, &ctx, &message[1], sizeof(message) - 2);
+    result = soft_sha_core(NULL, &ctx, &message[1], sizeof(message) - 2);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_finish(&scl, &ctx, digest, &digest_len);
+    result = soft_sha_finish(NULL, &ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(hca_test_sha_384, msg_abc_digest_not_aligned)
+TEST(soft_sha_384, msg_abc_digest_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -171,20 +161,20 @@ TEST(hca_test_sha_384, msg_abc_digest_not_aligned)
         0x1A, 0x8B, 0x60, 0x5A, 0x43, 0xFF, 0x5B, 0xED, 0x80, 0x86, 0x07, 0x2B,
         0xA1, 0xE7, 0xCC, 0x23, 0x58, 0xBA, 0xEC, 0xA1, 0x34, 0xC8, 0x25, 0xA7};
 
-    result = hca_sha_init(&scl, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_core(&scl, &ctx, message, sizeof(message));
+    result = soft_sha_core(NULL, &ctx, message, sizeof(message));
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_finish(&scl, &ctx, &digest[1], &digest_len);
+    result = soft_sha_finish(NULL, &ctx, &digest[1], &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(
         0 == memcmp(expected_digest, &digest[1], sizeof(expected_digest)));
 }
 
-TEST(hca_test_sha_384, msg_2_blocks_digest_not_aligned)
+TEST(soft_sha_384, msg_2_blocks_digest_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -202,20 +192,20 @@ TEST(hca_test_sha_384, msg_2_blocks_digest_not_aligned)
         0x2F, 0xA0, 0x80, 0x86, 0xE3, 0xB0, 0xF7, 0x12, 0xFC, 0xC7, 0xC7, 0x1A,
         0x55, 0x7E, 0x2D, 0xB9, 0x66, 0xC3, 0xE9, 0xFA, 0x91, 0x74, 0x60, 0x39};
 
-    result = hca_sha_init(&scl, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_core(&scl, &ctx, message, sizeof(message) - 1);
+    result = soft_sha_core(NULL, &ctx, message, sizeof(message) - 1);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_finish(&scl, &ctx, &digest[1], &digest_len);
+    result = soft_sha_finish(NULL, &ctx, &digest[1], &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(
         0 == memcmp(expected_digest, &digest[1], sizeof(expected_digest)));
 }
 
-TEST(hca_test_sha_384, msg_1024_bytes_aligned)
+TEST(soft_sha_384, msg_1024_bytes_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -317,20 +307,20 @@ TEST(hca_test_sha_384, msg_1024_bytes_aligned)
         0xB6, 0xD0, 0xAF, 0x06, 0x25, 0x34, 0x0C, 0x17, 0xB1, 0x2F, 0x1F, 0xFF,
         0x99, 0xC2, 0x69, 0x1D, 0x31, 0xCE, 0x13, 0x00, 0x1C, 0x90, 0x8C, 0x11};
 
-    result = hca_sha_init(&scl, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_core(&scl, &ctx, message, sizeof(message));
+    result = soft_sha_core(NULL, &ctx, message, sizeof(message));
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_finish(&scl, &ctx, digest, &digest_len);
+    result = soft_sha_finish(NULL, &ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(hca_test_sha_384, msg_1024_bytes_not_aligned)
+TEST(soft_sha_384, msg_1024_bytes_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -432,13 +422,13 @@ TEST(hca_test_sha_384, msg_1024_bytes_not_aligned)
         0xB6, 0xD0, 0xAF, 0x06, 0x25, 0x34, 0x0C, 0x17, 0xB1, 0x2F, 0x1F, 0xFF,
         0x99, 0xC2, 0x69, 0x1D, 0x31, 0xCE, 0x13, 0x00, 0x1C, 0x90, 0x8C, 0x11};
 
-    result = hca_sha_init(&scl, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
+    result = soft_sha_init(NULL, &ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_core(&scl, &ctx, &message[1], sizeof(message) - 1);
+    result = soft_sha_core(NULL, &ctx, &message[1], sizeof(message) - 1);
     TEST_ASSERT_TRUE(0 == result);
 
-    result = hca_sha_finish(&scl, &ctx, digest, &digest_len);
+    result = soft_sha_finish(NULL, &ctx, digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==

@@ -4,25 +4,23 @@
 #include <string.h>
 
 #include <api/hardware/scl_hca.h>
-#include <api/scl_api.h>
 #include <api/hash/sha.h>
+#include <api/scl_api.h>
 
-static const metal_scl_t scl = {
-    .hca_base = METAL_SIFIVE_HCA_0_BASE_ADDRESS,
-    .hash_func =  {
-        .sha_init   = hca_sha_init,
-        .sha_core   = hca_sha_core,
-        .sha_finish = hca_sha_finish,
-    }
-};
+static const metal_scl_t scl = {.hca_base = METAL_SIFIVE_HCA_0_BASE_ADDRESS,
+                                .hash_func = {
+                                    .sha_init = hca_sha_init,
+                                    .sha_core = hca_sha_core,
+                                    .sha_finish = hca_sha_finish,
+                                }};
 
-TEST_GROUP(hca_test_sha_224);
+TEST_GROUP(hca_sha_224);
 
-TEST_SETUP(hca_test_sha_224) {}
+TEST_SETUP(hca_sha_224) {}
 
-TEST_TEAR_DOWN(hca_test_sha_224) {}
+TEST_TEAR_DOWN(hca_sha_224) {}
 
-TEST(hca_test_sha_224, msg_abc_all_aligned)
+TEST(hca_sha_224, msg_abc_all_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -54,7 +52,7 @@ TEST(hca_test_sha_224, msg_abc_all_aligned)
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(hca_test_sha_224, msg_2_blocks_all_aligned)
+TEST(hca_sha_224, msg_2_blocks_all_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -83,7 +81,7 @@ TEST(hca_test_sha_224, msg_2_blocks_all_aligned)
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(hca_test_sha_224, msg_abc_msg_not_aligned)
+TEST(hca_sha_224, msg_abc_msg_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -116,7 +114,7 @@ TEST(hca_test_sha_224, msg_abc_msg_not_aligned)
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(hca_test_sha_224, msg_2_blocks_msg_not_aligned)
+TEST(hca_sha_224, msg_2_blocks_msg_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -145,7 +143,7 @@ TEST(hca_test_sha_224, msg_2_blocks_msg_not_aligned)
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(hca_test_sha_224, msg_abc_digest_not_aligned)
+TEST(hca_sha_224, msg_abc_digest_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -177,7 +175,7 @@ TEST(hca_test_sha_224, msg_abc_digest_not_aligned)
         0 == memcmp(expected_digest, &digest[1], sizeof(expected_digest)));
 }
 
-TEST(hca_test_sha_224, msg_2_blocks_digest_not_aligned)
+TEST(hca_sha_224, msg_2_blocks_digest_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -206,7 +204,7 @@ TEST(hca_test_sha_224, msg_2_blocks_digest_not_aligned)
         0 == memcmp(expected_digest, &digest[1], sizeof(expected_digest)));
 }
 
-TEST(hca_test_sha_224, msg_1024_bytes_aligned)
+TEST(hca_sha_224, msg_1024_bytes_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;
@@ -320,7 +318,7 @@ TEST(hca_test_sha_224, msg_1024_bytes_aligned)
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
 
-TEST(hca_test_sha_224, msg_1024_bytes_not_aligned)
+TEST(hca_sha_224, msg_1024_bytes_not_aligned)
 {
     int32_t result = 0;
     sha_ctx_t ctx;

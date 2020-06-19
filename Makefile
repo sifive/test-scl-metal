@@ -12,8 +12,10 @@ override SOURCE_DIR = $(CURRENT_DIR)
 
 override SOURCE_DIRS := $(SOURCE_DIR)
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/sha
+override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/aes
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/soft
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/hardware
+override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/aes/hardware
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/test_runners
 
 override C_SOURCES = $(foreach dir,$(SOURCE_DIRS),$(wildcard $(dir)/*.c))
