@@ -24,6 +24,11 @@ static void RunAllTests(void)
     RUN_TEST_GROUP(hca_aes_128);
     RUN_TEST_GROUP(hca_aes_192);
     RUN_TEST_GROUP(hca_aes_256);
+
+    // scl api implementation
+    RUN_TEST_GROUP(scl_aes_128);
+    RUN_TEST_GROUP(scl_aes_192);
+    RUN_TEST_GROUP(scl_aes_256);
 }
 
 int main(int argc, const char *argv[])

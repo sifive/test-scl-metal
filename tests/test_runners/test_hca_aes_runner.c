@@ -5,7 +5,7 @@
 TEST_GROUP_RUNNER(hca_aes_128)
 {
     RUN_TEST_CASE(hca_aes_128, ecb_F_1_12);
-    RUN_TEST_CASE(hca_aes_128, ecb_F_1_12_not_aligned);
+    RUN_TEST_CASE(hca_aes_128, ecb_not_aligned);
     RUN_TEST_CASE(hca_aes_128, cbc_F_2_12);
 }
 

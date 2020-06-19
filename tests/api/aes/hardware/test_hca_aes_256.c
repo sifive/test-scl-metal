@@ -68,13 +68,13 @@ TEST(hca_aes_256, ecb_F_1_56)
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     /* F.1.5 ECB-AES256.Encrypt */
-    result = hca_aes_cipher(&scl, SCL_AES_ECB, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, sizeof(plaintext_be), plaintext_be, tmp);
+    result = hca_aes_cipher(&scl, SCL_AES_ECB, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, plaintext_be, sizeof(plaintext_be), tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
 
     memset(tmp,0,sizeof(tmp));
     /* F.1.6 ECB-AES256.Decrypt */
-    result = hca_aes_cipher(&scl, SCL_AES_ECB, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE, sizeof(ciphertext_be), ciphertext_be, tmp);
+    result = hca_aes_cipher(&scl, SCL_AES_ECB, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE, ciphertext_be, sizeof(ciphertext_be), tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
 }
@@ -85,7 +85,7 @@ TEST(hca_aes_256, cbc_F_2_56)
     /* NIST[nistspecialpublication800-38a.pdf] 
      * F.2.5 CBC-AES256.Encrypt
      * F.2.6 CBC-AES256.Decrypt
-     * key: 8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b
+     * key: 603deb1015ca71be 2b73aef0857d7781 1f352c073b6108d7 2d9810a30914dff4
      * IV:  000102030405060708090a0b0c0d0e0f
      * Plaintext: 
      *     block1 = 6bc1bee22e409f96e93d7e117393172a
@@ -133,13 +133,13 @@ TEST(hca_aes_256, cbc_F_2_56)
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     /* F.2.5 CBC-AES256.Encrypt */
-    result = hca_aes_cipher(&scl, SCL_AES_CBC, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, sizeof(plaintext_be), plaintext_be, tmp);
+    result = hca_aes_cipher(&scl, SCL_AES_CBC, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, plaintext_be, sizeof(plaintext_be), tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
 
     /* F.2.6 CBC-AES256.Decrypt */
     memset(tmp,0,sizeof(tmp));
-    result = hca_aes_cipher(&scl, SCL_AES_CBC, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE, sizeof(ciphertext_be), ciphertext_be, tmp);
+    result = hca_aes_cipher(&scl, SCL_AES_CBC, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE, ciphertext_be, sizeof(ciphertext_be), tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
 }
