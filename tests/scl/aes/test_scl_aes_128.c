@@ -163,6 +163,7 @@ TEST(scl_aes_128, ecb_not_aligned)
     };
 
     const uint8_t ciphertext_be[65] __attribute__ ((aligned (8))) = {
+        0x00,
         0x3a, 0xd7, 0x7b, 0xb4, 0x0d, 0x7a, 0x36, 0x60, 0xa8, 0x9e, 0xca, 0xf3, 0x24, 0x66, 0xef, 0x97,
         0xf5, 0xd3, 0xd5, 0x85, 0x03, 0xb9, 0x69, 0x9d, 0xe7, 0x85, 0x89, 0x5a, 0x96, 0xfd, 0xba, 0xaf,
         0x43, 0xb1, 0xcd, 0x7f, 0x59, 0x8e, 0xce, 0x23, 0x88, 0x1b, 0x00, 0xe3, 0xed, 0x03, 0x06, 0x88,
@@ -178,7 +179,15 @@ TEST(scl_aes_128, ecb_not_aligned)
     /* F.1.1 ECB-AES128.Encrypt */
     result = scl_aes_ecb_core(&scl, tmp, &plaintext_be[1], sizeof(plaintext_be)-1, SCL_ENCRYPT);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
+    TEST_ASSERT_TRUE(0 == memcmp(&ciphertext_be[1], tmp, sizeof(ciphertext_be)-1));
+
+    result = scl_aes_ecb_init(&scl, key128, sizeof(key128), SCL_DECRYPT);
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    /* F.1.1 ECB-AES128.Encrypt */
+    result = scl_aes_ecb_core(&scl, tmp, &ciphertext_be[1], sizeof(ciphertext_be)-1, SCL_DECRYPT);
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(0 == memcmp(&plaintext_be[1], tmp, sizeof(plaintext_be)-1));
 }
 
 TEST(scl_aes_128, cbc_F_2_12)
