@@ -8,18 +8,16 @@
 
 #include <scl/scl_init.h>
 
-#include <api/software/scl_soft.h>
-#include <api/scl_api.h>
 #include <api/hash/sha.h>
+#include <api/scl_api.h>
+#include <api/software/scl_soft.h>
 
-static const metal_scl_t scl = {
-    .hca_base = 0,
-    .hash_func =  {
-        .sha_init   = soft_sha_init,
-        .sha_core   = soft_sha_core,
-        .sha_finish = soft_sha_finish,
-    }
-};
+static const metal_scl_t scl = {.hca_base = 0,
+                                .hash_func = {
+                                    .sha_init = soft_sha_init,
+                                    .sha_core = soft_sha_core,
+                                    .sha_finish = soft_sha_finish,
+                                }};
 
 TEST_GROUP(scl_soft_sha_512);
 
@@ -48,8 +46,8 @@ TEST(scl_soft_sha_512, msg_abc_all_aligned)
         0xA3, 0xFE, 0xEB, 0xBD, 0x45, 0x4D, 0x44, 0x23, 0x64, 0x3C, 0xE8,
         0x0E, 0x2A, 0x9A, 0xC9, 0x4F, 0xA5, 0x4C, 0xA4, 0x9F};
 
-    result =
-        scl_sha(&scl, SCL_HASH_SHA512, message, sizeof(message), digest, &digest_len);
+    result = scl_sha(&scl, SCL_HASH_SHA512, message, sizeof(message), digest,
+                     &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
@@ -75,8 +73,8 @@ TEST(scl_soft_sha_512, msg_2_blocks_all_aligned)
         0xC4, 0xB5, 0x43, 0x3A, 0xC7, 0xD3, 0x29, 0xEE, 0xB6, 0xDD, 0x26,
         0x54, 0x5E, 0x96, 0xE5, 0x5B, 0x87, 0x4B, 0xE9, 0x09};
 
-    result = scl_sha(&scl, SCL_HASH_SHA512, message, sizeof(message) - 1, digest,
-                     &digest_len);
+    result = scl_sha(&scl, SCL_HASH_SHA512, message, sizeof(message) - 1,
+                     digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
@@ -105,8 +103,8 @@ TEST(scl_soft_sha_512, msg_abc_msg_not_aligned)
         0xA3, 0xFE, 0xEB, 0xBD, 0x45, 0x4D, 0x44, 0x23, 0x64, 0x3C, 0xE8,
         0x0E, 0x2A, 0x9A, 0xC9, 0x4F, 0xA5, 0x4C, 0xA4, 0x9F};
 
-    result = scl_sha(&scl, SCL_HASH_SHA512, &message[1], sizeof(message) - 1, digest,
-                     &digest_len);
+    result = scl_sha(&scl, SCL_HASH_SHA512, &message[1], sizeof(message) - 1,
+                     digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
@@ -132,8 +130,8 @@ TEST(scl_soft_sha_512, msg_2_blocks_msg_not_aligned)
         0xC4, 0xB5, 0x43, 0x3A, 0xC7, 0xD3, 0x29, 0xEE, 0xB6, 0xDD, 0x26,
         0x54, 0x5E, 0x96, 0xE5, 0x5B, 0x87, 0x4B, 0xE9, 0x09};
 
-    result = scl_sha(&scl, SCL_HASH_SHA512, &message[1], sizeof(message) - 2, digest,
-                     &digest_len);
+    result = scl_sha(&scl, SCL_HASH_SHA512, &message[1], sizeof(message) - 2,
+                     digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
@@ -143,7 +141,7 @@ TEST(scl_soft_sha_512, msg_2_blocks_msg_not_aligned)
 TEST(scl_soft_sha_512, msg_abc_digest_not_aligned)
 {
     int32_t result = 0;
- 
+
     const uint8_t message[] __attribute__((aligned(8))) = {
         0x61,
         0x62,
@@ -161,8 +159,8 @@ TEST(scl_soft_sha_512, msg_abc_digest_not_aligned)
         0xA3, 0xFE, 0xEB, 0xBD, 0x45, 0x4D, 0x44, 0x23, 0x64, 0x3C, 0xE8,
         0x0E, 0x2A, 0x9A, 0xC9, 0x4F, 0xA5, 0x4C, 0xA4, 0x9F};
 
-    result = scl_sha(&scl, SCL_HASH_SHA512, message, sizeof(message), &digest[1],
-                     &digest_len);
+    result = scl_sha(&scl, SCL_HASH_SHA512, message, sizeof(message),
+                     &digest[1], &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(
@@ -188,8 +186,8 @@ TEST(scl_soft_sha_512, msg_2_blocks_digest_not_aligned)
         0xC4, 0xB5, 0x43, 0x3A, 0xC7, 0xD3, 0x29, 0xEE, 0xB6, 0xDD, 0x26,
         0x54, 0x5E, 0x96, 0xE5, 0x5B, 0x87, 0x4B, 0xE9, 0x09};
 
-    result = scl_sha(&scl, SCL_HASH_SHA512, message, sizeof(message) - 1, &digest[1],
-                     &digest_len);
+    result = scl_sha(&scl, SCL_HASH_SHA512, message, sizeof(message) - 1,
+                     &digest[1], &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(
