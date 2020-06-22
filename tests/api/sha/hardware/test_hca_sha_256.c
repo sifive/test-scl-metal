@@ -25,7 +25,7 @@ TEST(hca_sha_256, msg_abc_all_aligned)
     int32_t result = 0;
     sha_ctx_t ctx;
 
-    const uint8_t message[] __attribute__((aligned(8))) = {
+    static const uint8_t message[] __attribute__((aligned(8))) = {
         0x61,
         0x62,
         0x63,
@@ -34,7 +34,7 @@ TEST(hca_sha_256, msg_abc_all_aligned)
     uint8_t digest[SHA256_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+    static const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
         0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA, 0x41, 0x41, 0x40,
         0xDE, 0x5D, 0xAE, 0x22, 0x23, 0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17,
         0x7A, 0x9C, 0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD};
@@ -57,13 +57,13 @@ TEST(hca_sha_256, msg_2_blocks_all_aligned)
     int32_t result = 0;
     sha_ctx_t ctx;
 
-    const uint8_t message[] __attribute__((aligned(8))) =
+    static const uint8_t message[] __attribute__((aligned(8))) =
         "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
 
     uint8_t digest[SHA256_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+    static const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
         0x24, 0x8D, 0x6A, 0x61, 0xD2, 0x06, 0x38, 0xB8, 0xE5, 0xC0, 0x26,
         0x93, 0x0C, 0x3E, 0x60, 0x39, 0xA3, 0x3C, 0xE4, 0x59, 0x64, 0xFF,
         0x21, 0x67, 0xF6, 0xEC, 0xED, 0xD4, 0x19, 0xDB, 0x06, 0xC1};
@@ -86,7 +86,7 @@ TEST(hca_sha_256, msg_abc_msg_not_aligned)
     int32_t result = 0;
     sha_ctx_t ctx;
 
-    const uint8_t message[] __attribute__((aligned(8))) = {
+    static const uint8_t message[] __attribute__((aligned(8))) = {
         0x00,
         0x61,
         0x62,
@@ -96,7 +96,7 @@ TEST(hca_sha_256, msg_abc_msg_not_aligned)
     uint8_t digest[SHA256_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+    static const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
         0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA, 0x41, 0x41, 0x40,
         0xDE, 0x5D, 0xAE, 0x22, 0x23, 0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17,
         0x7A, 0x9C, 0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD};
@@ -119,13 +119,13 @@ TEST(hca_sha_256, msg_2_blocks_msg_not_aligned)
     int32_t result = 0;
     sha_ctx_t ctx;
 
-    const uint8_t message[] __attribute__((aligned(8))) =
+    static const uint8_t message[] __attribute__((aligned(8))) =
         "aabcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
 
     uint8_t digest[SHA256_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+    static const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
         0x24, 0x8D, 0x6A, 0x61, 0xD2, 0x06, 0x38, 0xB8, 0xE5, 0xC0, 0x26,
         0x93, 0x0C, 0x3E, 0x60, 0x39, 0xA3, 0x3C, 0xE4, 0x59, 0x64, 0xFF,
         0x21, 0x67, 0xF6, 0xEC, 0xED, 0xD4, 0x19, 0xDB, 0x06, 0xC1};
@@ -148,7 +148,7 @@ TEST(hca_sha_256, msg_abc_digest_not_aligned)
     int32_t result = 0;
     sha_ctx_t ctx;
 
-    const uint8_t message[] __attribute__((aligned(8))) = {
+    static const uint8_t message[] __attribute__((aligned(8))) = {
         0x61,
         0x62,
         0x63,
@@ -157,7 +157,7 @@ TEST(hca_sha_256, msg_abc_digest_not_aligned)
     uint8_t digest[SHA256_BYTE_HASHSIZE + 1] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest) - 1;
 
-    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+    static const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
         0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA, 0x41, 0x41, 0x40,
         0xDE, 0x5D, 0xAE, 0x22, 0x23, 0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17,
         0x7A, 0x9C, 0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD};
@@ -180,13 +180,13 @@ TEST(hca_sha_256, msg_2_blocks_digest_not_aligned)
     int32_t result = 0;
     sha_ctx_t ctx;
 
-    const uint8_t message[] __attribute__((aligned(8))) =
+    static const uint8_t message[] __attribute__((aligned(8))) =
         "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
 
     uint8_t digest[SHA256_BYTE_HASHSIZE + 1] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest) - 1;
 
-    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+    static const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
         0x24, 0x8D, 0x6A, 0x61, 0xD2, 0x06, 0x38, 0xB8, 0xE5, 0xC0, 0x26,
         0x93, 0x0C, 0x3E, 0x60, 0x39, 0xA3, 0x3C, 0xE4, 0x59, 0x64, 0xFF,
         0x21, 0x67, 0xF6, 0xEC, 0xED, 0xD4, 0x19, 0xDB, 0x06, 0xC1};
@@ -209,7 +209,7 @@ TEST(hca_sha_256, msg_1024_bytes_aligned)
     int32_t result = 0;
     sha_ctx_t ctx;
 
-    const uint8_t message[] __attribute__((aligned(8))) = {
+    static const uint8_t message[] __attribute__((aligned(8))) = {
         0x10, 0x94, 0xA3, 0x93, 0x1D, 0x00, 0xFC, 0x89, 0x5F, 0xA2, 0x57, 0x6F,
         0xD6, 0x37, 0xBF, 0x1B, 0xC8, 0xF7, 0xBB, 0x1D, 0xBB, 0x7C, 0xDF, 0xEF,
         0x41, 0x41, 0x7A, 0x02, 0xA2, 0x39, 0xD4, 0xBE, 0xC4, 0x0F, 0xCC, 0x76,
@@ -300,7 +300,7 @@ TEST(hca_sha_256, msg_1024_bytes_aligned)
     uint8_t digest[SHA256_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+    static const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
         0x5A, 0x15, 0xA8, 0x53, 0xCE, 0xEC, 0x2E, 0xA7, 0xE0, 0x96, 0x30,
         0x69, 0x52, 0x29, 0x09, 0x17, 0xF8, 0x3A, 0x0F, 0x47, 0x37, 0x14,
         0x6D, 0x60, 0xA3, 0x55, 0x39, 0x4C, 0xFB, 0xAA, 0xDF, 0x5D};
@@ -323,7 +323,7 @@ TEST(hca_sha_256, msg_1024_bytes_not_aligned)
     int32_t result = 0;
     sha_ctx_t ctx;
 
-    const uint8_t message[] __attribute__((aligned(8))) = {
+    static const uint8_t message[] __attribute__((aligned(8))) = {
         0x00, 0x10, 0x94, 0xA3, 0x93, 0x1D, 0x00, 0xFC, 0x89, 0x5F, 0xA2, 0x57,
         0x6F, 0xD6, 0x37, 0xBF, 0x1B, 0xC8, 0xF7, 0xBB, 0x1D, 0xBB, 0x7C, 0xDF,
         0xEF, 0x41, 0x41, 0x7A, 0x02, 0xA2, 0x39, 0xD4, 0xBE, 0xC4, 0x0F, 0xCC,
@@ -414,7 +414,7 @@ TEST(hca_sha_256, msg_1024_bytes_not_aligned)
     uint8_t digest[SHA256_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
+    static const uint8_t expected_digest[SHA256_BYTE_HASHSIZE] = {
         0x5A, 0x15, 0xA8, 0x53, 0xCE, 0xEC, 0x2E, 0xA7, 0xE0, 0x96, 0x30,
         0x69, 0x52, 0x29, 0x09, 0x17, 0xF8, 0x3A, 0x0F, 0x47, 0x37, 0x14,
         0x6D, 0x60, 0xA3, 0x55, 0x39, 0x4C, 0xFB, 0xAA, 0xDF, 0x5D};

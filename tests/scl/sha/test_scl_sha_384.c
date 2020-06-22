@@ -29,7 +29,7 @@ TEST(scl_soft_sha_384, msg_abc_all_aligned)
 {
     int32_t result = 0;
 
-    const uint8_t message[] __attribute__((aligned(8))) = {
+    static const uint8_t message[] __attribute__((aligned(8))) = {
         0x61,
         0x62,
         0x63,
@@ -38,7 +38,7 @@ TEST(scl_soft_sha_384, msg_abc_all_aligned)
     uint8_t digest[SHA384_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA384_BYTE_HASHSIZE] = {
+    static const uint8_t expected_digest[SHA384_BYTE_HASHSIZE] = {
         0xCB, 0x00, 0x75, 0x3F, 0x45, 0xA3, 0x5E, 0x8B, 0xB5, 0xA0, 0x3D, 0x69,
         0x9A, 0xC6, 0x50, 0x07, 0x27, 0x2C, 0x32, 0xAB, 0x0E, 0xDE, 0xD1, 0x63,
         0x1A, 0x8B, 0x60, 0x5A, 0x43, 0xFF, 0x5B, 0xED, 0x80, 0x86, 0x07, 0x2B,
@@ -56,14 +56,14 @@ TEST(scl_soft_sha_384, msg_2_blocks_all_aligned)
 {
     int32_t result = 0;
 
-    const uint8_t message[] __attribute__((aligned(8))) =
+    static const uint8_t message[] __attribute__((aligned(8))) =
         "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmn"
         "opjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu";
 
     uint8_t digest[SHA384_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA384_BYTE_HASHSIZE] = {
+    static const uint8_t expected_digest[SHA384_BYTE_HASHSIZE] = {
         0x09, 0x33, 0x0C, 0x33, 0xF7, 0x11, 0x47, 0xE8, 0x3D, 0x19, 0x2F, 0xC7,
         0x82, 0xCD, 0x1B, 0x47, 0x53, 0x11, 0x1B, 0x17, 0x3B, 0x3B, 0x05, 0xD2,
         0x2F, 0xA0, 0x80, 0x86, 0xE3, 0xB0, 0xF7, 0x12, 0xFC, 0xC7, 0xC7, 0x1A,
@@ -81,7 +81,7 @@ TEST(scl_soft_sha_384, msg_abc_msg_not_aligned)
 {
     int32_t result = 0;
 
-    const uint8_t message[] __attribute__((aligned(8))) = {
+    static const uint8_t message[] __attribute__((aligned(8))) = {
         0x00,
         0x61,
         0x62,
@@ -91,7 +91,7 @@ TEST(scl_soft_sha_384, msg_abc_msg_not_aligned)
     uint8_t digest[SHA384_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA384_BYTE_HASHSIZE] = {
+    static const uint8_t expected_digest[SHA384_BYTE_HASHSIZE] = {
         0xCB, 0x00, 0x75, 0x3F, 0x45, 0xA3, 0x5E, 0x8B, 0xB5, 0xA0, 0x3D, 0x69,
         0x9A, 0xC6, 0x50, 0x07, 0x27, 0x2C, 0x32, 0xAB, 0x0E, 0xDE, 0xD1, 0x63,
         0x1A, 0x8B, 0x60, 0x5A, 0x43, 0xFF, 0x5B, 0xED, 0x80, 0x86, 0x07, 0x2B,
@@ -109,14 +109,14 @@ TEST(scl_soft_sha_384, msg_2_blocks_msg_not_aligned)
 {
     int32_t result = 0;
 
-    const uint8_t message[] __attribute__((aligned(8))) =
+    static const uint8_t message[] __attribute__((aligned(8))) =
         "aabcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklm"
         "nopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu";
 
     uint8_t digest[SHA384_BYTE_HASHSIZE] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest);
 
-    const uint8_t expected_digest[SHA384_BYTE_HASHSIZE] = {
+    static const uint8_t expected_digest[SHA384_BYTE_HASHSIZE] = {
         0x09, 0x33, 0x0C, 0x33, 0xF7, 0x11, 0x47, 0xE8, 0x3D, 0x19, 0x2F, 0xC7,
         0x82, 0xCD, 0x1B, 0x47, 0x53, 0x11, 0x1B, 0x17, 0x3B, 0x3B, 0x05, 0xD2,
         0x2F, 0xA0, 0x80, 0x86, 0xE3, 0xB0, 0xF7, 0x12, 0xFC, 0xC7, 0xC7, 0x1A,
@@ -134,7 +134,7 @@ TEST(scl_soft_sha_384, msg_abc_digest_not_aligned)
 {
     int32_t result = 0;
 
-    const uint8_t message[] __attribute__((aligned(8))) = {
+    static const uint8_t message[] __attribute__((aligned(8))) = {
         0x61,
         0x62,
         0x63,
@@ -143,7 +143,7 @@ TEST(scl_soft_sha_384, msg_abc_digest_not_aligned)
     uint8_t digest[SHA384_BYTE_HASHSIZE + 1] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest) - 1;
 
-    const uint8_t expected_digest[SHA384_BYTE_HASHSIZE] = {
+    static const uint8_t expected_digest[SHA384_BYTE_HASHSIZE] = {
         0xCB, 0x00, 0x75, 0x3F, 0x45, 0xA3, 0x5E, 0x8B, 0xB5, 0xA0, 0x3D, 0x69,
         0x9A, 0xC6, 0x50, 0x07, 0x27, 0x2C, 0x32, 0xAB, 0x0E, 0xDE, 0xD1, 0x63,
         0x1A, 0x8B, 0x60, 0x5A, 0x43, 0xFF, 0x5B, 0xED, 0x80, 0x86, 0x07, 0x2B,
@@ -161,14 +161,14 @@ TEST(scl_soft_sha_384, msg_2_blocks_digest_not_aligned)
 {
     int32_t result = 0;
 
-    const uint8_t message[] __attribute__((aligned(8))) =
+    static const uint8_t message[] __attribute__((aligned(8))) =
         "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmn"
         "opjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu";
 
     uint8_t digest[SHA384_BYTE_HASHSIZE + 1] __attribute__((aligned(8)));
     size_t digest_len = sizeof(digest) - 1;
 
-    const uint8_t expected_digest[SHA384_BYTE_HASHSIZE] = {
+    static const uint8_t expected_digest[SHA384_BYTE_HASHSIZE] = {
         0x09, 0x33, 0x0C, 0x33, 0xF7, 0x11, 0x47, 0xE8, 0x3D, 0x19, 0x2F, 0xC7,
         0x82, 0xCD, 0x1B, 0x47, 0x53, 0x11, 0x1B, 0x17, 0x3B, 0x3B, 0x05, 0xD2,
         0x2F, 0xA0, 0x80, 0x86, 0xE3, 0xB0, 0xF7, 0x12, 0xFC, 0xC7, 0xC7, 0x1A,
