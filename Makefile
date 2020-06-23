@@ -13,7 +13,8 @@ override SOURCE_DIR = $(CURRENT_DIR)
 override SOURCE_DIRS := $(SOURCE_DIR)
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/sha
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/aes
-override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/soft
+override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/bignumbers/software
+override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/software
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/hardware
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/aes/hardware
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/test_runners
@@ -78,6 +79,7 @@ override INCLUDE_DIRS := 	$(CURRENT_DIR) \
 							$(CURRENT_DIR)/tests/sha
 
 override CFLAGS += $(foreach dir,$(INCLUDE_DIRS),-I $(dir))
+override CFLAGS += -Wall -Wextra
 
 # override CFLAGS += -I $(CURRENT_DIR)
 override ASFLAGS = $(CFLAGS)
@@ -98,9 +100,6 @@ endif
 # ----------------------------------------------------------------------
 
 $(BUILD_DIRECTORY_UNITY)/%.o: $(UNITY_DIR)/%.c
-	$(info source:$<)
-	$(info source:$<)
-	$(info obj:$@)
 	$(HIDE) mkdir -p $(dir $@)
 	$(HIDE) $(CC) -c -o $@ $(CFLAGS) $(XCFLAGS) $<
 	
