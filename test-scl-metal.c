@@ -30,6 +30,9 @@ static void RunAllTests(void)
     RUN_TEST_GROUP(scl_aes_192);
     RUN_TEST_GROUP(scl_aes_256);
 
+    // utils
+    RUN_TEST_GROUP(utils);
+
     // software bignumbers
     RUN_TEST_GROUP(soft_bignumbers);
 }
