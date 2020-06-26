@@ -39,7 +39,7 @@ TEST(hca_aes_256, ecb_F_1_56)
      *     block4 = 23304b7a39f9f3ff067d8d8f9e24ecc7
      */
     static const uint64_t key256[4] = {0x2d9810a30914dff4, 0x1f352c073b6108d7,
-                                0x2b73aef0857d7781, 0x603deb1015ca71be};
+                                       0x2b73aef0857d7781, 0x603deb1015ca71be};
 
     static const uint8_t plaintext_be[64] __attribute__((aligned(8))) = {
         0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e,
@@ -96,7 +96,7 @@ TEST(hca_aes_256, cbc_F_2_56)
      *     block4 = b2eb05e2c39be9fcda6c19078c6a9d1b
      */
     static const uint64_t key256[4] = {0x2d9810a30914dff4, 0x1f352c073b6108d7,
-                                0x2b73aef0857d7781, 0x603deb1015ca71be};
+                                       0x2b73aef0857d7781, 0x603deb1015ca71be};
 
     static const uint64_t IV[2] = {0x08090a0b0c0d0e0f, 0x0001020304050607};
 

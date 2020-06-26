@@ -38,8 +38,8 @@ TEST(hca_aes_192, ecb_F_1_34)
      *     block3 = ef7afd2270e2e60adce0ba2face6444e
      *     block4 = 9a4b41ba738d6c72fb16691603c18e0e
      */
-    static const uint64_t key192[4] = {0, 0x62f8ead2522c6b7b, 0xc810f32b809079e5,
-                                0x8e73b0f7da0e6452};
+    static const uint64_t key192[4] = {0, 0x62f8ead2522c6b7b,
+                                       0xc810f32b809079e5, 0x8e73b0f7da0e6452};
 
     static const uint8_t plaintext_be[64] __attribute__((aligned(8))) = {
         0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e,
@@ -96,8 +96,8 @@ TEST(hca_aes_192, cbc_F_2_34)
      *     block3 = 571b242012fb7ae07fa9baac3df102e0
      *     block4 = 08b0e27988598881d920a9e64f5615cd
      */
-    static const uint64_t key192[4] = {0, 0x62f8ead2522c6b7b, 0xc810f32b809079e5,
-                                0x8e73b0f7da0e6452};
+    static const uint64_t key192[4] = {0, 0x62f8ead2522c6b7b,
+                                       0xc810f32b809079e5, 0x8e73b0f7da0e6452};
 
     static const uint64_t IV[2] = {0x08090a0b0c0d0e0f, 0x0001020304050607};
 
