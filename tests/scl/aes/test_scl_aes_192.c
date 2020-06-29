@@ -10,6 +10,10 @@
 #include <api/hardware/scl_hca.h>
 #include <api/scl_api.h>
 
+#include <metal/machine/platform.h>
+
+#if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
+
 static const metal_scl_t scl = {.hca_base = METAL_SIFIVE_HCA_0_BASE_ADDRESS,
                                 .aes_func = {.setkey = hca_aes_setkey,
                                              .setiv = hca_aes_setiv,
@@ -264,3 +268,5 @@ TEST(scl_aes_192, cbc_F_2_34_high)
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
 }
+
+#endif

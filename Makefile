@@ -10,15 +10,26 @@ override CURRENT_DIR := $(patsubst %/,%, $(dir $(abspath $(firstword $(MAKEFILE_
 override BUILD_DIRECTORY = $(CURRENT_DIR)/$(CONFIGURATION)/build
 override SOURCE_DIR = $(CURRENT_DIR)
 
+# ----------------------------------------------------------------------
+# Add variable for HCA
+# ----------------------------------------------------------------------0
+# export HCA_VERSION ?= 0.5
+
 override SOURCE_DIRS := $(SOURCE_DIR)
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/sha
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/aes
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/bignumbers/software
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/software
+
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/hardware
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/aes/hardware
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/test_runners
+
+ifneq ($(HCA_VERSION),)
+	override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/hardware
+	override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/aes/hardware
+endif
 
 override C_SOURCES = $(foreach dir,$(SOURCE_DIRS),$(wildcard $(dir)/*.c))
 					
@@ -38,11 +49,6 @@ override CFLAGS += $(foreach dir,$(SCL_INCLUDES),-I $(dir))
 
 override LDLIBS += -lscl
 override LDFLAGS += -L$(join $(abspath  $(BUILD_DIRECTORY)),/scl/lib)
-
-# ----------------------------------------------------------------------
-# Add variable for HCA
-# ----------------------------------------------------------------------0
-export HCA_VERSION ?= 0.5
 
 # ----------------------------------------------------------------------
 # Add custom flags for test

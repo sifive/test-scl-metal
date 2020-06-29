@@ -7,6 +7,10 @@
 #include <api/hardware/scl_hca.h>
 #include <api/scl_api.h>
 
+#include <metal/machine/platform.h>
+
+#if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
+
 #define CCM_TQ(t, q)     ((uint8_t)((uint8_t)(t & 0xF) + (uint8_t)(q << 4)))
 
 static const metal_scl_t scl = {.hca_base = METAL_SIFIVE_HCA_0_BASE_ADDRESS,
@@ -841,3 +845,4 @@ TEST(hca_aes_128, gcm_3)
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(0 == memcmp(tag, tag_c, sizeof(tag)));
 }
+#endif

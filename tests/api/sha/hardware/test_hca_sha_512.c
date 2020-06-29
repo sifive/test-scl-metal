@@ -7,6 +7,10 @@
 #include <api/hash/sha.h>
 #include <api/scl_api.h>
 
+#include <metal/machine/platform.h>
+
+#if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
+
 static const metal_scl_t scl = {.hca_base = METAL_SIFIVE_HCA_0_BASE_ADDRESS,
                                 .hash_func = {
                                     .sha_init = hca_sha_init,
@@ -458,3 +462,5 @@ TEST(hca_sha_512, msg_1024_bytes_not_aligned)
     TEST_ASSERT_TRUE(0 ==
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 }
+
+#endif
