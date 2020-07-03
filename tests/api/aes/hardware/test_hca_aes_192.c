@@ -11,7 +11,9 @@ static const metal_scl_t scl = {.hca_base = METAL_SIFIVE_HCA_0_BASE_ADDRESS,
                                 .aes_func = {.setkey = hca_aes_setkey,
                                              .setiv = hca_aes_setiv,
                                              .cipher = hca_aes_cipher,
-                                             .auth = hca_aes_auth}};
+                                             .auth_init = hca_aes_auth_init, 
+                                             .auth_core = hca_aes_auth_core,
+                                             .auth_finish = hca_aes_auth_finish}};
 
 TEST_GROUP(hca_aes_192);
 
