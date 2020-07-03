@@ -92,7 +92,6 @@ TEST(soft_bignumbers, soft_bignum_add_size_2_with_carry)
 
 TEST(soft_bignumbers, soft_bignum_add_size_5)
 {
-    size_t result = 0;
     uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
     static const uint64_t in_a[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
                                      0x00000000EFFFFFFFUL};
@@ -104,13 +103,11 @@ TEST(soft_bignumbers, soft_bignum_add_size_5)
     carry = soft_bignum_add(in_a, in_b, out, 5);
 
     TEST_ASSERT_TRUE(0 == carry);
-    result = memcmp(expected_out, out, sizeof(expected_out));
-    TEST_ASSERT_TRUE(0 == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 TEST(soft_bignumbers, soft_bignum_add_size_5_with_carry)
 {
-    size_t result = 0;
     uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
     static const uint64_t in_a[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
                                      0x00000000FFFFFFFFUL};
@@ -121,13 +118,11 @@ TEST(soft_bignumbers, soft_bignum_add_size_5_with_carry)
     carry = soft_bignum_add(in_a, in_b, out, 5);
 
     TEST_ASSERT_TRUE(1 == carry);
-    result = memcmp(expected_out, out, sizeof(expected_out));
-    TEST_ASSERT_TRUE(0 == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 TEST(soft_bignumbers, soft_bignum_add_summ_all_FF)
 {
-    size_t result = 0;
     uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
     static const uint64_t in_a[10] = {
         0xFFFFFFFFFFFFFFFEUL, 0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
@@ -146,13 +141,11 @@ TEST(soft_bignumbers, soft_bignum_add_summ_all_FF)
     carry = soft_bignum_add(in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
 
     TEST_ASSERT_TRUE(0 == carry);
-    result = memcmp(expected_out, out, sizeof(expected_out));
-    TEST_ASSERT_TRUE(0 == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 TEST(soft_bignumbers, soft_bignum_add_carry_1)
 {
-    size_t result = 0;
     uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
     static const uint64_t in_a[10] = {
         0xFFFFFFFFFFFFFFFEUL, 0xFFFFFFFFFFFFFFFFUL,
@@ -167,13 +160,11 @@ TEST(soft_bignumbers, soft_bignum_add_carry_1)
     carry = soft_bignum_add(in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
 
     TEST_ASSERT_TRUE(0 == carry);
-    result = memcmp(expected_out, out, sizeof(expected_out));
-    TEST_ASSERT_TRUE(0 == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 TEST(soft_bignumbers, soft_bignum_add_carry_2)
 {
-    size_t result = 0;
     uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
     static const uint64_t in_a[10] = {
         0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
@@ -187,8 +178,7 @@ TEST(soft_bignumbers, soft_bignum_add_carry_2)
     carry = soft_bignum_add(in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
 
     TEST_ASSERT_TRUE(1 == carry);
-    result = memcmp(expected_out, out, sizeof(expected_out));
-    TEST_ASSERT_TRUE(0 == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 /* Substraction */
@@ -271,7 +261,6 @@ TEST(soft_bignumbers, soft_bignum_sub_size_2_with_carry)
 
 TEST(soft_bignumbers, soft_bignum_sub_size_5)
 {
-    size_t result = 0;
     uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
     static const uint64_t in_a[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
                                      0x00000000EFFFFFFFUL};
@@ -284,13 +273,11 @@ TEST(soft_bignumbers, soft_bignum_sub_size_5)
     carry = soft_bignum_sub(in_a, in_b, out, 5);
 
     TEST_ASSERT_TRUE(0 == carry);
-    result = memcmp(expected_out, out, sizeof(expected_out));
-    TEST_ASSERT_TRUE(0 == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 TEST(soft_bignumbers, soft_bignum_sub_size_5_with_carry)
 {
-    size_t result = 0;
     uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
     static const uint64_t in_a[3] = {1, 0, 0};
     static const uint64_t in_b[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
@@ -303,13 +290,11 @@ TEST(soft_bignumbers, soft_bignum_sub_size_5_with_carry)
     carry = soft_bignum_sub(in_a, in_b, out, 5);
 
     TEST_ASSERT_TRUE(1 == carry);
-    result = memcmp(expected_out, out, sizeof(expected_out));
-    TEST_ASSERT_TRUE(0 == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 TEST(soft_bignumbers, soft_bignum_sub_size_5_with_carry_2)
 {
-    size_t result = 0;
     uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
     static const uint64_t in_a[3] = {0, 2, 0};
     static const uint64_t in_b[3] = {1, 0xFF, 0};
@@ -321,8 +306,7 @@ TEST(soft_bignumbers, soft_bignum_sub_size_5_with_carry_2)
     carry = soft_bignum_sub(in_a, in_b, out, 5);
 
     TEST_ASSERT_TRUE(1 == carry);
-    result = memcmp(expected_out, out, sizeof(expected_out));
-    TEST_ASSERT_TRUE(0 == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 /* Increment by one */
@@ -368,8 +352,7 @@ TEST(soft_bignumbers, soft_bignum_inc_size_2)
     uint64_t in = 0x00000000FFFFFFFFUL;
     static const uint64_t expected_out = 0x0000000100000000UL;
 
-    carry =
-        soft_bignum_inc(&in, sizeof(in) / sizeof(uint32_t));
+    carry = soft_bignum_inc(&in, sizeof(in) / sizeof(uint32_t));
 
     TEST_ASSERT_TRUE(0 == carry);
     TEST_ASSERT_TRUE(expected_out == in);
@@ -381,8 +364,7 @@ TEST(soft_bignumbers, soft_bignum_inc_size_2_with_carry)
     uint64_t in = 0xFFFFFFFFFFFFFFFFUL;
     static const uint64_t expected_out = 0;
 
-    carry =
-        soft_bignum_inc(&in, sizeof(in) / sizeof(uint32_t));
+    carry = soft_bignum_inc(&in, sizeof(in) / sizeof(uint32_t));
 
     TEST_ASSERT_TRUE(1 == carry);
     TEST_ASSERT_TRUE(expected_out == in);
@@ -390,34 +372,31 @@ TEST(soft_bignumbers, soft_bignum_inc_size_2_with_carry)
 
 TEST(soft_bignumbers, soft_bignum_inc_size_5)
 {
-    size_t result = 0;
     uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
     uint64_t in[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
-                                     0x00000000EFFFFFFFUL};
+                      0x00000000EFFFFFFFUL};
     static const uint64_t expected_out[3] = {0, 0, 0x00000000F0000000UL};
 
     carry = soft_bignum_inc(in, 5);
 
     TEST_ASSERT_TRUE(0 == carry);
-    result = memcmp(expected_out, in, sizeof(expected_out));
-    TEST_ASSERT_TRUE(0 == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, in, sizeof(expected_out));
 }
 
 TEST(soft_bignumbers, soft_bignum_inc_size_5_with_carry)
 {
-    size_t result = 0;
     uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
     uint64_t in[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
-                                     0x00000000FFFFFFFFUL};
+                      0x00000000FFFFFFFFUL};
     static const uint64_t expected_out[3] = {0, 0, 0};
 
     carry = soft_bignum_inc(in, 5);
 
     TEST_ASSERT_TRUE(1 == carry);
-    result = memcmp(expected_out, in, sizeof(expected_out));
-    TEST_ASSERT_TRUE(0 == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, in, sizeof(expected_out));
 }
 
+/* Compare */
 TEST(soft_bignumbers, soft_bignum_compare_a_equals_b)
 {
     int32_t result = 0;
@@ -586,4 +565,360 @@ TEST(soft_bignumbers, soft_bignum_compare_a_lower_than_b_msb)
     result = soft_bignum_compare(a, b, word_size);
 
     TEST_ASSERT_TRUE(-1 == result);
+}
+
+/* Multiplication */
+TEST(soft_bignumbers, soft_bignum_mult_size_0)
+{
+    static const uint64_t in_a = 0xFFFFFFFFFFFFFFFEUL;
+    static const uint64_t in_b = 1;
+    uint64_t out[2] = {0};
+    static const uint64_t expected_out[2] = {0};
+
+    soft_bignum_mult(&in_a, &in_b, out, 0);
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_mult_size_1)
+{
+    static const uint64_t in_a = 0x00000000FFFFFFFFUL;
+    static const uint64_t in_b = 0x00000000FFFFFFFFUL;
+    uint64_t out = 0;
+    static const uint64_t expected_out = 0xFFFFFFFE00000001UL;
+
+    soft_bignum_mult(&in_a, &in_b, &out, 1);
+
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mult_size_2)
+{
+    static const uint64_t in_a = 0xFFFFFFFFFFFFFFFFUL;
+    static const uint64_t in_b = 0xFFFFFFFFFFFFFFFFUL;
+    uint64_t out[2] = {0};
+    static const uint64_t expected_out[2] = {0x0000000000000001UL,
+                                             0xFFFFFFFFFFFFFFFEUL};
+
+    soft_bignum_mult(&in_a, &in_b, out, sizeof(in_a) / sizeof(uint32_t));
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_mult_size_5)
+{
+    static const uint64_t in_a[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                                     0x00000000FFFFFFFFUL};
+    static const uint64_t in_b[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                                     0x00000000FFFFFFFFUL};
+
+    uint64_t out[5] = {0};
+    static const uint64_t expected_out[5] = {
+        0x0000000000000001UL, 0x0000000000000000UL, 0xFFFFFFFE00000000UL,
+        0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL};
+
+    soft_bignum_mult(in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_mult_size_5_zero)
+{
+    static const uint64_t in_a[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                                     0x00000000FFFFFFFFUL};
+    static const uint64_t in_b[3] = {0, 0, 0};
+
+    uint64_t out[5] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                       0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                       0xFFFFFFFFFFFFFFFFUL};
+    static const uint64_t expected_out[5] = {0, 0, 0, 0, 0};
+
+    soft_bignum_mult(in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_mult_size_5_identity)
+{
+    static const uint64_t in_a[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                                     0x00000000FFFFFFFFUL};
+    static const uint64_t in_b[3] = {1, 0, 0};
+
+    uint64_t out[5] = {0, 0, 0, 0, 0};
+    static const uint64_t expected_out[5] = {
+        0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL, 0x00000000FFFFFFFFUL, 0, 0};
+
+    soft_bignum_mult(in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+/* Right shift */
+TEST(soft_bignumbers, soft_bignum_rightshift_size_0)
+{
+    int32_t retval = 0;
+    uint64_t in[1] = {0xFFFFFFFFFFFFFFFFUL};
+    uint64_t out[1] = {0};
+    static const uint64_t expected_out[1] = {0};
+
+    retval = soft_bignum_rightshift(NULL, in, out, 2, 0);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_rightshift_size_1)
+{
+    int32_t retval = 0;
+    uint64_t in[1] = {0x00000000FFFFFFFFUL};
+    uint64_t out[1] = {0xFFFFFFFFFFFFFFFFUL};
+    static const uint64_t expected_out[1] = {0xFFFFFFFF3FFFFFFFUL};
+
+    retval = soft_bignum_rightshift(NULL, in, out, 2, 1);
+
+    TEST_ASSERT_TRUE(0 == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_rightshift_size_2)
+{
+    int32_t retval = 0;
+    uint64_t in[1] = {0xFFFFFFFFFFFFFFFFUL};
+    uint64_t out[1] = {0};
+    static const uint64_t expected_out[1] = {0x3FFFFFFFFFFFFFFFUL};
+
+    retval = soft_bignum_rightshift(NULL, in, out, 2, 2);
+
+    TEST_ASSERT_TRUE(0 == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_rightshift_size_5)
+{
+    int32_t retval = 0;
+    uint64_t in[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                      0x0FFFFFFFEFFFFFFFUL};
+    uint64_t out[3] = {0, 0, 0x0FFFFFFF00000000UL};
+    static const uint64_t expected_out[3] = {
+        0xFFFFFFFFFFFFFFFFUL, 0x00000000EFFFFFFFUL, 0x0FFFFFFF00000000UL};
+
+    retval = soft_bignum_rightshift(NULL, in, out, 64, 5);
+
+    TEST_ASSERT_TRUE(0 == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_rightshift_size_7)
+{
+    int32_t retval = 0;
+    uint64_t in[4] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                      0xFFFFFFFFFFFFFFFFUL, 0x00000000EFFFFFFFUL};
+    uint64_t out[4] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                       0xFFFFFFFFFFFFFFFFUL, 0x0FFFFFFFFFFFFFFFUL};
+    static const uint64_t expected_out[4] = {
+        0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL, 0x0000000077FFFFFFUL,
+        0x0FFFFFFF00000000UL};
+
+    retval = soft_bignum_rightshift(NULL, in, out, 65, 7);
+
+    TEST_ASSERT_TRUE(0 == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_rightshift_size_5_shift_0)
+{
+    int32_t retval = 0;
+    uint64_t in[3] = {0x0FFFFFFF0FFFFFFFUL, 0x0FFFFFFF0FFFFFFFUL,
+                      0x000000000FFFFFFFUL};
+    uint64_t out[3] = {0, 0, 0};
+    static const uint64_t expected_out[3] = {
+        0x0FFFFFFF0FFFFFFFUL, 0x0FFFFFFF0FFFFFFFUL, 0x000000000FFFFFFFUL};
+
+    retval = soft_bignum_rightshift(NULL, in, out, 0, 5);
+
+    TEST_ASSERT_TRUE(0 == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_rightshift_size_5_shift_159)
+{
+    int32_t retval = 0;
+    uint64_t in[3] = {0x0FFFFFFF0FFFFFFFUL, 0x0FFFFFFF0FFFFFFFUL,
+                      0x00000000FFFFFFFFUL};
+    uint64_t out[3] = {0, 0, 0};
+    static const uint64_t expected_out[3] = {1, 0, 0};
+
+    retval = soft_bignum_rightshift(NULL, in, out, 159, 5);
+
+    TEST_ASSERT_TRUE(0 == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_rightshift_size_5_shift_160)
+{
+    int32_t retval = 0;
+    uint64_t in[3] = {0x0FFFFFFF0FFFFFFFUL, 0x0FFFFFFF0FFFFFFFUL,
+                      0x000000000FFFFFFFUL};
+    uint64_t out[3] = {0, 0, 0};
+    static const uint64_t expected_out[3] = {0, 0, 0};
+
+    retval = soft_bignum_rightshift(NULL, in, out, 160, 5);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_rightshift_size_5_in_NULL)
+{
+    int32_t retval = 0;
+    uint64_t out[3] = {0, 0, 0};
+
+    retval = soft_bignum_rightshift(NULL, NULL, out, 64, 5);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_INPUT == retval);
+}
+
+TEST(soft_bignumbers, soft_bignum_rightshift_size_5_out_NULL)
+{
+    int32_t retval = 0;
+    uint64_t in[3] = {0x0FFFFFFF0FFFFFFFUL, 0x0FFFFFFF0FFFFFFFUL,
+                      0x000000000FFFFFFFUL};
+
+    retval = soft_bignum_rightshift(NULL, in, NULL, 64, 5);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_INPUT == retval);
+}
+
+/* Left shift */
+TEST(soft_bignumbers, soft_bignum_leftshift_size_0)
+{
+    int32_t retval = 0;
+    uint64_t in[1] = {0xFFFFFFFFFFFFFFFFUL};
+    uint64_t out[1] = {0};
+    static const uint64_t expected_out[1] = {0};
+
+    retval = soft_bignum_leftshift(NULL, in, out, 2, 0);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_leftshift_size_1)
+{
+    int32_t retval = 0;
+    uint64_t in[1] = {0x000000000FFFFFFFUL};
+    uint64_t out[1] = {0xFFFFFFFFFFFFFFFFUL};
+    static const uint64_t expected_out[1] = {0xFFFFFFFF3FFFFFFCUL};
+
+    retval = soft_bignum_leftshift(NULL, in, out, 2, 1);
+
+    TEST_ASSERT_TRUE(0 == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_leftshift_size_2)
+{
+    int32_t retval = 0;
+    uint64_t in[1] = {0x0FFFFFFFFFFFFFFFUL};
+    uint64_t out[1] = {0};
+    static const uint64_t expected_out[1] = {0x3FFFFFFFFFFFFFFCUL};
+
+    retval = soft_bignum_leftshift(NULL, in, out, 2, 2);
+
+    TEST_ASSERT_TRUE(0 == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_leftshift_size_5)
+{
+    int32_t retval = 0;
+    uint64_t in[3] = {0xFFFFFFFF00000000UL, 0xFFFFFFFFFFFFFFFFUL,
+                      0x0FFFFFFF0FFFFFFFUL};
+    uint64_t out[3] = {0, 0, 0};
+    static const uint64_t expected_out[3] = {0, 0xFFFFFFFF00000000UL,
+                                             0x00000000FFFFFFFFUL};
+
+    retval = soft_bignum_leftshift(NULL, in, out, 64, 5);
+
+    TEST_ASSERT_TRUE(0 == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_leftshift_size_7)
+{
+    int32_t retval = 0;
+    uint64_t in[4] = {0xFFFFFFFF00000000UL, 0xFFFFFFFFFFFFFFFFUL,
+                      0xFFFFFFFFFFFFFFFFUL, 0x00000000FFFFFFFFUL};
+    uint64_t out[4] = {0, 0, 0, 0};
+    static const uint64_t expected_out[4] = {
+        0, 0xFFFFFFFE00000000UL, 0xFFFFFFFFFFFFFFFFUL, 0x00000000FFFFFFFFUL};
+
+    retval = soft_bignum_leftshift(NULL, in, out, 65, 7);
+
+    TEST_ASSERT_TRUE(0 == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_leftshift_size_5_shift_0)
+{
+    int32_t retval = 0;
+    uint64_t in[3] = {0x0FFFFFFF0FFFFFFFUL, 0x0FFFFFFF0FFFFFFFUL,
+                      0x000000000FFFFFFFUL};
+    uint64_t out[3] = {0, 0, 0};
+    static const uint64_t expected_out[3] = {
+        0x0FFFFFFF0FFFFFFFUL, 0x0FFFFFFF0FFFFFFFUL, 0x000000000FFFFFFFUL};
+
+    retval = soft_bignum_leftshift(NULL, in, out, 0, 5);
+
+    TEST_ASSERT_TRUE(0 == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_leftshift_size_5_shift_159)
+{
+    int32_t retval = 0;
+    uint64_t in[3] = {0x0FFFFFFF0FFFFFFFUL, 0x0FFFFFFF0FFFFFFFUL,
+                      0x000000000FFFFFFFUL};
+    uint64_t out[3] = {0, 0, 0};
+    static const uint64_t expected_out[3] = {0, 0, 0x80000000};
+
+    retval = soft_bignum_leftshift(NULL, in, out, 159, 5);
+
+    TEST_ASSERT_TRUE(0 == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_leftshift_size_5_shift_160)
+{
+    int32_t retval = 0;
+    uint64_t in[3] = {0x0FFFFFFF0FFFFFFFUL, 0x0FFFFFFF0FFFFFFFUL,
+                      0x000000000FFFFFFFUL};
+    uint64_t out[3] = {0, 0, 0};
+    static const uint64_t expected_out[3] = {0, 0, 0};
+
+    retval = soft_bignum_leftshift(NULL, in, out, 160, 5);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_leftshift_size_5_in_NULL)
+{
+    int32_t retval = 0;
+    uint64_t out[3] = {0, 0, 0};
+
+    retval = soft_bignum_leftshift(NULL, NULL, out, 64, 5);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_INPUT == retval);
+}
+
+TEST(soft_bignumbers, soft_bignum_leftshift_size_5_out_NULL)
+{
+    int32_t retval = 0;
+    uint64_t in[3] = {0x0FFFFFFF0FFFFFFFUL, 0x0FFFFFFF0FFFFFFFUL,
+                      0x000000000FFFFFFFUL};
+
+    retval = soft_bignum_leftshift(NULL, in, NULL, 64, 5);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_INPUT == retval);
 }
