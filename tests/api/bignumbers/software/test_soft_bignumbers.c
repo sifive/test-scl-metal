@@ -15,84 +15,85 @@ TEST_TEAR_DOWN(soft_bignumbers) {}
 /* Addition */
 TEST(soft_bignumbers, soft_bignum_add_size_0)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
 
     static const uint64_t in_a = 0xFFFFFFFFFFFFFFFEUL;
     static const uint64_t in_b = 1;
     uint64_t out = 0;
     static const uint64_t expected_out = 0;
 
-    carry = soft_bignum_add(&in_a, &in_b, &out, 0);
+    result = soft_bignum_add(NULL, &in_a, &in_b, &out, 0);
 
-    TEST_ASSERT_TRUE(0 == carry);
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
     TEST_ASSERT_TRUE(expected_out == out);
 }
 
 TEST(soft_bignumbers, soft_bignum_add_size_1)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
 
     static const uint64_t in_a = 0x00000000FFFFFFFEUL;
     static const uint64_t in_b = 1;
     uint64_t out = 0;
     static const uint64_t expected_out = 0x00000000FFFFFFFFUL;
 
-    carry = soft_bignum_add(&in_a, &in_b, &out, 1);
+    result = soft_bignum_add(NULL, &in_a, &in_b, &out, 1);
 
-    TEST_ASSERT_TRUE(0 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(expected_out == out);
 }
 
 TEST(soft_bignumbers, soft_bignum_add_size_1_with_carry)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
 
     static const uint64_t in_a = 0x00000000FFFFFFFFUL;
     static const uint64_t in_b = 1;
     uint64_t out = 0;
     static const uint64_t expected_out = 0;
 
-    carry = soft_bignum_add(&in_a, &in_b, &out, 1);
+    result = soft_bignum_add(NULL, &in_a, &in_b, &out, 1);
 
-    TEST_ASSERT_TRUE(1 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(expected_out == out);
 }
 
 TEST(soft_bignumbers, soft_bignum_add_size_2)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
 
     static const uint64_t in_a = 0x00000000FFFFFFFFUL;
     static const uint64_t in_b = 1;
     uint64_t out = 0;
     static const uint64_t expected_out = 0x0000000100000000UL;
 
-    carry =
-        soft_bignum_add(&in_a, &in_b, &out, sizeof(in_a) / sizeof(uint32_t));
+    result =
+        soft_bignum_add(NULL, &in_a, &in_b, &out, sizeof(in_a) / sizeof(uint32_t));
 
-    TEST_ASSERT_TRUE(0 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(expected_out == out);
 }
 
 TEST(soft_bignumbers, soft_bignum_add_size_2_with_carry)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
 
     static const uint64_t in_a = 0xFFFFFFFFFFFFFFFFUL;
     static const uint64_t in_b = 1;
     uint64_t out = 0;
     static const uint64_t expected_out = 0;
 
-    carry =
-        soft_bignum_add(&in_a, &in_b, &out, sizeof(in_a) / sizeof(uint32_t));
+    result =
+        soft_bignum_add(NULL, &in_a, &in_b, &out, sizeof(in_a) / sizeof(uint32_t));
 
-    TEST_ASSERT_TRUE(1 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(expected_out == out);
 }
 
 TEST(soft_bignumbers, soft_bignum_add_size_5)
 {
-    uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
+    int32_t result = 0;
+
     static const uint64_t in_a[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
                                      0x00000000EFFFFFFFUL};
     static const uint64_t in_b[3] = {1, 0, 0};
@@ -100,30 +101,32 @@ TEST(soft_bignumbers, soft_bignum_add_size_5)
     static const uint64_t expected_out[4] = {0, 0, 0x00000000F0000000UL,
                                              0xFFFFFFFFFFFFFFFFUL};
 
-    carry = soft_bignum_add(in_a, in_b, out, 5);
+    result = soft_bignum_add(NULL, in_a, in_b, out, 5);
 
-    TEST_ASSERT_TRUE(0 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 TEST(soft_bignumbers, soft_bignum_add_size_5_with_carry)
 {
-    uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
+    int32_t result = 0;
+
     static const uint64_t in_a[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
                                      0x00000000FFFFFFFFUL};
     static const uint64_t in_b[3] = {1, 0, 0};
     uint64_t out[3] = {0};
     static const uint64_t expected_out[3] = {0, 0, 0};
 
-    carry = soft_bignum_add(in_a, in_b, out, 5);
+    result = soft_bignum_add(NULL, in_a, in_b, out, 5);
 
-    TEST_ASSERT_TRUE(1 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 TEST(soft_bignumbers, soft_bignum_add_summ_all_FF)
 {
-    uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
+    int32_t result = 0;
+
     static const uint64_t in_a[10] = {
         0xFFFFFFFFFFFFFFFEUL, 0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
         0xFFFFFFFFFFFFFFFFUL, 0x00000000FFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
@@ -138,15 +141,16 @@ TEST(soft_bignumbers, soft_bignum_add_summ_all_FF)
         0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
         0xFFFFFFFFFFFFFFFFUL};
 
-    carry = soft_bignum_add(in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
+    result = soft_bignum_add(NULL, in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
 
-    TEST_ASSERT_TRUE(0 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 TEST(soft_bignumbers, soft_bignum_add_carry_1)
 {
-    uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
+    int32_t result = 0;
+
     static const uint64_t in_a[10] = {
         0xFFFFFFFFFFFFFFFEUL, 0xFFFFFFFFFFFFFFFFUL,
         0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
@@ -157,15 +161,16 @@ TEST(soft_bignumbers, soft_bignum_add_carry_1)
     uint64_t out[10] = {0};
     static const uint64_t expected_out[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
 
-    carry = soft_bignum_add(in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
+    result = soft_bignum_add(NULL, in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
 
-    TEST_ASSERT_TRUE(0 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 TEST(soft_bignumbers, soft_bignum_add_carry_2)
 {
-    uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
+    int32_t result = 0;
+
     static const uint64_t in_a[10] = {
         0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
         0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
@@ -175,93 +180,94 @@ TEST(soft_bignumbers, soft_bignum_add_carry_2)
     uint64_t out[10] = {0};
     static const uint64_t expected_out[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    carry = soft_bignum_add(in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
+    result = soft_bignum_add(NULL, in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
 
-    TEST_ASSERT_TRUE(1 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 /* Substraction */
 TEST(soft_bignumbers, soft_bignum_sub_size_0)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
 
     static const uint64_t in_a = 0xFFFFFFFFFFFFFFFEUL;
     static const uint64_t in_b = 1;
     uint64_t out = 0;
     static const uint64_t expected_out = 0;
 
-    carry = soft_bignum_sub(&in_a, &in_b, &out, 0);
+    result = soft_bignum_sub(NULL, &in_a, &in_b, &out, 0);
 
-    TEST_ASSERT_TRUE(0 == carry);
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
     TEST_ASSERT_TRUE(expected_out == out);
 }
 
 TEST(soft_bignumbers, soft_bignum_sub_size_1)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
 
     static const uint64_t in_a = 0x00000000FFFFFFFEUL;
     static const uint64_t in_b = 1;
     uint64_t out = 0;
     static const uint64_t expected_out = 0x00000000FFFFFFFDUL;
 
-    carry = soft_bignum_sub(&in_a, &in_b, &out, 1);
+    result = soft_bignum_sub(NULL, &in_a, &in_b, &out, 1);
 
-    TEST_ASSERT_TRUE(0 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(expected_out == out);
 }
 
 TEST(soft_bignumbers, soft_bignum_sub_size_1_with_carry)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
 
     static const uint64_t in_a = 1;
     static const uint64_t in_b = 0x00000000FFFFFFFFUL;
     uint64_t out = 0;
     static const uint64_t expected_out = 2;
 
-    carry = soft_bignum_sub(&in_a, &in_b, &out, 1);
+    result = soft_bignum_sub(NULL, &in_a, &in_b, &out, 1);
 
-    TEST_ASSERT_TRUE(1 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(expected_out == out);
 }
 
 TEST(soft_bignumbers, soft_bignum_sub_size_2)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
 
     static const uint64_t in_a = 0xFFFFFFFFFFFFFFFEUL;
     static const uint64_t in_b = 1;
     uint64_t out = 0;
     static const uint64_t expected_out = 0xFFFFFFFFFFFFFFFDUL;
 
-    carry =
-        soft_bignum_sub(&in_a, &in_b, &out, sizeof(in_a) / sizeof(uint32_t));
+    result =
+        soft_bignum_sub(NULL, &in_a, &in_b, &out, sizeof(in_a) / sizeof(uint32_t));
 
-    TEST_ASSERT_TRUE(0 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(expected_out == out);
 }
 
 TEST(soft_bignumbers, soft_bignum_sub_size_2_with_carry)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
 
     static const uint64_t in_a = 1;
     static const uint64_t in_b = 0x00000000FFFFFFFFUL;
     uint64_t out = 0;
     static const uint64_t expected_out = 0xFFFFFFFF00000002;
 
-    carry =
-        soft_bignum_sub(&in_a, &in_b, &out, sizeof(in_a) / sizeof(uint32_t));
+    result =
+        soft_bignum_sub(NULL, &in_a, &in_b, &out, sizeof(in_a) / sizeof(uint32_t));
 
-    TEST_ASSERT_TRUE(1 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(expected_out == out);
 }
 
 TEST(soft_bignumbers, soft_bignum_sub_size_5)
 {
-    uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
+    int32_t result = 0;
+
     static const uint64_t in_a[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
                                      0x00000000EFFFFFFFUL};
     static const uint64_t in_b[3] = {1, 0, 0};
@@ -270,15 +276,16 @@ TEST(soft_bignumbers, soft_bignum_sub_size_5)
         0xFFFFFFFFFFFFFFFEUL, 0xFFFFFFFFFFFFFFFFUL, 0x00000000EFFFFFFFUL,
         0xFFFFFFFFFFFFFFFFUL};
 
-    carry = soft_bignum_sub(in_a, in_b, out, 5);
+    result = soft_bignum_sub(NULL, in_a, in_b, out, 5);
 
-    TEST_ASSERT_TRUE(0 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 TEST(soft_bignumbers, soft_bignum_sub_size_5_with_carry)
 {
-    uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
+    int32_t result = 0;
+
     static const uint64_t in_a[3] = {1, 0, 0};
     static const uint64_t in_b[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
                                      0x00000000FFFFFFFFUL};
@@ -287,15 +294,16 @@ TEST(soft_bignumbers, soft_bignum_sub_size_5_with_carry)
     static const uint64_t expected_out[3] = {
         0x0000000000000002, 0x0000000000000000UL, 0x0000000000000000UL};
 
-    carry = soft_bignum_sub(in_a, in_b, out, 5);
+    result = soft_bignum_sub(NULL, in_a, in_b, out, 5);
 
-    TEST_ASSERT_TRUE(1 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 TEST(soft_bignumbers, soft_bignum_sub_size_5_with_carry_2)
 {
-    uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
+    int32_t result = 0;
+
     static const uint64_t in_a[3] = {0, 2, 0};
     static const uint64_t in_b[3] = {1, 0xFF, 0};
 
@@ -303,96 +311,100 @@ TEST(soft_bignumbers, soft_bignum_sub_size_5_with_carry_2)
     static const uint64_t expected_out[3] = {
         0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFF02UL, 0x00000000FFFFFFFFUL};
 
-    carry = soft_bignum_sub(in_a, in_b, out, 5);
+    result = soft_bignum_sub(NULL, in_a, in_b, out, 5);
 
-    TEST_ASSERT_TRUE(1 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 /* Increment by one */
 TEST(soft_bignumbers, soft_bignum_inc_size_0)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
+
     uint64_t in = 0;
     static const uint64_t expected_out = 0;
 
-    carry = soft_bignum_inc(&in, 0);
+    result = soft_bignum_inc(NULL, &in, 0);
 
-    TEST_ASSERT_TRUE(0 == carry);
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
     TEST_ASSERT_TRUE(expected_out == in);
 }
 
 TEST(soft_bignumbers, soft_bignum_inc_size_1)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
+
     uint64_t in = 0x00000000FFFFFFFEUL;
     static const uint64_t expected_out = 0x00000000FFFFFFFFUL;
 
-    carry = soft_bignum_inc(&in, 1);
+    result = soft_bignum_inc(NULL, &in, 1);
 
-    TEST_ASSERT_TRUE(0 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(expected_out == in);
 }
 
 TEST(soft_bignumbers, soft_bignum_inc_size_1_with_carry)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
+
     uint64_t in = 0x00000000FFFFFFFFUL;
     static const uint64_t expected_out = 0;
 
-    carry = soft_bignum_inc(&in, 1);
+    result = soft_bignum_inc(NULL, &in, 1);
 
-    TEST_ASSERT_TRUE(1 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(expected_out == in);
 }
 
 TEST(soft_bignumbers, soft_bignum_inc_size_2)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
+
     uint64_t in = 0x00000000FFFFFFFFUL;
     static const uint64_t expected_out = 0x0000000100000000UL;
 
-    carry = soft_bignum_inc(&in, sizeof(in) / sizeof(uint32_t));
+    result = soft_bignum_inc(NULL, &in, sizeof(in) / sizeof(uint32_t));
 
-    TEST_ASSERT_TRUE(0 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(expected_out == in);
 }
 
 TEST(soft_bignumbers, soft_bignum_inc_size_2_with_carry)
 {
-    uint64_t carry = 0;
+    int32_t result = 0;
     uint64_t in = 0xFFFFFFFFFFFFFFFFUL;
     static const uint64_t expected_out = 0;
 
-    carry = soft_bignum_inc(&in, sizeof(in) / sizeof(uint32_t));
+    result = soft_bignum_inc(NULL, &in, sizeof(in) / sizeof(uint32_t));
 
-    TEST_ASSERT_TRUE(1 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(expected_out == in);
 }
 
 TEST(soft_bignumbers, soft_bignum_inc_size_5)
 {
-    uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
+    int32_t result = 0;
     uint64_t in[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
                       0x00000000EFFFFFFFUL};
     static const uint64_t expected_out[3] = {0, 0, 0x00000000F0000000UL};
 
-    carry = soft_bignum_inc(in, 5);
+    result = soft_bignum_inc(NULL, in, 5);
 
-    TEST_ASSERT_TRUE(0 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, in, sizeof(expected_out));
 }
 
 TEST(soft_bignumbers, soft_bignum_inc_size_5_with_carry)
 {
-    uint64_t carry = 0xFFFFFFFFFFFFFFFFUL;
+    int32_t result = 0;
     uint64_t in[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
                       0x00000000FFFFFFFFUL};
     static const uint64_t expected_out[3] = {0, 0, 0};
 
-    carry = soft_bignum_inc(in, 5);
+    result = soft_bignum_inc(NULL, in, 5);
 
-    TEST_ASSERT_TRUE(1 == carry);
+    TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, in, sizeof(expected_out));
 }
 
@@ -426,7 +438,7 @@ TEST(soft_bignumbers, soft_bignum_compare_a_equals_b)
 
     word_size = sizeof(b) / sizeof(*b);
 
-    result = soft_bignum_compare(a, b, word_size);
+    result = soft_bignum_compare(NULL, a, b, word_size);
 
     TEST_ASSERT_TRUE(0 == result);
 }
@@ -460,7 +472,7 @@ TEST(soft_bignumbers, soft_bignum_compare_a_greater_than_b_lsb)
 
     word_size = sizeof(b) / sizeof(*b);
 
-    result = soft_bignum_compare(a, b, word_size);
+    result = soft_bignum_compare(NULL, a, b, word_size);
 
     TEST_ASSERT_TRUE(1 == result);
 }
@@ -494,7 +506,7 @@ TEST(soft_bignumbers, soft_bignum_compare_a_greater_than_b_msb)
 
     word_size = sizeof(b) / sizeof(*b);
 
-    result = soft_bignum_compare(a, b, word_size);
+    result = soft_bignum_compare(NULL, a, b, word_size);
 
     TEST_ASSERT_TRUE(1 == result);
 }
@@ -528,7 +540,7 @@ TEST(soft_bignumbers, soft_bignum_compare_a_lower_than_b_lsb)
 
     word_size = sizeof(b) / sizeof(*b);
 
-    result = soft_bignum_compare(a, b, word_size);
+    result = soft_bignum_compare(NULL, a, b, word_size);
 
     TEST_ASSERT_TRUE(-1 == result);
 }
@@ -562,7 +574,7 @@ TEST(soft_bignumbers, soft_bignum_compare_a_lower_than_b_msb)
 
     word_size = sizeof(b) / sizeof(*b);
 
-    result = soft_bignum_compare(a, b, word_size);
+    result = soft_bignum_compare(NULL, a, b, word_size);
 
     TEST_ASSERT_TRUE(-1 == result);
 }
@@ -570,43 +582,50 @@ TEST(soft_bignumbers, soft_bignum_compare_a_lower_than_b_msb)
 /* Multiplication */
 TEST(soft_bignumbers, soft_bignum_mult_size_0)
 {
+    int32_t result = 0;
     static const uint64_t in_a = 0xFFFFFFFFFFFFFFFEUL;
     static const uint64_t in_b = 1;
     uint64_t out[2] = {0};
     static const uint64_t expected_out[2] = {0};
 
-    soft_bignum_mult(&in_a, &in_b, out, 0);
+    result = soft_bignum_mult(NULL, &in_a, &in_b, out, 0);
 
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
 }
 
 TEST(soft_bignumbers, soft_bignum_mult_size_1)
 {
+    int32_t result = 0;
     static const uint64_t in_a = 0x00000000FFFFFFFFUL;
     static const uint64_t in_b = 0x00000000FFFFFFFFUL;
     uint64_t out = 0;
     static const uint64_t expected_out = 0xFFFFFFFE00000001UL;
 
-    soft_bignum_mult(&in_a, &in_b, &out, 1);
+    result = soft_bignum_mult(NULL, &in_a, &in_b, &out, 1);
 
     TEST_ASSERT_TRUE(expected_out == out);
+    TEST_ASSERT_TRUE(SCL_OK == result);
 }
 
 TEST(soft_bignumbers, soft_bignum_mult_size_2)
 {
+    int32_t result = 0;
     static const uint64_t in_a = 0xFFFFFFFFFFFFFFFFUL;
     static const uint64_t in_b = 0xFFFFFFFFFFFFFFFFUL;
     uint64_t out[2] = {0};
     static const uint64_t expected_out[2] = {0x0000000000000001UL,
                                              0xFFFFFFFFFFFFFFFEUL};
 
-    soft_bignum_mult(&in_a, &in_b, out, sizeof(in_a) / sizeof(uint32_t));
+    result = soft_bignum_mult(NULL, &in_a, &in_b, out, sizeof(in_a) / sizeof(uint32_t));
 
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+    TEST_ASSERT_TRUE(SCL_OK == result);
 }
 
 TEST(soft_bignumbers, soft_bignum_mult_size_5)
 {
+    int32_t result = 0;
     static const uint64_t in_a[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
                                      0x00000000FFFFFFFFUL};
     static const uint64_t in_b[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
@@ -617,13 +636,15 @@ TEST(soft_bignumbers, soft_bignum_mult_size_5)
         0x0000000000000001UL, 0x0000000000000000UL, 0xFFFFFFFE00000000UL,
         0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL};
 
-    soft_bignum_mult(in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
+    result = soft_bignum_mult(NULL, in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
 
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+    TEST_ASSERT_TRUE(SCL_OK == result);
 }
 
 TEST(soft_bignumbers, soft_bignum_mult_size_5_zero)
 {
+    int32_t result = 0;
     static const uint64_t in_a[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
                                      0x00000000FFFFFFFFUL};
     static const uint64_t in_b[3] = {0, 0, 0};
@@ -633,13 +654,15 @@ TEST(soft_bignumbers, soft_bignum_mult_size_5_zero)
                        0xFFFFFFFFFFFFFFFFUL};
     static const uint64_t expected_out[5] = {0, 0, 0, 0, 0};
 
-    soft_bignum_mult(in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
+    result = soft_bignum_mult(NULL, in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
 
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+    TEST_ASSERT_TRUE(SCL_OK == result);
 }
 
 TEST(soft_bignumbers, soft_bignum_mult_size_5_identity)
 {
+    int32_t result = 0;
     static const uint64_t in_a[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
                                      0x00000000FFFFFFFFUL};
     static const uint64_t in_b[3] = {1, 0, 0};
@@ -648,9 +671,10 @@ TEST(soft_bignumbers, soft_bignum_mult_size_5_identity)
     static const uint64_t expected_out[5] = {
         0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL, 0x00000000FFFFFFFFUL, 0, 0};
 
-    soft_bignum_mult(in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
+    result = soft_bignum_mult(NULL, in_a, in_b, out, sizeof(in_a) / sizeof(uint32_t));
 
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+    TEST_ASSERT_TRUE(SCL_OK == result);
 }
 
 /* Right shift */
