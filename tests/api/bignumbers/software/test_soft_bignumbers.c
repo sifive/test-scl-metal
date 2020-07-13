@@ -193,6 +193,62 @@ TEST(soft_bignumbers, soft_bignum_add_carry_2)
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
+TEST(soft_bignumbers, soft_bignum_add_in_a_is_output)
+{
+    int32_t result = 0;
+
+    uint64_t in_a[10] = {
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL};
+    static const uint64_t in_b[10] = {
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL};
+
+    static const uint64_t expected_out[10] = {
+        0x2222222222222222UL, 0x2222222222222222UL, 0x2222222222222222UL,
+        0x2222222222222222UL, 0x2222222222222222UL, 0x2222222222222222UL,
+        0x2222222222222222UL, 0x2222222222222222UL, 0x2222222222222222UL,
+        0x1111111122222222UL};
+
+    result = soft_bignum_add(NULL, in_a, in_b, in_a,
+                             sizeof(in_a) / sizeof(uint32_t) - 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, in_a, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_add_in_b_is_output)
+{
+    int32_t result = 0;
+
+    static const uint64_t in_a[10] = {
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL};
+    uint64_t in_b[10] = {
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL};
+
+    static const uint64_t expected_out[10] = {
+        0x2222222222222222UL, 0x2222222222222222UL, 0x2222222222222222UL,
+        0x2222222222222222UL, 0x2222222222222222UL, 0x2222222222222222UL,
+        0x2222222222222222UL, 0x2222222222222222UL, 0x2222222222222222UL,
+        0x1111111122222222UL};
+
+    result = soft_bignum_add(NULL, in_a, in_b, in_b,
+                             sizeof(in_a) / sizeof(uint32_t) - 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, in_b, sizeof(expected_out));
+}
+
 /* Substraction */
 TEST(soft_bignumbers, soft_bignum_sub_size_0)
 {
@@ -322,6 +378,62 @@ TEST(soft_bignumbers, soft_bignum_sub_size_5_with_carry_2)
 
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_sub_in_a_is_output)
+{
+    int32_t result = 0;
+
+    uint64_t in_a[10] = {
+        0x3333333333333333UL, 0x3333333333333333UL, 0x3333333333333333UL,
+        0x3333333333333333UL, 0x3333333333333333UL, 0x3333333333333333UL,
+        0x3333333333333333UL, 0x3333333333333333UL, 0x3333333333333333UL,
+        0x1111111133333333UL};
+    static const uint64_t in_b[10] = {
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL};
+
+    static const uint64_t expected_out[10] = {
+        0x2222222222222222UL, 0x2222222222222222UL, 0x2222222222222222UL,
+        0x2222222222222222UL, 0x2222222222222222UL, 0x2222222222222222UL,
+        0x2222222222222222UL, 0x2222222222222222UL, 0x2222222222222222UL,
+        0x1111111122222222UL};
+
+    result = soft_bignum_sub(NULL, in_a, in_b, in_a,
+                             sizeof(in_a) / sizeof(uint32_t) - 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, in_a, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_sub_in_b_is_output)
+{
+    int32_t result = 0;
+
+    static const uint64_t in_a[10] = {
+        0x3333333333333333UL, 0x3333333333333333UL, 0x3333333333333333UL,
+        0x3333333333333333UL, 0x3333333333333333UL, 0x3333333333333333UL,
+        0x3333333333333333UL, 0x3333333333333333UL, 0x3333333333333333UL,
+        0x1111111133333333UL};
+    uint64_t in_b[10] = {
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
+        0x1111111111111111UL};
+
+    static const uint64_t expected_out[10] = {
+        0x2222222222222222UL, 0x2222222222222222UL, 0x2222222222222222UL,
+        0x2222222222222222UL, 0x2222222222222222UL, 0x2222222222222222UL,
+        0x2222222222222222UL, 0x2222222222222222UL, 0x2222222222222222UL,
+        0x1111111122222222UL};
+
+    result = soft_bignum_sub(NULL, in_a, in_b, in_b,
+                             sizeof(in_a) / sizeof(uint32_t) - 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, in_b, sizeof(expected_out));
 }
 
 /* Increment by one */
