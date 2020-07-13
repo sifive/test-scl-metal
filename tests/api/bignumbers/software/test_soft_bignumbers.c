@@ -8,7 +8,24 @@
 
 static const metal_scl_t scl = {
     .hca_base = 0,
-};
+    .bignum_func = {
+        .compare = soft_bignum_compare,
+        .compare_len_diff = soft_bignum_compare_len_diff,
+        .is_null = soft_bignum_is_null,
+        .inc = soft_bignum_inc,
+        .add = soft_bignum_add,
+        .sub = soft_bignum_sub,
+        .mult = soft_bignum_mult,
+        .leftshift = soft_bignum_leftshift,
+        .rightshift = soft_bignum_rightshift,
+        .msb_set_in_word = soft_bignum_msb_set_in_word,
+        .get_msb_set = soft_bignum_get_msb_set,
+        .set_bit = soft_bignum_set_bit,
+        .div = soft_bignum_div,
+        .mod = soft_bignum_mod,
+    },
+}
+;
 
 TEST_GROUP(soft_bignumbers);
 
@@ -197,11 +214,11 @@ TEST(soft_bignumbers, soft_bignum_add_in_a_is_output)
 {
     int32_t result = 0;
 
-    uint64_t in_a[10] = {
-        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
-        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
-        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
-        0x1111111111111111UL};
+    uint64_t in_a[10] = {0x1111111111111111UL, 0x1111111111111111UL,
+                         0x1111111111111111UL, 0x1111111111111111UL,
+                         0x1111111111111111UL, 0x1111111111111111UL,
+                         0x1111111111111111UL, 0x1111111111111111UL,
+                         0x1111111111111111UL, 0x1111111111111111UL};
     static const uint64_t in_b[10] = {
         0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
         0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
@@ -230,11 +247,11 @@ TEST(soft_bignumbers, soft_bignum_add_in_b_is_output)
         0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
         0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
         0x1111111111111111UL};
-    uint64_t in_b[10] = {
-        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
-        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
-        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
-        0x1111111111111111UL};
+    uint64_t in_b[10] = {0x1111111111111111UL, 0x1111111111111111UL,
+                         0x1111111111111111UL, 0x1111111111111111UL,
+                         0x1111111111111111UL, 0x1111111111111111UL,
+                         0x1111111111111111UL, 0x1111111111111111UL,
+                         0x1111111111111111UL, 0x1111111111111111UL};
 
     static const uint64_t expected_out[10] = {
         0x2222222222222222UL, 0x2222222222222222UL, 0x2222222222222222UL,
@@ -384,11 +401,11 @@ TEST(soft_bignumbers, soft_bignum_sub_in_a_is_output)
 {
     int32_t result = 0;
 
-    uint64_t in_a[10] = {
-        0x3333333333333333UL, 0x3333333333333333UL, 0x3333333333333333UL,
-        0x3333333333333333UL, 0x3333333333333333UL, 0x3333333333333333UL,
-        0x3333333333333333UL, 0x3333333333333333UL, 0x3333333333333333UL,
-        0x1111111133333333UL};
+    uint64_t in_a[10] = {0x3333333333333333UL, 0x3333333333333333UL,
+                         0x3333333333333333UL, 0x3333333333333333UL,
+                         0x3333333333333333UL, 0x3333333333333333UL,
+                         0x3333333333333333UL, 0x3333333333333333UL,
+                         0x3333333333333333UL, 0x1111111133333333UL};
     static const uint64_t in_b[10] = {
         0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
         0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
@@ -417,11 +434,11 @@ TEST(soft_bignumbers, soft_bignum_sub_in_b_is_output)
         0x3333333333333333UL, 0x3333333333333333UL, 0x3333333333333333UL,
         0x3333333333333333UL, 0x3333333333333333UL, 0x3333333333333333UL,
         0x1111111133333333UL};
-    uint64_t in_b[10] = {
-        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
-        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
-        0x1111111111111111UL, 0x1111111111111111UL, 0x1111111111111111UL,
-        0x1111111111111111UL};
+    uint64_t in_b[10] = {0x1111111111111111UL, 0x1111111111111111UL,
+                         0x1111111111111111UL, 0x1111111111111111UL,
+                         0x1111111111111111UL, 0x1111111111111111UL,
+                         0x1111111111111111UL, 0x1111111111111111UL,
+                         0x1111111111111111UL, 0x1111111111111111UL};
 
     static const uint64_t expected_out[10] = {
         0x2222222222222222UL, 0x2222222222222222UL, 0x2222222222222222UL,
@@ -1096,104 +1113,6 @@ TEST(soft_bignumbers, soft_bignum_leftshift_size_7_shift_59)
 
     TEST_ASSERT_TRUE(0 == retval);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, in, sizeof(expected_out));
-}
-
-/* soft_bignum_nb_non_zero_32b_word */
-TEST(soft_bignumbers, soft_bignum_nb_non_zero_32b_word_array_null_ptr)
-{
-    int32_t result = 0;
-
-    result = soft_bignum_nb_non_zero_32b_word(NULL, NULL, 1);
-
-    TEST_ASSERT_TRUE(SCL_INVALID_INPUT == result);
-}
-
-TEST(soft_bignumbers, soft_bignum_nb_non_zero_32b_word_size_0x80000000)
-{
-    int32_t result = 0;
-    uint64_t array[3] = {0x0000000000000000, 0x0000000000000000,
-                         0x0000000000000000};
-
-    result = soft_bignum_nb_non_zero_32b_word(NULL, array, 0x80000000);
-
-    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
-}
-
-TEST(soft_bignumbers, soft_bignum_nb_non_zero_32b_word_size_0)
-{
-    int32_t result = 0;
-    uint64_t array[3] = {0x0000000000000001, 0x0000000000000000,
-                         0x0000000000000000};
-
-    result = soft_bignum_nb_non_zero_32b_word(NULL, array, 0);
-
-    TEST_ASSERT_TRUE(0 == result);
-}
-
-TEST(soft_bignumbers, soft_bignum_nb_non_zero_32b_word_size_2_expect_1)
-{
-    int32_t result = 0;
-    uint64_t array[3] = {0x0000000000000001, 0x0000000000000000,
-                         0x0000000000000000};
-
-    result = soft_bignum_nb_non_zero_32b_word(NULL, array, 2);
-
-    TEST_ASSERT_TRUE(1 == result);
-}
-
-TEST(soft_bignumbers, soft_bignum_nb_non_zero_32b_word_size_2_expect_2)
-{
-    int32_t result = 0;
-    uint64_t array[3] = {0x0000000100000001, 0x0000000000000000,
-                         0x0000000000000000};
-
-    result = soft_bignum_nb_non_zero_32b_word(NULL, array, 2);
-
-    TEST_ASSERT_TRUE(2 == result);
-}
-
-TEST(soft_bignumbers, soft_bignum_nb_non_zero_32b_word_size_6_expect_1)
-{
-    int32_t result = 0;
-    uint64_t array[3] = {0x0000000000000001, 0x0000000000000000,
-                         0x0000000000000000};
-
-    result = soft_bignum_nb_non_zero_32b_word(NULL, array, 6);
-
-    TEST_ASSERT_TRUE(1 == result);
-}
-
-TEST(soft_bignumbers, soft_bignum_nb_non_zero_32b_word_size_6_expect_5)
-{
-    int32_t result = 0;
-    uint64_t array[3] = {0x0000000100000001, 0x0000000000000000,
-                         0x0000000000000001};
-
-    result = soft_bignum_nb_non_zero_32b_word(NULL, array, 6);
-
-    TEST_ASSERT_TRUE(5 == result);
-}
-
-TEST(soft_bignumbers, soft_bignum_nb_non_zero_32b_word_size_6_expect_6)
-{
-    int32_t result = 0;
-    uint64_t array[3] = {0x0000000100000001, 0x0000000000000000,
-                         0x0000000100000000};
-
-    result = soft_bignum_nb_non_zero_32b_word(NULL, array, 6);
-
-    TEST_ASSERT_TRUE(6 == result);
-}
-
-TEST(soft_bignumbers, soft_bignum_nb_non_zero_32b_word_size_6_expect_0)
-{
-    int32_t result = 0;
-    uint64_t array[3] = {0x0000000000000000, 0x0000000000000000,
-                         0x0000000000000000};
-
-    result = soft_bignum_nb_non_zero_32b_word(NULL, array, 6);
-
-    TEST_ASSERT_TRUE(0 == result);
 }
 
 /* test on msb set in word */
@@ -2062,3 +1981,6 @@ TEST(soft_bignumbers, soft_bignum_div_success_1)
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_quotient, quotient,
                                  sizeof(expected_quotient));
 }
+
+/* modulus computation */
+// TEST(soft_bignumbers, soft_bignum_div_success_1)

@@ -14,6 +14,8 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_add_summ_all_FF);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_add_carry_1);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_add_carry_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_add_in_a_is_output);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_add_in_b_is_output);
 
     /* substraction */
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_sub_size_0);
@@ -24,6 +26,8 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_sub_size_5);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_sub_size_5_with_carry);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_sub_size_5_with_carry_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_sub_in_a_is_output);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_sub_in_b_is_output);
 
     /* increment by one */
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_inc_size_0);
@@ -74,23 +78,6 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_leftshift_size_5_in_NULL);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_leftshift_size_5_out_NULL);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_leftshift_size_7_shift_59);
-
-    /* get non zero 32b words */
-    RUN_TEST_CASE(soft_bignumbers,
-                  soft_bignum_nb_non_zero_32b_word_array_null_ptr);
-    RUN_TEST_CASE(soft_bignumbers,
-                  soft_bignum_nb_non_zero_32b_word_size_0x80000000);
-    RUN_TEST_CASE(soft_bignumbers, soft_bignum_nb_non_zero_32b_word_size_0);
-    RUN_TEST_CASE(soft_bignumbers,
-                  soft_bignum_nb_non_zero_32b_word_size_2_expect_1);
-    RUN_TEST_CASE(soft_bignumbers,
-                  soft_bignum_nb_non_zero_32b_word_size_2_expect_2);
-    RUN_TEST_CASE(soft_bignumbers,
-                  soft_bignum_nb_non_zero_32b_word_size_6_expect_1);
-    RUN_TEST_CASE(soft_bignumbers,
-                  soft_bignum_nb_non_zero_32b_word_size_6_expect_5);
-    RUN_TEST_CASE(soft_bignumbers,
-                  soft_bignum_nb_non_zero_32b_word_size_6_expect_6);
 
     /* test on msb set in word */
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_msb_set_in_word_32b_word);
