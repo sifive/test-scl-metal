@@ -19,6 +19,8 @@ TEST_GROUP_RUNNER(scl_aes_128)
     RUN_TEST_CASE(scl_aes_128, gcm_1);
     RUN_TEST_CASE(scl_aes_128, gcm_2);
     RUN_TEST_CASE(scl_aes_128, gcm_3);
+    RUN_TEST_CASE(scl_aes_128, gcm_3_b1);
+    RUN_TEST_CASE(scl_aes_128, gcm_3_b2);
 }
 
 // AES 192
