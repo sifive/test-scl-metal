@@ -669,6 +669,7 @@ TEST(hca_aes_128, ccm_4b)
     TEST_ASSERT_TRUE(0 == memcmp(tag, tag_c, sizeof(tag)));
 }
 
+
 TEST(hca_aes_128, gcm_1)
 {
     /* 
