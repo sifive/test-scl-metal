@@ -8,24 +8,24 @@
 
 static const metal_scl_t scl = {
     .hca_base = 0,
-    .bignum_func = {
-        .compare = soft_bignum_compare,
-        .compare_len_diff = soft_bignum_compare_len_diff,
-        .is_null = soft_bignum_is_null,
-        .inc = soft_bignum_inc,
-        .add = soft_bignum_add,
-        .sub = soft_bignum_sub,
-        .mult = soft_bignum_mult,
-        .leftshift = soft_bignum_leftshift,
-        .rightshift = soft_bignum_rightshift,
-        .msb_set_in_word = soft_bignum_msb_set_in_word,
-        .get_msb_set = soft_bignum_get_msb_set,
-        .set_bit = soft_bignum_set_bit,
-        .div = soft_bignum_div,
-        .mod = soft_bignum_mod,
-    },
-}
-;
+    .bignum_func =
+        {
+            .compare = soft_bignum_compare,
+            .compare_len_diff = soft_bignum_compare_len_diff,
+            .is_null = soft_bignum_is_null,
+            .inc = soft_bignum_inc,
+            .add = soft_bignum_add,
+            .sub = soft_bignum_sub,
+            .mult = soft_bignum_mult,
+            .leftshift = soft_bignum_leftshift,
+            .rightshift = soft_bignum_rightshift,
+            .msb_set_in_word = soft_bignum_msb_set_in_word,
+            .get_msb_set = soft_bignum_get_msb_set,
+            .set_bit = soft_bignum_set_bit,
+            .div = soft_bignum_div,
+            .mod = soft_bignum_mod,
+        },
+};
 
 TEST_GROUP(soft_bignumbers);
 
@@ -1115,6 +1115,20 @@ TEST(soft_bignumbers, soft_bignum_leftshift_size_7_shift_59)
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, in, sizeof(expected_out));
 }
 
+TEST(soft_bignumbers, soft_bignum_leftshift_size_5_shift_39)
+{
+    int32_t retval = 0;
+    uint64_t in[3] = {0x0123456789ABCDEF, 0x0123456789ABCDEF,
+                      0xFFFFFFFF00000000};
+    static const uint64_t expected_out[3] = {
+        0xD5E6F78000000000UL, 0xD5E6F78091A2B3C4UL, 0xFFFFFFFF91A2B3C4UL};
+
+    retval = soft_bignum_leftshift(NULL, in, in, 39, 5);
+
+    TEST_ASSERT_TRUE(0 == retval);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, in, sizeof(expected_out));
+}
+
 /* test on msb set in word */
 TEST(soft_bignumbers, soft_bignum_msb_set_in_word_32b_word)
 {
@@ -1960,7 +1974,7 @@ TEST(soft_bignumbers, soft_bignum_div_dividend_lt_divisor)
                                  sizeof(expected_quotient));
 }
 
-TEST(soft_bignumbers, soft_bignum_div_success_1)
+TEST(soft_bignumbers, soft_bignum_div_dividend_gt_divisor)
 {
     int32_t result = 0;
     uint64_t dividend[6] = {0x0FFFFFFFFFFFFFFF, 0, 0, 0, 0, 0};
@@ -1983,4 +1997,171 @@ TEST(soft_bignumbers, soft_bignum_div_success_1)
 }
 
 /* modulus computation */
-// TEST(soft_bignumbers, soft_bignum_div_success_1)
+TEST(soft_bignumbers, soft_bignum_mod_modulus_0)
+{
+    int32_t result = 0;
+    uint64_t input[6] = {0x0000000000000001, 0x0000000000000000,
+                         0x0000000000000000, 0x0000000000000000,
+                         0x0000000000000000, 0x0000000000000000};
+    uint64_t modulus[3] = {0x0000000000000000, 0x0000000000000000,
+                           0x0000000000000000};
+
+    uint64_t remainder[3] = {0x0000000000000000, 0x0000000000000000,
+                             0x0000000000000000};
+
+    uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
+                                      0x0000000000000000};
+
+    result =
+        soft_bignum_mod(&scl, input, sizeof(input) / sizeof(uint32_t), modulus,
+                        sizeof(modulus) / sizeof(uint32_t), remainder);
+
+    TEST_ASSERT_TRUE(SCL_ZERO_DIVISION == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
+                                 sizeof(expected_remainder));
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_input_null_ptr)
+{
+    int32_t result = 0;
+    uint64_t input[6] = {0x0000000000000001, 0x0000000000000000,
+                         0x0000000000000000, 0x0000000000000000,
+                         0x0000000000000000, 0x0000000000000000};
+    uint64_t modulus[3] = {0x0000000000000000, 0x0000000000000000,
+                           0x0000000000000000};
+
+    uint64_t remainder[3] = {0x0000000000000000, 0x0000000000000000,
+                             0x0000000000000000};
+
+    uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
+                                      0x0000000000000000};
+
+    result =
+        soft_bignum_mod(&scl, NULL, sizeof(input) / sizeof(uint32_t), modulus,
+                        sizeof(modulus) / sizeof(uint32_t), remainder);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_INPUT == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
+                                 sizeof(expected_remainder));
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_modulus_null_ptr)
+{
+    int32_t result = 0;
+    uint64_t input[6] = {0x0000000000000001, 0x0000000000000000,
+                         0x0000000000000000, 0x0000000000000000,
+                         0x0000000000000000, 0x0000000000000000};
+    uint64_t modulus[3] = {0x0000000000000001, 0x0000000000000000,
+                           0x0000000000000000};
+    uint64_t remainder[3] = {0x0000000000000000, 0x0000000000000000,
+                             0x0000000000000000};
+    uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
+                                      0x0000000000000000};
+
+    result =
+        soft_bignum_mod(&scl, input, sizeof(input) / sizeof(uint32_t), NULL,
+                        sizeof(modulus) / sizeof(uint32_t), remainder);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_INPUT == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
+                                 sizeof(expected_remainder));
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_input_size_0)
+{
+    int32_t result = 0;
+    uint64_t input[6] = {0x0000000000000001, 0x0000000000000000,
+                         0x0000000000000000, 0x0000000000000000,
+                         0x0000000000000000, 0x0000000000000000};
+    uint64_t modulus[3] = {0x0000000000000001, 0x0000000000000000,
+                           0x0000000000000000};
+    uint64_t remainder[3] = {0x0000000000000000, 0x0000000000000000,
+                             0x0000000000000000};
+    uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
+                                      0x0000000000000000};
+
+    result = soft_bignum_mod(&scl, input, 0, modulus,
+                             sizeof(modulus) / sizeof(uint32_t), remainder);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
+                                 sizeof(expected_remainder));
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_modulus_size_0)
+{
+    int32_t result = 0;
+    uint64_t input[6] = {0x0000000000000001, 0x0000000000000000,
+                         0x0000000000000000, 0x0000000000000000,
+                         0x0000000000000000, 0x0000000000000000};
+    uint64_t modulus[3] = {0x0000000000000001, 0x0000000000000000,
+                           0x0000000000000000};
+    uint64_t remainder[3] = {0x0000000000000000, 0x0000000000000000,
+                             0x0000000000000000};
+    uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
+                                      0x0000000000000000};
+
+    result = soft_bignum_mod(&scl, input, sizeof(input) / sizeof(uint32_t),
+                             modulus, 0, remainder);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
+                                 sizeof(expected_remainder));
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_input_lt_modulus)
+{
+    int32_t result = 0;
+    uint64_t input[6] = {
+        0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xEFFFFFFFFFFFFFFF, 0, 0, 0};
+    uint64_t modulus[3] = {0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF,
+                           0xFFFFFFFFFFFFFFFF};
+    uint64_t remainder[3] = {0x0000000000000000, 0x0000000000000000,
+                             0x0000000000000000};
+    uint64_t expected_remainder[3] = {0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF,
+                                      0xEFFFFFFFFFFFFFFF};
+
+    result =
+        soft_bignum_mod(&scl, input, sizeof(input) / sizeof(uint32_t), modulus,
+                        sizeof(modulus) / sizeof(uint32_t), remainder);
+
+    TEST_ASSERT_TRUE(0 == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
+                                 sizeof(expected_remainder));
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_input_gt_modulus)
+{
+    int32_t result = 0;
+    uint64_t input[6] = {0x0FFFFFFFFFFFFFFF, 0, 0, 0, 0, 0};
+    uint64_t modulus[3] = {0x0123456789ABCDEF, 0, 0};
+    uint64_t remainder[3] = {0, 0, 0};
+
+    uint64_t expected_remainder[3] = {0x0123456789ABCED, 0, 0};
+
+    result =
+        soft_bignum_mod(&scl, input, sizeof(input) / sizeof(uint32_t), modulus,
+                        sizeof(modulus) / sizeof(uint32_t), remainder);
+
+    TEST_ASSERT_TRUE(0 == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
+                                 sizeof(expected_remainder));
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_input_gt_modulus_2)
+{
+    int32_t result = 0;
+    uint64_t input[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                         0x00000000FFFFFFFFUL};
+    uint64_t modulus[2] = {0x0123456789ABCDEFUL, 0x0123456789ABCDEFUL};
+    uint64_t remainder[2] = {0, 0};
+    uint64_t expected_remainder[2] = {0x000000F0FFFFFFFFUL, 0x000000F000000000};
+
+    result =
+        soft_bignum_mod(&scl, input, sizeof(input) / sizeof(uint32_t), modulus,
+                        sizeof(modulus) / sizeof(uint32_t), remainder);
+
+    TEST_ASSERT_TRUE(0 == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
+                                 sizeof(expected_remainder));
+}

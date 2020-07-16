@@ -78,6 +78,7 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_leftshift_size_5_in_NULL);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_leftshift_size_5_out_NULL);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_leftshift_size_7_shift_59);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_leftshift_size_5_shift_39);
 
     /* test on msb set in word */
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_msb_set_in_word_32b_word);
@@ -148,5 +149,15 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_div_dividend_size_0);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_div_divisor_size_0);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_div_dividend_lt_divisor);
-    RUN_TEST_CASE(soft_bignumbers, soft_bignum_div_success_1);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_div_dividend_gt_divisor);
+
+    /* Modulus computation */
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_modulus_0);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_input_null_ptr);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_modulus_null_ptr);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_input_size_0);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_modulus_size_0);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_input_lt_modulus);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_input_gt_modulus);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_input_gt_modulus_2);
 }
