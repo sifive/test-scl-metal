@@ -160,4 +160,14 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_input_lt_modulus);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_input_gt_modulus);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_input_gt_modulus_2);
+
+    /* Modular addition */
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_add_size_0);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_add_size_0);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_add_size_1);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_add_size_1_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_add_size_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_add_size_2_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_add_size_5);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_add_size_5_2);
 }
