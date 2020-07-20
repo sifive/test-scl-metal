@@ -170,4 +170,22 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_add_size_2_2);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_add_size_5);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_add_size_5_2);
+
+    /* Negate */
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_negate_size_0);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_negate_nullptr);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_negate_size_1);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_negate_size_1_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_negate_size_5);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_negate_size_5_2);
+
+    /* Modular subtraction */
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_sub_size_0);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_sub_size_0);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_sub_size_1);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_sub_size_1_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_sub_size_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_sub_size_2_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_sub_size_5);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_sub_size_5_2);
 }
