@@ -2547,6 +2547,30 @@ TEST(soft_bignumbers, soft_bignum_mod_sub_size_2_2)
     TEST_ASSERT_TRUE(expected_out == out);
 }
 
+TEST(soft_bignumbers, soft_bignum_mod_sub_size_2_3)
+{
+    int32_t result = 0;
+
+    static const uint64_t in_a = 0;
+    static const uint64_t in_b = 0x00000000FFFFFFFFUL;
+    uint64_t out = 0xFFFFFFFFFFFFFFFFUL;
+    static const uint64_t modulus = 0x0000000088888888UL;
+    static const uint64_t expected_out = 0x0000000011111111UL;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 2);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_sub(&scl, &bignum_ctx, &in_a, &in_b, &out, 2);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
 TEST(soft_bignumbers, soft_bignum_mod_sub_size_5)
 {
     int32_t result = 0;
@@ -2598,6 +2622,351 @@ TEST(soft_bignumbers, soft_bignum_mod_sub_size_5_2)
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     result = soft_bignum_mod_sub(&scl, &bignum_ctx, in_a, in_b, out, 5);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+/* Negate mod */
+TEST(soft_bignumbers, soft_bignum_mod_neg_size_0)
+{
+    int32_t result = 0;
+
+    static const uint64_t in = 0xFFFFFFFFFFFFFFFEUL;
+    uint64_t out = 0;
+    static const uint64_t modulus = 0x0000000088888888UL;
+    static const uint64_t expected_out = 0;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_neg(&scl, &bignum_ctx, &in, &out, 0);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_neg_size_1)
+{
+    int32_t result = 0;
+
+    static const uint64_t in = 0x00000000FFFFFFFEUL;
+    uint64_t out = 0xFFFFFFFFFFFFFFFFUL;
+    static const uint64_t modulus = 0x0000000088888888UL;
+    static const uint64_t expected_out = 0xFFFFFFFF11111112UL;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_neg(&scl, &bignum_ctx, &in, &out, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_neg_size_1_2)
+{
+    int32_t result = 0;
+
+    static const uint64_t in = 1;
+    uint64_t out = 0xFFFFFFFFFFFFFFFFUL;
+    static const uint64_t modulus = 0x0000000088888888UL;
+    static const uint64_t expected_out = 0xFFFFFFFF88888887UL;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_neg(&scl, &bignum_ctx, &in, &out, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_neg_size_2)
+{
+    int32_t result = 0;
+
+    static const uint64_t in = 0;
+    uint64_t out = 0;
+    static const uint64_t modulus = 0x0000000088888844UL;
+    static const uint64_t expected_out = 0;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 2);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_neg(&scl, &bignum_ctx, &in, &out, 2);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_neg_size_2_2)
+{
+    int32_t result = 0;
+
+    static const uint64_t in = 0xFFFFFFFFFFFFFFFFUL;
+    uint64_t out = 0xFFFFFFFFFFFFFFFFUL;
+    static const uint64_t modulus = 0x0000000088888844UL;
+    static const uint64_t expected_out = 0x0000000008884805UL;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 2);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_neg(&scl, &bignum_ctx, &in, &out, 2);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_neg_size_5)
+{
+    int32_t result = 0;
+
+    static const uint64_t in[3] = {0x648B0FBA30D7C42BUL, 0x5F7F9B9078284709UL,
+                                   0x0000000032DD71F1UL};
+    uint64_t out[3] = {0, 0, 0xFFFFFFFFFFFFFFFFUL};
+    static const uint64_t modulus[3] = {
+        0x624E538619945733UL, 0xA5CC86132415406DUL, 0x00000000CAA1F63BUL};
+    static const uint64_t expected_out[3] = {
+        0xFDC343CBE8BC9308, 0x464CEA82ABECF963, 0xFFFFFFFF97C4844AUL};
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, modulus, 5);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_neg(&scl, &bignum_ctx, in, out, 5);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_neg_size_5_2)
+{
+    int32_t result = 0;
+
+    static const uint64_t in[3] = {0x648B0FBA30D7C42BUL, 0x5F7F9B9078284709UL,
+                                   0x0000000032DD71F1UL};
+    uint64_t out[3] = {0, 0, 0xFFFFFFFFFFFFFFFFUL};
+    static const uint64_t modulus[3] = {
+        0x624E538619945733UL, 0xA5CC86132415406DUL, 0x0000000000A1F63BUL};
+    static const uint64_t expected_out[3] = {
+        0xB63D5DB3E717D2F8UL, 0x1636D07DF2911B92UL, 0xFFFFFFFF006176EEUL};
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, modulus, 5);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_neg(&scl, &bignum_ctx, in, out, 5);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+/* Modular multiplication */
+TEST(soft_bignumbers, soft_bignum_mod_mult_size_0)
+{
+    int32_t result = 0;
+
+    static const uint64_t in_a = 0xFFFFFFFFFFFFFFFEUL;
+    static const uint64_t in_b = 1;
+    uint64_t out = 0;
+    static const uint64_t modulus = 0x0000000088888888UL;
+    static const uint64_t expected_out = 0;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_mult(&scl, &bignum_ctx, &in_a, &in_b, &out, 0);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_mult_size_1)
+{
+    int32_t result = 0;
+
+    static const uint64_t in_a = 0x00000000FFFFFFFEUL;
+    static const uint64_t in_b = 0;
+    uint64_t out = 0xFFFFFFFFFFFFFFFFUL;
+    static const uint64_t modulus = 0x0000000088888844UL;
+    static const uint64_t expected_out = 0xFFFFFFFF00000000UL;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_mult(&scl, &bignum_ctx, &in_a, &in_b, &out, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_mult_size_1_2)
+{
+    int32_t result = 0;
+
+    static const uint64_t in_a = 0xFFFFFFFF88888887UL;
+    static const uint64_t in_b = 1;
+    uint64_t out = 0xFFFFFFFFFFFFFFFFUL;
+    static const uint64_t modulus = 0x0000000088888888UL;
+    static const uint64_t expected_out = 0xFFFFFFFF88888887UL;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_mult(&scl, &bignum_ctx, &in_a, &in_b, &out, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_mult_size_2)
+{
+    int32_t result = 0;
+
+    static const uint64_t in_a = 0xFFFFFFFFFFFFFFFFUL;
+    static const uint64_t in_b = 0xFFFFFFFFFFFFFFFFUL;
+    uint64_t out = 0;
+    static const uint64_t modulus = 0x0000008888888844UL;
+    static const uint64_t expected_out = 0x00000087A7E8E865UL;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 2);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_mult(&scl, &bignum_ctx, &in_a, &in_b, &out, 2);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_mult_size_2_2)
+{
+    int32_t result = 0;
+
+    static const uint64_t in_a = 0x0000008888888844UL;
+    static const uint64_t in_b = 0x000000FFFFFFFF04UL;
+    uint64_t out = 0;
+    static const uint64_t modulus = 0x0000008888888844UL;
+    static const uint64_t expected_out = 0;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 2);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_mult(&scl, &bignum_ctx, &in_a, &in_b, &out, 2);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_mult_size_5)
+{
+    int32_t result = 0;
+
+    static const uint64_t in_a[3] = {0x648B0FBA30D7C42BUL, 0x5F7F9B9078284709UL,
+                                     0x0000000032DD71F1UL};
+    static const uint64_t in_b[3] = {0xB8ADBD61E64C509EUL, 0x313F0EA554C0D0DEUL,
+                                     0x000000001BED89D1UL};
+    uint64_t out[3] = {0, 0, 0xFFFFFFFFFFFFFFFFUL};
+    static const uint64_t modulus[3] = {
+        0x624E538619945733UL, 0xA5CC86132415406DUL, 0x00000000CAA1F63BUL};
+    static const uint64_t expected_out[3] = {
+        0x8CA81DFF74110FDFUL, 0x23784294875967CAUL, 0xFFFFFFFF3445E07AUL};
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, modulus, 5);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_mult(&scl, &bignum_ctx, in_a, in_b, out, 5);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_mult_size_5_2)
+{
+    int32_t result = 0;
+
+    static const uint64_t in_a[3] = {0x648B0FBA30D7C42BUL, 0x5F7F9B9078284709UL,
+                                     0x0000000032DD71F1UL};
+    static const uint64_t in_b[3] = {0xB8ADBD61E64C509EUL, 0x313F0EA554C0D0DEUL,
+                                     0x000000001BED89D1UL};
+    uint64_t out[3] = {0, 0, 0xFFFFFFFFFFFFFFFFUL};
+    static const uint64_t modulus[3] = {
+        0x624E538619945733UL, 0xA5CC86132415406DUL, 0x0000000000A1F63BUL};
+    static const uint64_t expected_out[3] = {
+        0xF3E059F6C1FD3BA8UL, 0xE27C4581A326DFD7UL, 0xFFFFFFFF009F07C0UL};
+        
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, modulus, 5);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_mult(&scl, &bignum_ctx, in_a, in_b, out, 5);
 
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));

@@ -186,6 +186,26 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_sub_size_1_2);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_sub_size_2);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_sub_size_2_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_sub_size_2_3);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_sub_size_5);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_sub_size_5_2);
+
+    /* Negate mod */
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_neg_size_0);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_neg_size_1);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_neg_size_1_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_neg_size_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_neg_size_2_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_neg_size_5);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_neg_size_5_2);
+
+    /* Modular multiplication */
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_0);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_1);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_1_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_2_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_5);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_5_2);
+
 }
