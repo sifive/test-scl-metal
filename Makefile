@@ -82,7 +82,7 @@ override INCLUDE_DIRS := 	$(CURRENT_DIR) \
 							$(CURRENT_DIR)/tests/sha
 
 override CFLAGS += $(foreach dir,$(INCLUDE_DIRS),-I $(dir))
-override CFLAGS += -Wall -Wextra
+override CFLAGS += -Wall -Wextra -fstack-protector-all
 
 # override CFLAGS += -I $(CURRENT_DIR)
 override ASFLAGS = $(CFLAGS)
