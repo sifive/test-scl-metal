@@ -207,5 +207,4 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_2_2);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_5);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_5_2);
-
 }

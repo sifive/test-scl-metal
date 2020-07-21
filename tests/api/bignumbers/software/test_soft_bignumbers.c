@@ -778,8 +778,7 @@ TEST(soft_bignumbers, soft_bignum_mult_size_5)
         0x0000000000000001UL, 0x0000000000000000UL, 0xFFFFFFFE00000000UL,
         0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL};
 
-    result = soft_bignum_mult(NULL, in_a, in_b, out,
-                              sizeof(in_a) / sizeof(uint32_t));
+    result = soft_bignum_mult(NULL, in_a, in_b, out, 5);
 
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
     TEST_ASSERT_TRUE(SCL_OK == result);
@@ -797,8 +796,7 @@ TEST(soft_bignumbers, soft_bignum_mult_size_5_zero)
                        0xFFFFFFFFFFFFFFFFUL};
     static const uint64_t expected_out[5] = {0, 0, 0, 0, 0};
 
-    result = soft_bignum_mult(NULL, in_a, in_b, out,
-                              sizeof(in_a) / sizeof(uint32_t));
+    result = soft_bignum_mult(NULL, in_a, in_b, out, 5);
 
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
     TEST_ASSERT_TRUE(SCL_OK == result);
@@ -815,8 +813,7 @@ TEST(soft_bignumbers, soft_bignum_mult_size_5_identity)
     static const uint64_t expected_out[5] = {
         0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL, 0x00000000FFFFFFFFUL, 0, 0};
 
-    result = soft_bignum_mult(NULL, in_a, in_b, out,
-                              sizeof(in_a) / sizeof(uint32_t));
+    result = soft_bignum_mult(NULL, in_a, in_b, out, 5);
 
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
     TEST_ASSERT_TRUE(SCL_OK == result);
