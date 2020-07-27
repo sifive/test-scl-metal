@@ -62,6 +62,7 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_rightshift_size_5_shift_0);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_rightshift_size_5_shift_159);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_rightshift_size_5_shift_160);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_rightshift_size_5_shift_1);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_rightshift_size_5_in_NULL);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_rightshift_size_5_out_NULL);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_rightshift_size_7_shift_59);
@@ -74,6 +75,7 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_leftshift_size_7);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_leftshift_size_5_shift_0);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_leftshift_size_5_shift_159);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_leftshift_size_5_shift_1);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_leftshift_size_5_shift_160);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_leftshift_size_5_in_NULL);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_leftshift_size_5_out_NULL);
@@ -207,4 +209,17 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_2_2);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_5);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_5_2);
+
+    /* Modular multiplicative inverse */
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_0);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_1_not_inversible);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_1_err_parity);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_1);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_1_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_2_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_5);
+    // RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_5_2);
+    // RUN_TEST_CASE(soft_bignumbers,
+    // soft_bignum_mod_inv_size_5_not_inversible);
 }
