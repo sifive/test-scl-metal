@@ -30,6 +30,8 @@ override OBJS :=	$(subst $(SOURCE_DIR),$(BUILD_DIRECTORY),$(C_SOURCES:.c=.o)) \
 # ----------------------------------------------------------------------
 # Add custom flags for libscl 
 # ----------------------------------------------------------------------
+LIBSCL_METAL_CFLAGS := $(CFLAGS)
+
 SCL_SOURCE_PATH ?= ../../scl-metal
 SCL_DIR = $(abspath $(SCL_SOURCE_PATH))
 include $(SCL_DIR)/scripts/scl.mk
@@ -84,6 +86,8 @@ override INCLUDE_DIRS := 	$(CURRENT_DIR) \
 override CFLAGS += $(foreach dir,$(INCLUDE_DIRS),-I $(dir))
 override CFLAGS += -Wall -Wextra -fstack-protector-all
 
+LIBSCL_METAL_CFLAGS += -fstack-protector-all
+
 # override CFLAGS += -I $(CURRENT_DIR)
 override ASFLAGS = $(CFLAGS)
 
@@ -118,7 +122,7 @@ libscl.a:
 	make -f Makefile -C $(SCL_DIR) \
 	BUILD_DIR=$(join $(abspath  $(BUILD_DIRECTORY)),/scl) \
 	libscl.a \
-	VERBOSE=$(VERBOSE)
+	VERBOSE=$(VERBOSE) CFLAGS="$(LIBSCL_METAL_CFLAGS)"
 	
 $(PROGRAM): \
 	libscl.a \
