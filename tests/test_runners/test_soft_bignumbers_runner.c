@@ -219,7 +219,13 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_2);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_2_2);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_5);
-    // RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_5_2);
-    // RUN_TEST_CASE(soft_bignumbers,
-    // soft_bignum_mod_inv_size_5_not_inversible);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_5_2);
+    RUN_TEST_CASE(soft_bignumbers,
+    soft_bignum_mod_inv_size_5_not_inversible);
+
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_square_size_0);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_square_size_1);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_square_size_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_square_size_5);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_square_size_5_zero);
 }

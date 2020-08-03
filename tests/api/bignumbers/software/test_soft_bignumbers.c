@@ -18,6 +18,7 @@ static const metal_scl_t scl = {
             .add = soft_bignum_add,
             .sub = soft_bignum_sub,
             .mult = soft_bignum_mult,
+            .square = soft_bignum_square,
             .leftshift = soft_bignum_leftshift,
             .rightshift = soft_bignum_rightshift,
             .msb_set_in_word = soft_bignum_msb_set_in_word,
@@ -29,6 +30,8 @@ static const metal_scl_t scl = {
             .mod_add = soft_bignum_mod_add,
             .mod_sub = soft_bignum_mod_sub,
             .mod_mult = soft_bignum_mod_mult,
+            .mod_inv = soft_bignum_mod_inv,
+            .mod_square = soft_bignum_mod_square,
         },
 };
 
@@ -3114,8 +3117,6 @@ TEST(soft_bignumbers, soft_bignum_mod_inv_size_1_2)
     TEST_ASSERT_TRUE(expected_out == out);
 }
 
-#if 1
-
 TEST(soft_bignumbers, soft_bignum_mod_inv_size_2)
 {
     int32_t result = 0;
@@ -3238,4 +3239,81 @@ TEST(soft_bignumbers, soft_bignum_mod_inv_size_5_not_inversible)
     TEST_ASSERT_TRUE(SCL_NOT_INVERSIBLE == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
-#endif
+
+/* square */
+TEST(soft_bignumbers, soft_bignum_square_size_0)
+{
+    int32_t result = 0;
+    static const uint64_t in = 0xFFFFFFFFFFFFFFFEUL;
+    uint64_t out[2] = {0};
+    static const uint64_t expected_out[2] = {0};
+
+    result = soft_bignum_square(NULL, &in, out, 0);
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
+}
+
+TEST(soft_bignumbers, soft_bignum_square_size_1)
+{
+    int32_t result = 0;
+    static const uint64_t in = 0x00000000FFFFFFFFUL;
+    uint64_t out = 0;
+    static const uint64_t expected_out = 0xFFFFFFFE00000001UL;
+
+    result = soft_bignum_square(NULL, &in, &out, 1);
+
+    TEST_ASSERT_TRUE(expected_out == out);
+    TEST_ASSERT_TRUE(SCL_OK == result);
+}
+
+TEST(soft_bignumbers, soft_bignum_square_size_2)
+{
+    int32_t result = 0;
+    static const uint64_t in = 0xFFFFFFFFFFFFFFFFUL;
+    uint64_t out[2] = {0};
+    static const uint64_t expected_out[2] = {0x0000000000000001UL,
+                                             0xFFFFFFFFFFFFFFFEUL};
+
+    result = soft_bignum_square(NULL, &in, out,
+                              sizeof(in) / sizeof(uint32_t));
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+    TEST_ASSERT_TRUE(SCL_OK == result);
+}
+
+TEST(soft_bignumbers, soft_bignum_square_size_5)
+{
+    int32_t result = 0;
+    static const uint64_t in[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                                     0x00000000FFFFFFFFUL};
+
+    uint64_t out[5] = {0};
+    static const uint64_t expected_out[5] = {
+        0x0000000000000001UL, 0x0000000000000000UL, 0xFFFFFFFE00000000UL,
+        0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL};
+
+    result = soft_bignum_square(NULL, in, out, 5);
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+    TEST_ASSERT_TRUE(SCL_OK == result);
+}
+
+TEST(soft_bignumbers, soft_bignum_square_size_5_zero)
+{
+    int32_t result = 0;
+    static const uint64_t in[3] = {0, 0, 0};
+
+    uint64_t out[5] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                       0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                       0xFFFFFFFFFFFFFFFFUL};
+    static const uint64_t expected_out[5] = {0, 0, 0, 0, 0};
+
+    result = soft_bignum_square(NULL, in, out, 5);
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+    TEST_ASSERT_TRUE(SCL_OK == result);
+}
+
+/* Modular square */
+
