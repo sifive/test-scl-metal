@@ -412,7 +412,7 @@ TEST(hca_aes_128, ccm_1)
     result = hca_aes_setiv(&scl, IV);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 1), NULL, 0, sizeof(payload_be));
+    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 2), NULL, 0, sizeof(payload_be));
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     result = hca_aes_auth_core(&scl, &ctx_aes_auth, payload_be, sizeof(payload_be), tmp, &len);
@@ -462,7 +462,7 @@ TEST(hca_aes_128, ccm_2)
     result = hca_aes_setiv(&scl, IV);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 1), aad_be, sizeof(aad_be), 0);
+    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 2), aad_be, sizeof(aad_be), 0);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     result = hca_aes_auth_finish(&scl, &ctx_aes_auth, NULL, tag_c);
@@ -521,7 +521,7 @@ TEST(hca_aes_128, ccm_3)
     result = hca_aes_setiv(&scl, IV);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 1), aad_be, sizeof(aad_be), sizeof(payload_be));
+    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 2), aad_be, sizeof(aad_be), sizeof(payload_be));
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     result = hca_aes_auth_core(&scl, &ctx_aes_auth, payload_be, sizeof(payload_be), tmp, &len);
@@ -587,7 +587,7 @@ TEST(hca_aes_128, ccm_4)
     result = hca_aes_setiv(&scl, IV);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 1), aad_be, sizeof(aad_be), sizeof(payload_be));
+    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 2), aad_be, sizeof(aad_be), sizeof(payload_be));
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     result = hca_aes_auth_core(&scl, &ctx_aes_auth, payload_be, sizeof(payload_be), tmp, &len);
@@ -656,7 +656,7 @@ TEST(hca_aes_128, ccm_4b)
     result = hca_aes_setiv(&scl, IV);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_LITTLE_ENDIAN_MODE, CCM_TQ(7, 1), (uint8_t *)aad_le, sizeof(aad_le), sizeof(payload_le));
+    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_LITTLE_ENDIAN_MODE, CCM_TQ(7, 2), (uint8_t *)aad_le, sizeof(aad_le), sizeof(payload_le));
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     result = hca_aes_auth_core(&scl, &ctx_aes_auth, (uint8_t *)payload_le, sizeof(payload_le), tmp, &len);
