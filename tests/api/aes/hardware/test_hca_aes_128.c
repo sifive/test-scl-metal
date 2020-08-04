@@ -73,14 +73,13 @@ TEST(hca_aes_128, ecb_F_1_12)
     result = hca_aes_cipher(&scl, SCL_AES_ECB, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE,
                             plaintext_be, sizeof(plaintext_be), tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
-
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
     memset(tmp, 0, sizeof(tmp));
     /* F.1.2 ECB-AES128.Decrypt */
     result = hca_aes_cipher(&scl, SCL_AES_ECB, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE,
                             ciphertext_be, sizeof(ciphertext_be), tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(plaintext_be, tmp, sizeof(plaintext_be));
 }
 
 TEST(hca_aes_128, ecb_not_aligned)
@@ -129,7 +128,7 @@ TEST(hca_aes_128, ecb_not_aligned)
     result = hca_aes_cipher(&scl, SCL_AES_ECB, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE,
                             &plaintext_be[1], sizeof(plaintext_be) - 1, tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
 }
 
 TEST(hca_aes_128, cbc_F_2_12)
@@ -184,14 +183,14 @@ TEST(hca_aes_128, cbc_F_2_12)
     result = hca_aes_cipher(&scl, SCL_AES_CBC, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE,
                             plaintext_be, sizeof(plaintext_be), tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
 
     /* F.2.2 CBC-AES128.Decrypt */
     memset(tmp, 0, sizeof(tmp));
     result = hca_aes_cipher(&scl, SCL_AES_CBC, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE,
                             ciphertext_be, sizeof(ciphertext_be), tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(plaintext_be, tmp, sizeof(plaintext_be));
 }
 
 TEST(hca_aes_128, cfb_F_3_1314)
@@ -244,14 +243,14 @@ TEST(hca_aes_128, cfb_F_3_1314)
     result = hca_aes_cipher(&scl, SCL_AES_CFB, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE,
                             plaintext_be, sizeof(plaintext_be), tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
 
     /* F.3.14 CFB-AES128.Decrypt */
     memset(tmp, 0, sizeof(tmp));
     result = hca_aes_cipher(&scl, SCL_AES_CFB, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE,
                             ciphertext_be, sizeof(ciphertext_be), tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(plaintext_be, tmp, sizeof(plaintext_be));
 }
 
 TEST(hca_aes_128, ofb_F_4_12)
@@ -304,14 +303,14 @@ TEST(hca_aes_128, ofb_F_4_12)
     result = hca_aes_cipher(&scl, SCL_AES_OFB, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE,
                             plaintext_be, sizeof(plaintext_be), tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
 
     /* F.4.2 OFB-AES128.Decrypt */
     memset(tmp, 0, sizeof(tmp));
     result = hca_aes_cipher(&scl, SCL_AES_OFB, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE,
                             ciphertext_be, sizeof(ciphertext_be), tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(plaintext_be, tmp, sizeof(plaintext_be));
 }
 
 TEST(hca_aes_128, ctr_F_5_12)
@@ -364,14 +363,14 @@ TEST(hca_aes_128, ctr_F_5_12)
     result = hca_aes_cipher(&scl, SCL_AES_CTR, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE,
                             plaintext_be, sizeof(plaintext_be), tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
  
     /* F.5.2 CTR-AES128.Decrypt */
     memset(tmp, 0, sizeof(tmp));
     result = hca_aes_cipher(&scl, SCL_AES_CTR, SCL_DECRYPT, SCL_BIG_ENDIAN_MODE,
                             ciphertext_be, sizeof(ciphertext_be), tmp);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(plaintext_be, tmp, sizeof(plaintext_be));
 }
 
 TEST(hca_aes_128, ccm_1)
@@ -394,7 +393,8 @@ TEST(hca_aes_128, ccm_1)
 
     static const uint8_t payload_be[24] __attribute__((aligned(8))) = {
         0x7c, 0x86, 0x13, 0x5e, 0xd9, 0xc2, 0xa5, 0x15, 0xaa, 0xae, 0x0e, 0x9a, 0x20, 0x81, 0x33, 0x89,
-        0x72, 0x69, 0x22, 0x0f, 0x30, 0x87, 0x00, 0x06};
+        0x72, 0x69, 0x22, 0x0f, 0x30, 0x87, 0x00, 0x06
+    };
 
     static const uint8_t ciphertext_be[24] __attribute__((aligned(8))) = {
         0x1f, 0xae, 0xb0, 0xee, 0x2c, 0xa2, 0xcd, 0x52, 0xf0, 0xaa, 0x39, 0x66, 0x57, 0x83, 0x44, 0xf2,
@@ -409,6 +409,7 @@ TEST(hca_aes_128, ccm_1)
     uint8_t tmp[24] __attribute__((aligned(8))) = {0};
     uint64_t tag_c[2] __attribute__((aligned(8))) = {0};
     int32_t result = 0;
+    size_t len;
 
     aes_auth_ctx_t ctx_aes_auth = {0};
 
@@ -418,16 +419,17 @@ TEST(hca_aes_128, ccm_1)
     result = hca_aes_setiv(&scl, IV);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 1), NULL, 0, sizeof(payload_be));
+    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 2), NULL, 0, sizeof(payload_be));
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_core(&scl, &ctx_aes_auth, SCL_BIG_ENDIAN_MODE, payload_be, sizeof(payload_be), tmp);
+    result = hca_aes_auth_core(&scl, &ctx_aes_auth, payload_be, sizeof(payload_be), tmp, &len);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, len);
 
-    result = hca_aes_auth_finish(&scl, &ctx_aes_auth, NULL, tag_c);
+    result = hca_aes_auth_finish(&scl, &ctx_aes_auth, &tmp[len], tag_c);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(tag, tag_c, sizeof(tag)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(tag, tag_c, sizeof(tag));
 }
 
 TEST(hca_aes_128, ccm_2)
@@ -467,12 +469,12 @@ TEST(hca_aes_128, ccm_2)
     result = hca_aes_setiv(&scl, IV);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 1), aad_be, sizeof(aad_be), 0);
+    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 2), aad_be, sizeof(aad_be), 0);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     result = hca_aes_auth_finish(&scl, &ctx_aes_auth, NULL, tag_c);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(tag, tag_c, sizeof(tag)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(tag, tag_c, sizeof(tag));
 }
 
 TEST(hca_aes_128, ccm_3)
@@ -516,6 +518,7 @@ TEST(hca_aes_128, ccm_3)
     uint64_t tag_c[2] __attribute__((aligned(8))) = {0};
     uint8_t tmp[24] __attribute__((aligned(8))) = {0};
     int32_t result = 0;
+    size_t len;
 
     aes_auth_ctx_t ctx_aes_auth = {0};
 
@@ -525,16 +528,17 @@ TEST(hca_aes_128, ccm_3)
     result = hca_aes_setiv(&scl, IV);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 1), aad_be, sizeof(aad_be), sizeof(payload_be));
+    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 2), aad_be, sizeof(aad_be), sizeof(payload_be));
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_core(&scl, &ctx_aes_auth, SCL_BIG_ENDIAN_MODE, payload_be, sizeof(payload_be), tmp);
+    result = hca_aes_auth_core(&scl, &ctx_aes_auth, payload_be, sizeof(payload_be), tmp, &len);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, len);
 
-    result = hca_aes_auth_finish(&scl, &ctx_aes_auth, NULL, tag_c);
+    result = hca_aes_auth_finish(&scl, &ctx_aes_auth, &tmp[len], tag_c);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(tag, tag_c, sizeof(tag)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(tag, tag_c, sizeof(tag));
 }
 
 TEST(hca_aes_128, ccm_4)
@@ -580,6 +584,7 @@ TEST(hca_aes_128, ccm_4)
     uint64_t tag_c[2] __attribute__((aligned(8))) = {0};
     uint8_t tmp[24] __attribute__((aligned(8))) = {0};
     int32_t result = 0;
+    size_t len;
 
     aes_auth_ctx_t ctx_aes_auth = {0};
 
@@ -589,16 +594,17 @@ TEST(hca_aes_128, ccm_4)
     result = hca_aes_setiv(&scl, IV);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 1), aad_be, sizeof(aad_be), sizeof(payload_be));
+    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, CCM_TQ(7, 2), aad_be, sizeof(aad_be), sizeof(payload_be));
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_core(&scl, &ctx_aes_auth, SCL_BIG_ENDIAN_MODE, payload_be, sizeof(payload_be), tmp);
+    result = hca_aes_auth_core(&scl, &ctx_aes_auth, payload_be, sizeof(payload_be), tmp, &len);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, len);
 
-    result = hca_aes_auth_finish(&scl, &ctx_aes_auth, NULL, tag_c);
+    result = hca_aes_auth_finish(&scl, &ctx_aes_auth, &tmp[len], tag_c);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(tag, tag_c, sizeof(tag)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(tag, tag_c, sizeof(tag));
 }
 
 TEST(hca_aes_128, ccm_4b)
@@ -647,6 +653,7 @@ TEST(hca_aes_128, ccm_4b)
     uint64_t tag_c[2] __attribute__((aligned(8))) = {0};
     uint8_t tmp[24] __attribute__((aligned(8))) = {0};
     int32_t result = 0;
+    size_t len;
 
     aes_auth_ctx_t ctx_aes_auth = {0};
 
@@ -656,17 +663,19 @@ TEST(hca_aes_128, ccm_4b)
     result = hca_aes_setiv(&scl, IV);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_LITTLE_ENDIAN_MODE, CCM_TQ(7, 1), (uint8_t *)aad_le, sizeof(aad_le), sizeof(payload_le));
+    result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_CCM, SCL_ENCRYPT, SCL_LITTLE_ENDIAN_MODE, CCM_TQ(7, 2), (uint8_t *)aad_le, sizeof(aad_le), sizeof(payload_le));
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_core(&scl, &ctx_aes_auth, SCL_LITTLE_ENDIAN_MODE, (uint8_t *)payload_le, sizeof(payload_le), tmp);
+    result = hca_aes_auth_core(&scl, &ctx_aes_auth, (uint8_t *)payload_le, sizeof(payload_le), tmp, &len);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_le, tmp, sizeof(ciphertext_le)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_le, tmp, len);
 
-    result = hca_aes_auth_finish(&scl, &ctx_aes_auth, NULL, tag_c);
+    result = hca_aes_auth_finish(&scl, &ctx_aes_auth, &tmp[len], tag_c);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(tag, tag_c, sizeof(tag)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_le, tmp, sizeof(ciphertext_le));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(tag, tag_c, sizeof(tag));
 }
+
 
 TEST(hca_aes_128, gcm_1)
 {
@@ -712,6 +721,7 @@ TEST(hca_aes_128, gcm_1)
     uint8_t tmp[51] __attribute__((aligned(8))) = {0};
     uint64_t tag_c[2] __attribute__((aligned(8))) = {0};
     int32_t result = 0;
+    size_t len;
 
     aes_auth_ctx_t ctx_aes_auth = {0};
 
@@ -724,13 +734,13 @@ TEST(hca_aes_128, gcm_1)
     result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_GCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, 0, NULL, 0, sizeof(payload_be));
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_core(&scl, &ctx_aes_auth, SCL_BIG_ENDIAN_MODE, payload_be, sizeof(payload_be), tmp);
+    result = hca_aes_auth_core(&scl, &ctx_aes_auth, payload_be, sizeof(payload_be), tmp, &len);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
 
-    result = hca_aes_auth_finish(&scl, &ctx_aes_auth, NULL, tag_c);
+    result = hca_aes_auth_finish(&scl, &ctx_aes_auth, &tmp[len], tag_c);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(tag, tag_c, sizeof(tag)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(tag, tag_c, sizeof(tag));
 }
 
 TEST(hca_aes_128, gcm_2)
@@ -777,7 +787,7 @@ TEST(hca_aes_128, gcm_2)
 
     result = hca_aes_auth_finish(&scl, &ctx_aes_auth, NULL, tag_c);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(tag, tag_c, sizeof(tag)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(tag, tag_c, sizeof(tag));
 }
 
 TEST(hca_aes_128, gcm_3)
@@ -825,6 +835,7 @@ TEST(hca_aes_128, gcm_3)
     uint64_t tag_c[2] __attribute__((aligned(8))) = {0};
     uint8_t tmp[32] __attribute__((aligned(8))) = {0};
     int32_t result = 0;
+    size_t len;
 
     aes_auth_ctx_t ctx_aes_auth = {0};
 
@@ -837,12 +848,12 @@ TEST(hca_aes_128, gcm_3)
     result = hca_aes_auth_init(&scl, &ctx_aes_auth, SCL_AES_GCM, SCL_ENCRYPT, SCL_BIG_ENDIAN_MODE, 0, aad_be, sizeof(aad_be), sizeof(payload_be));
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = hca_aes_auth_core(&scl, &ctx_aes_auth, SCL_BIG_ENDIAN_MODE, payload_be, sizeof(payload_be), tmp);
+    result = hca_aes_auth_core(&scl, &ctx_aes_auth, payload_be, sizeof(payload_be), tmp, &len);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
 
     result = hca_aes_auth_finish(&scl, &ctx_aes_auth, NULL, tag_c);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(tag, tag_c, sizeof(tag)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(tag, tag_c, sizeof(tag));
 }
 #endif

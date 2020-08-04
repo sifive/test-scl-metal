@@ -76,7 +76,7 @@ TEST(scl_aes_256, ecb_F_1_56)
     result = scl_aes_ecb_core(&scl, tmp, plaintext_be, sizeof(plaintext_be),
                               SCL_ENCRYPT);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
 
     memset(tmp, 0, sizeof(tmp));
     /* F.1.6 ECB-AES256.Decrypt */
@@ -86,7 +86,7 @@ TEST(scl_aes_256, ecb_F_1_56)
     result = scl_aes_ecb_core(&scl, tmp, ciphertext_be, sizeof(ciphertext_be),
                               SCL_DECRYPT);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(plaintext_be, tmp, sizeof(plaintext_be));
 }
 
 TEST(scl_aes_256, ecb_F_1_56_high)
@@ -134,14 +134,14 @@ TEST(scl_aes_256, ecb_F_1_56_high)
     result = scl_aes_ecb(&scl, tmp, plaintext_be, sizeof(plaintext_be), key256,
                          sizeof(key256), SCL_ENCRYPT);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
 
     memset(tmp, 0, sizeof(tmp));
     /* F.1.6 ECB-AES256.Decrypt */
     result = scl_aes_ecb(&scl, tmp, ciphertext_be, sizeof(ciphertext_be),
                          key256, sizeof(key256), SCL_DECRYPT);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(plaintext_be, tmp, sizeof(plaintext_be));
 }
 
 TEST(scl_aes_256, cbc_F_2_56)
@@ -198,7 +198,7 @@ TEST(scl_aes_256, cbc_F_2_56)
     result = scl_aes_cbc_core(&scl, tmp, plaintext_be, sizeof(plaintext_be),
                               SCL_ENCRYPT);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
 
     memset(tmp, 0, sizeof(tmp));
     result = scl_aes_cbc_init(&scl, key256, sizeof(key256), IV, sizeof(IV),
@@ -209,7 +209,7 @@ TEST(scl_aes_256, cbc_F_2_56)
     result = scl_aes_cbc_core(&scl, tmp, ciphertext_be, sizeof(ciphertext_be),
                               SCL_DECRYPT);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(plaintext_be, tmp, sizeof(plaintext_be));
 }
 
 TEST(scl_aes_256, cbc_F_2_56_high)
@@ -262,14 +262,14 @@ TEST(scl_aes_256, cbc_F_2_56_high)
     result = scl_aes_cbc(&scl, tmp, plaintext_be, sizeof(plaintext_be), key256,
                          sizeof(key256), IV, sizeof(IV), SCL_ENCRYPT);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(ciphertext_be, tmp, sizeof(ciphertext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
 
     memset(tmp, 0, sizeof(tmp));
     /* F.2.6 CBC-AES256.Decrypt */
     result = scl_aes_cbc(&scl, tmp, ciphertext_be, sizeof(ciphertext_be),
                          key256, sizeof(key256), IV, sizeof(IV), SCL_DECRYPT);
     TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_TRUE(0 == memcmp(plaintext_be, tmp, sizeof(plaintext_be)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(plaintext_be, tmp, sizeof(plaintext_be));
 }
 
 #endif
