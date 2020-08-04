@@ -13,10 +13,13 @@ override SOURCE_DIR = $(CURRENT_DIR)
 override SOURCE_DIRS := $(SOURCE_DIR)
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/sha
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/aes
-override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/soft
+override SOURCE_DIRS += $(SOURCE_DIR)/tests/api
+override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/bignumbers/software
+override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/software
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/hardware
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/aes/hardware
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/test_runners
+
 
 override C_SOURCES = $(foreach dir,$(SOURCE_DIRS),$(wildcard $(dir)/*.c))
 					
@@ -27,6 +30,8 @@ override OBJS :=	$(subst $(SOURCE_DIR),$(BUILD_DIRECTORY),$(C_SOURCES:.c=.o)) \
 # ----------------------------------------------------------------------
 # Add custom flags for libscl 
 # ----------------------------------------------------------------------
+LIBSCL_METAL_CFLAGS := $(CFLAGS)
+
 SCL_SOURCE_PATH ?= ../../scl-metal
 SCL_DIR = $(abspath $(SCL_SOURCE_PATH))
 include $(SCL_DIR)/scripts/scl.mk
@@ -37,9 +42,10 @@ override CFLAGS += $(foreach dir,$(SCL_INCLUDES),-I $(dir))
 override LDLIBS += -lscl
 override LDFLAGS += -L$(join $(abspath  $(BUILD_DIRECTORY)),/scl/lib)
 
+
 # ----------------------------------------------------------------------
 # Add variable for HCA
-# ----------------------------------------------------------------------0
+# ----------------------------------------------------------------------
 export HCA_VERSION ?= 0.5
 
 # ----------------------------------------------------------------------
@@ -78,6 +84,9 @@ override INCLUDE_DIRS := 	$(CURRENT_DIR) \
 							$(CURRENT_DIR)/tests/sha
 
 override CFLAGS += $(foreach dir,$(INCLUDE_DIRS),-I $(dir))
+override CFLAGS += -Wall -Wextra -fstack-protector-all
+
+LIBSCL_METAL_CFLAGS += -fstack-protector-all
 
 # override CFLAGS += -I $(CURRENT_DIR)
 override ASFLAGS = $(CFLAGS)
@@ -98,9 +107,6 @@ endif
 # ----------------------------------------------------------------------
 
 $(BUILD_DIRECTORY_UNITY)/%.o: $(UNITY_DIR)/%.c
-	$(info source:$<)
-	$(info source:$<)
-	$(info obj:$@)
 	$(HIDE) mkdir -p $(dir $@)
 	$(HIDE) $(CC) -c -o $@ $(CFLAGS) $(XCFLAGS) $<
 	
@@ -116,7 +122,7 @@ libscl.a:
 	make -f Makefile -C $(SCL_DIR) \
 	BUILD_DIR=$(join $(abspath  $(BUILD_DIRECTORY)),/scl) \
 	libscl.a \
-	VERBOSE=$(VERBOSE)
+	VERBOSE=$(VERBOSE) CFLAGS="$(LIBSCL_METAL_CFLAGS)"
 	
 $(PROGRAM): \
 	libscl.a \

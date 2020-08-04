@@ -93,8 +93,8 @@ TEST(scl_soft_sha_224, msg_abc_msg_not_aligned)
         0xA4, 0x77, 0xBD, 0xA2, 0x55, 0xB3, 0x2A, 0xAD, 0xBC, 0xE4,
         0xBD, 0xA0, 0xB3, 0xF7, 0xE3, 0x6C, 0x9D, 0xA7};
 
-    result = result = scl_sha(&scl, SCL_HASH_SHA224, &message[1],
-                              sizeof(message) - 1, digest, &digest_len);
+    result = scl_sha(&scl, SCL_HASH_SHA224, &message[1], sizeof(message) - 1,
+                     digest, &digest_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA224_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==

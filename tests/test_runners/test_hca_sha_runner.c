@@ -1,6 +1,11 @@
 #include "unity.h"
 #include "unity_fixture.h"
 
+#include <api/hardware/scl_hca.h>
+#include <metal/machine/platform.h>
+
+#if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
+
 // SHA 224
 TEST_GROUP_RUNNER(hca_sha_224)
 {
@@ -52,3 +57,5 @@ TEST_GROUP_RUNNER(hca_sha_512)
     RUN_TEST_CASE(hca_sha_512, msg_1024_bytes_aligned);
     RUN_TEST_CASE(hca_sha_512, msg_1024_bytes_not_aligned);
 }
+
+#endif

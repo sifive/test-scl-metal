@@ -7,6 +7,10 @@
 #include <api/hardware/scl_hca.h>
 #include <api/scl_api.h>
 
+#include <metal/machine/platform.h>
+
+#if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
+
 #define CCM_TQ(t, q)     ((uint8_t)((uint8_t)(t & 0xF) + (uint8_t)(q << 4)))
 
 static const metal_scl_t scl = {.hca_base = METAL_SIFIVE_HCA_0_BASE_ADDRESS,
@@ -40,7 +44,8 @@ TEST(hca_aes_128, ecb_F_1_12)
      *     block3 = 43b1cd7f598ece23881b00e3ed030688
      *     block4 = 7b0c785e27e8ad3f8223207104725dd4
      */
-    static const uint64_t key128[4] = {0, 0, 0xabf7158809cf4f3c, 0x2b7e151628aed2a6};
+    static const uint64_t key128[4] = {0, 0, 0xabf7158809cf4f3c,
+                                       0x2b7e151628aed2a6};
 
     static const uint8_t plaintext_be[64] __attribute__((aligned(8))) = {
         0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e,
@@ -94,7 +99,8 @@ TEST(hca_aes_128, ecb_not_aligned)
      *     block3 = 43b1cd7f598ece23881b00e3ed030688
      *     block4 = 7b0c785e27e8ad3f8223207104725dd4
      */
-    static const uint64_t key128[4] = {0, 0, 0xabf7158809cf4f3c, 0x2b7e151628aed2a6};
+    static const uint64_t key128[4] = {0, 0, 0xabf7158809cf4f3c,
+                                       0x2b7e151628aed2a6};
 
     static const uint8_t plaintext_be[65] __attribute__((aligned(8))) = {
         0x00, 0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d,
@@ -143,7 +149,8 @@ TEST(hca_aes_128, cbc_F_2_12)
      *     block3 = 73bed6b8e3c1743b7116e69e22229516
      *     block4 = 3ff1caa1681fac09120eca307586e1a7
      */
-    static const uint64_t key128[4] = {0, 0, 0xabf7158809cf4f3c, 0x2b7e151628aed2a6};
+    static const uint64_t key128[4] = {0, 0, 0xabf7158809cf4f3c,
+                                       0x2b7e151628aed2a6};
 
     static const uint64_t IV[2] = {0x08090a0b0c0d0e0f, 0x0001020304050607};
 
@@ -849,3 +856,4 @@ TEST(hca_aes_128, gcm_3)
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(tag, tag_c, sizeof(tag));
 }
+#endif

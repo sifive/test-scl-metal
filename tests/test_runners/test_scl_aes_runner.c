@@ -1,6 +1,11 @@
 #include "unity.h"
 #include "unity_fixture.h"
 
+#include <api/hardware/scl_hca.h>
+#include <metal/machine/platform.h>
+
+#if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
+
 // AES 128
 TEST_GROUP_RUNNER(scl_aes_128)
 {
@@ -42,3 +47,5 @@ TEST_GROUP_RUNNER(scl_aes_256)
     RUN_TEST_CASE(scl_aes_256, cbc_F_2_56);
     RUN_TEST_CASE(scl_aes_256, cbc_F_2_56_high);
 }
+
+#endif
