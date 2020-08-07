@@ -15,6 +15,7 @@ override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/sha
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/aes
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/bignumbers/software
+override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/asymmetric/ecc/software
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/software
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/hardware
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/aes/hardware
@@ -91,7 +92,7 @@ LIBSCL_METAL_CFLAGS += -fstack-protector-all
 # override CFLAGS += -I $(CURRENT_DIR)
 override ASFLAGS = $(CFLAGS)
 
-override LDFLAGS  += -Wl,--defsym,__stack_size=0xC00
+override LDFLAGS  += -Wl,--defsym,__stack_size=0x2000
 
 # ----------------------------------------------------------------------
 # Macro
