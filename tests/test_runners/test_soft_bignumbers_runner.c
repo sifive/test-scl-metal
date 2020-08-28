@@ -16,6 +16,7 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_add_carry_2);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_add_in_a_is_output);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_add_in_b_is_output);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_add_100_bytes);
 
     /* substraction */
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_sub_size_0);
@@ -211,6 +212,7 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_2_2);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_5);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_5_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_12);
 
     /* Modular multiplicative inverse */
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_0);
