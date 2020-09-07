@@ -205,3 +205,111 @@ TEST(soft_ecc, test_p384r1_add_affine_point_via_jacobian)
     TEST_ASSERT_EQUAL_HEX8_ARRAY(point_expected_y, point_1_y,
                                  ECC_SECP384R1_BYTESIZE);
 }
+
+/* test co-Z multiplication */
+
+TEST(soft_ecc, test_soft_ecc_mult_coz)
+{
+    int32_t result = 0;
+
+    uint32_t point_x[ECC_SECP384R1_32B_WORDS_SIZE]
+        __attribute__((aligned(8))) = {0};
+
+    uint32_t point_y[ECC_SECP384R1_32B_WORDS_SIZE]
+        __attribute__((aligned(8))) = {0};
+
+    uint32_t k[ECC_SECP384R1_32B_WORDS_SIZE + 1] __attribute__((aligned(8))) = {
+        0xa5a5a5a5, 0xa5a5a5a5, 0xa5a5a5a5, 0xa5a5a5a5, 0xa5a5a5a5,
+        0xa5a5a5a5, 0xa5a5a5a5, 0xa5a5a5a5, 0xa5a5a5a5, 0xa5a5a5a5,
+        0xa5a5a5a5, 0xa5a5a5a5, 0x00000001};
+
+    static const uint32_t point_expected_x[ECC_SECP384R1_32B_WORDS_SIZE] = {
+        0xce9e055c, 0x0b28d27c, 0xcec1e64e, 0x09aa0f24, 0x32cce9e8, 0x68067caf,
+        0x144a6b52, 0x6e0f8c76, 0xcc00946c, 0xa134500e, 0xcea11fef, 0x521cd0aa};
+
+    static const uint32_t point_expected_y[ECC_SECP384R1_32B_WORDS_SIZE] = {
+        0x27bf720d, 0xe546d499, 0xb9f02ddd, 0x1a866443, 0xb6eeea36, 0xccf845f9,
+        0x1dd61ff3, 0xdb890fcd, 0xea7f8e66, 0xb480895b, 0x028b8f1d, 0x911e5cc9};
+
+    ecc_bignum_affine_point_t output_aff_pnt = {.x = (uint64_t *)point_x, .y = (uint64_t *)point_y};
+
+    result =
+        soft_ecc_mult_coz(&scl, &ecc_secp384r1, ecc_secp384r1.g, (uint64_t *)k,
+                          ECC_SECP384R1_32B_WORDS_SIZE + 1, &output_aff_pnt);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(point_expected_x, point_x,
+                                 ECC_SECP384R1_BYTESIZE);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(point_expected_y, point_y,
+                                 ECC_SECP384R1_BYTESIZE);
+}
+
+/* test co-Z add c */
+
+TEST(soft_ecc, test_soft_ecc_xycz_addc)
+{
+    int32_t result = 0;
+
+    uint32_t point_1_x[ECC_SECP384R1_32B_WORDS_SIZE]
+        __attribute__((aligned(8))) = {0x40ecd64d, 0x9814b74b, 0xe81f17d6,
+                                       0x3681efa0, 0xf27113fe, 0xdb0ddeeb,
+                                       0xf3d2faaf, 0x781a2808, 0xa2c12671,
+                                       0x78191950, 0x334272e3, 0x80bcdae0};
+
+    uint32_t point_1_y[ECC_SECP384R1_32B_WORDS_SIZE]
+        __attribute__((aligned(8))) = {0xf2e97b2f, 0xe3d9b7ad, 0x05a2a998,
+                                       0xd2f7bcf9, 0x0ef5b1ee, 0x8584ebe9,
+                                       0x720e9aff, 0x6cf5ed43, 0xf846ed09,
+                                       0x3262d310, 0x7215c02c, 0xbd7bfa6d};
+
+    uint32_t point_2_x[ECC_SECP384R1_32B_WORDS_SIZE]
+        __attribute__((aligned(8))) = {0xc5e40b94, 0x59ab4f6e, 0xb7ba23cd,
+                                       0xb223d61a, 0xa906c671, 0x6c54c93e,
+                                       0xe6b5d561, 0xd279318f, 0xe34e6d18,
+                                       0x52eebd29, 0x81ef5f4f, 0xe50dbe09};
+
+    uint32_t point_2_y[ECC_SECP384R1_32B_WORDS_SIZE]
+        __attribute__((aligned(8))) = {0xf1e0757a, 0x9dd63d29, 0x0ad2205e,
+                                       0x73333e36, 0x1fe41e83, 0x08c2e53b,
+                                       0xb9e0a162, 0xc068b421, 0x809fb3a5,
+                                       0xd90b8c1a, 0x52ac7ebe, 0x5b939b5a};
+
+    static const uint32_t point_1_expected_x[ECC_SECP384R1_32B_WORDS_SIZE] = {
+        0x55f0e204, 0xb2e9a157, 0x718db550, 0x367c11d8, 0xa26db8a0, 0xfaa9d9cc,
+        0x2a3ccf65, 0xc2215c9c, 0xf96aa701, 0xbc066dc3, 0x14d63be7, 0x832b9dae};
+
+    static const uint32_t point_1_expected_y[ECC_SECP384R1_32B_WORDS_SIZE] = {
+        0xe0885d7c, 0xc9c30ec7, 0x0ace6112, 0xbcf841b9, 0xf429565e, 0xa4c84138,
+        0xa35ac568, 0x1276a031, 0xdc163f77, 0xc47c5c58, 0xffa6c158, 0xd7944d07};
+
+    static const uint32_t point_2_expected_x[ECC_SECP384R1_32B_WORDS_SIZE] = {
+        0xdf28f2c8, 0x76c55d7c, 0xc797032d, 0x11e029e5, 0xf542f855, 0x1fa29278,
+        0x2057d64b, 0x2b193ac6, 0x94646760, 0x2edb5bed, 0x2d4e6999, 0xf0f4e8bc};
+
+    static const uint32_t point_2_expected_y[ECC_SECP384R1_32B_WORDS_SIZE] = {
+        0x005e1c03, 0x0f3514b6, 0x8651e6b3, 0x228cc4b5, 0x621174bc, 0x6ef7a1ab,
+        0x694eb8c0, 0x5b8afade, 0x52ab3dc4, 0xccf80d83, 0x372f57bf, 0x33f0e253};
+
+    ecc_bignum_affine_point_t p[2];
+
+    p[0].x = (uint64_t *)point_1_x;
+    p[0].y = (uint64_t *)point_1_y;
+    p[1].x = (uint64_t *)point_2_x;
+    p[1].y = (uint64_t *)point_2_y;
+
+    result =
+        soft_ecc_xycz_addc(&scl, &ecc_secp384r1, &p[1], &p[0], &p[0], &p[1]);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(point_1_expected_x, point_1_x,
+                                 ECC_SECP384R1_BYTESIZE);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(point_1_expected_y, point_1_y,
+                                 ECC_SECP384R1_BYTESIZE);
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(point_2_expected_x, point_2_x,
+                                 ECC_SECP384R1_BYTESIZE);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(point_2_expected_y, point_2_y,
+                                 ECC_SECP384R1_BYTESIZE);
+}
