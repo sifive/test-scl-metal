@@ -2291,8 +2291,8 @@ TEST(soft_bignumbers, soft_bignum_mod_size_12)
         0xe0, 0x37, 0xda, 0xc8, 0x1a, 0xbb, 0x20, 0xad, 0xf8, 0xcb, 0xab, 0xfc,
         0x2c, 0x2b, 0x34, 0xfa, 0x9a, 0xef, 0x3d, 0xb8, 0x4f, 0x62, 0x5b, 0xdb};
 
-    result = soft_bignum_mod(&scl, (uint64_t *)in, 24, ecc_secp384r1.p, 12,
-                             remainder);
+    result = soft_bignum_mod(&scl, (const uint64_t *)in, 24, ecc_secp384r1.p,
+                             12, remainder);
 
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,

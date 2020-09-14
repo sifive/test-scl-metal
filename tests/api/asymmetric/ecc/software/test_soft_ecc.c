@@ -6,7 +6,7 @@
 
 #include <api/software/scl_soft.h>
 
-static const metal_scl_t scl = {
+static metal_scl_t scl = {
     .hca_base = 0,
     .bignum_func =
         {
@@ -71,7 +71,8 @@ TEST(soft_ecc, test_p384r1_affine_2_jacobian_2_affine)
         .x = point_jac_x, .y = point_jac_y, .z = point_jac_z};
 
     result = soft_ecc_convert_affine_to_jacobian(
-        &scl, &ecc_secp384r1, &point, &point_jac, ECC_SECP384R1_32B_WORDS_SIZE);
+        &scl, &ecc_secp384r1, (ecc_bignum_affine_const_point_t *)&point,
+        &point_jac, ECC_SECP384R1_32B_WORDS_SIZE);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     result = soft_ecc_convert_jacobian_to_affine(
@@ -115,7 +116,8 @@ TEST(soft_ecc, test_p384r1_double_affine_point_via_jacobian)
         .x = point_jac_x, .y = point_jac_y, .z = point_jac_z};
 
     result = soft_ecc_convert_affine_to_jacobian(
-        &scl, &ecc_secp384r1, &point, &point_jac, ECC_SECP384R1_32B_WORDS_SIZE);
+        &scl, &ecc_secp384r1, (ecc_bignum_affine_const_point_t *)&point,
+        &point_jac, ECC_SECP384R1_32B_WORDS_SIZE);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     result = soft_ecc_double_jacobian(&scl, &ecc_secp384r1, &point_jac,
@@ -178,14 +180,14 @@ TEST(soft_ecc, test_p384r1_add_affine_point_via_jacobian)
     ecc_bignum_jacobian_point_t point_2_jac = {
         .x = point_2_jac_x, .y = point_2_jac_y, .z = point_2_jac_z};
 
-    result = soft_ecc_convert_affine_to_jacobian(&scl, &ecc_secp384r1, &point_1,
-                                                 &point_1_jac,
-                                                 ECC_SECP384R1_32B_WORDS_SIZE);
+    result = soft_ecc_convert_affine_to_jacobian(
+        &scl, &ecc_secp384r1, (ecc_bignum_affine_const_point_t *)&point_1,
+        &point_1_jac, ECC_SECP384R1_32B_WORDS_SIZE);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
-    result = soft_ecc_convert_affine_to_jacobian(&scl, &ecc_secp384r1, &point_2,
-                                                 &point_2_jac,
-                                                 ECC_SECP384R1_32B_WORDS_SIZE);
+    result = soft_ecc_convert_affine_to_jacobian(
+        &scl, &ecc_secp384r1, (ecc_bignum_affine_const_point_t *)&point_2,
+        &point_2_jac, ECC_SECP384R1_32B_WORDS_SIZE);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     result = soft_ecc_add_jacobian_jacobian(&scl, &ecc_secp384r1, &point_1_jac,
@@ -231,7 +233,8 @@ TEST(soft_ecc, test_soft_ecc_mult_coz)
         0x27bf720d, 0xe546d499, 0xb9f02ddd, 0x1a866443, 0xb6eeea36, 0xccf845f9,
         0x1dd61ff3, 0xdb890fcd, 0xea7f8e66, 0xb480895b, 0x028b8f1d, 0x911e5cc9};
 
-    ecc_bignum_affine_point_t output_aff_pnt = {.x = (uint64_t *)point_x, .y = (uint64_t *)point_y};
+    ecc_bignum_affine_point_t output_aff_pnt = {.x = (uint64_t *)point_x,
+                                                .y = (uint64_t *)point_y};
 
     result =
         soft_ecc_mult_coz(&scl, &ecc_secp384r1, ecc_secp384r1.g, (uint64_t *)k,
@@ -276,20 +279,20 @@ TEST(soft_ecc, test_soft_ecc_xycz_addc)
                                        0xd90b8c1a, 0x52ac7ebe, 0x5b939b5a};
 
     static const uint32_t point_1_expected_x[ECC_SECP384R1_32B_WORDS_SIZE] = {
-        0x55f0e204, 0xb2e9a157, 0x718db550, 0x367c11d8, 0xa26db8a0, 0xfaa9d9cc,
-        0x2a3ccf65, 0xc2215c9c, 0xf96aa701, 0xbc066dc3, 0x14d63be7, 0x832b9dae};
+        0xfa15e069, 0xa3b9403a, 0x04b928ee, 0x142ebb65, 0x759695fd, 0xacbab3b2,
+        0x29a25512, 0xb0125625, 0x0710b759, 0x4df8dfd0, 0xa59f4652, 0x1bcf9599};
 
     static const uint32_t point_1_expected_y[ECC_SECP384R1_32B_WORDS_SIZE] = {
-        0xe0885d7c, 0xc9c30ec7, 0x0ace6112, 0xbcf841b9, 0xf429565e, 0xa4c84138,
-        0xa35ac568, 0x1276a031, 0xdc163f77, 0xc47c5c58, 0xffa6c158, 0xd7944d07};
+        0x106d7177, 0xabf85d07, 0x0ca67a20, 0xb013be41, 0x0e542a4b, 0xb988d006,
+        0x95179c39, 0x6c7670a4, 0xaf8438db, 0x351e617a, 0x530c18e1, 0x52b7472c};
 
     static const uint32_t point_2_expected_x[ECC_SECP384R1_32B_WORDS_SIZE] = {
-        0xdf28f2c8, 0x76c55d7c, 0xc797032d, 0x11e029e5, 0xf542f855, 0x1fa29278,
-        0x2057d64b, 0x2b193ac6, 0x94646760, 0x2edb5bed, 0x2d4e6999, 0xf0f4e8bc};
+        0xe772e1d2, 0x655dba40, 0x808fcfb9, 0xeb9c3dfd, 0x40af1b0c, 0x46e0f61e,
+        0x7d94b9a2, 0xfbe129ec, 0x17895867, 0xa238d093, 0x053ebb61, 0xb24a7bc8};
 
     static const uint32_t point_2_expected_y[ECC_SECP384R1_32B_WORDS_SIZE] = {
-        0x005e1c03, 0x0f3514b6, 0x8651e6b3, 0x228cc4b5, 0x621174bc, 0x6ef7a1ab,
-        0x694eb8c0, 0x5b8afade, 0x52ab3dc4, 0xccf80d83, 0x372f57bf, 0x33f0e253};
+        0xea05b779, 0xf12059cb, 0xd08eb803, 0xa1e09845, 0x49ad0318, 0x689a5c95,
+        0x652e6476, 0xb13a9dec, 0x80417d2e, 0xcc886b48, 0xa3cd3b32, 0xd7be9639};
 
     ecc_bignum_affine_point_t p[2];
 
@@ -298,8 +301,9 @@ TEST(soft_ecc, test_soft_ecc_xycz_addc)
     p[1].x = (uint64_t *)point_2_x;
     p[1].y = (uint64_t *)point_2_y;
 
-    result =
-        soft_ecc_xycz_addc(&scl, &ecc_secp384r1, &p[1], &p[0], &p[0], &p[1]);
+    result = soft_ecc_xycz_addc(
+        &scl, &ecc_secp384r1, (ecc_bignum_affine_const_point_t *)&p[1],
+        (ecc_bignum_affine_const_point_t *)&p[0], &p[0], &p[1]);
 
     TEST_ASSERT_TRUE(SCL_OK == result);
 
