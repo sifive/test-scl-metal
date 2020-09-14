@@ -81,11 +81,15 @@ override LDLIBS := $(filter-out $(FILTER_PATTERN),$(LDLIBS)) -Wl,--end-group
 # ----------------------------------------------------------------------
 # Common def
 # ----------------------------------------------------------------------
-override INCLUDE_DIRS := 	$(CURRENT_DIR) \
-							$(CURRENT_DIR)/tests/sha
+override INCLUDE_DIRS := 	$(CURRENT_DIR) 
 
 override CFLAGS += $(foreach dir,$(INCLUDE_DIRS),-I $(dir))
 override CFLAGS += -Wall -Wextra -fstack-protector-all
+
+override CFLAGS += -Wpedantic -Wcast-qual \
+					-Wunreachable-code -Wstrict-aliasing -Wdangling-else \
+					-Wconversion -Wsign-conversion -Wmissing-include-dirs \
+					-Wduplicated-branches -Wduplicated-cond -Warray-bounds 
 
 LIBSCL_METAL_CFLAGS += -fstack-protector-all
 
