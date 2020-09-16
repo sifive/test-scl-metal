@@ -7,6 +7,8 @@
 #include <api/hash/sha.h>
 #include <api/software/scl_soft.h>
 
+#include <scl/scl_ecdsa.h>
+
 static int32_t get_data_for_test(const metal_scl_t *const scl,
                                  uint32_t *data_out);
 
@@ -26,43 +28,45 @@ static metal_scl_t scl = {
             .sub = soft_bignum_sub,
             .mult = soft_bignum_mult,
             .square = soft_bignum_square_with_mult,
-            // .square = soft_bignum_square,
             .leftshift = soft_bignum_leftshift,
             .rightshift = soft_bignum_rightshift,
             .msb_set_in_word = soft_bignum_msb_set_in_word,
             .get_msb_set = soft_bignum_get_msb_set,
             .set_bit = soft_bignum_set_bit,
             .div = soft_bignum_div,
-            // .mod = soft_bignum_mod,
             .mod = soft_ecc_mod,
             .set_modulus = soft_bignum_set_modulus,
             .mod_add = soft_bignum_mod_add,
             .mod_sub = soft_bignum_mod_sub,
-            // .mod_sub = soft_ecc_mod_sub,
             .mod_mult = soft_bignum_mod_mult,
             .mod_inv = soft_bignum_mod_inv,
             .mod_square = soft_bignum_mod_square,
+        },
+
+    .ecdsa_func =
+        {
+            .signature = soft_ecdsa_signature,
+            .verification = soft_ecdsa_verification,
         },
 };
 
 int32_t get_data_for_test(const metal_scl_t *const scl, uint32_t *data_out)
 {
     (void)scl;
-    // *data_out = 0x7F7F7F7F;
     *data_out = 0xA5A5A5A5;
     return (SCL_OK);
 }
 
-TEST_GROUP(soft_ecdsa);
+TEST_GROUP(scl_ecdsa);
 
-TEST_SETUP(soft_ecdsa) {}
+TEST_SETUP(scl_ecdsa) {}
 
-TEST_TEAR_DOWN(soft_ecdsa) {}
+TEST_TEAR_DOWN(scl_ecdsa) {}
 
 /* Verification */
 
 /* SECP256r1 */
-TEST(soft_ecdsa, test_p256r1_curve_input_256B_verif_success)
+TEST(scl_ecdsa, test_p256r1_curve_input_256B_verif_success)
 {
     int32_t result = 0;
 
@@ -94,13 +98,13 @@ TEST(soft_ecdsa, test_p256r1_curve_input_256B_verif_success)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_OK == result);
 }
 
-TEST(soft_ecdsa, test_p256r1_curve_input_256B_verif_invalid_signature)
+TEST(scl_ecdsa, test_p256r1_curve_input_256B_verif_invalid_signature)
 {
     int32_t result = 0;
 
@@ -132,13 +136,13 @@ TEST(soft_ecdsa, test_p256r1_curve_input_256B_verif_invalid_signature)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_ERR_SIGNATURE == result);
 }
 
-TEST(soft_ecdsa, test_p256r1_curve_input_256B_verif_invalid_signature_zero)
+TEST(scl_ecdsa, test_p256r1_curve_input_256B_verif_invalid_signature_zero)
 {
     int32_t result = 0;
 
@@ -170,13 +174,13 @@ TEST(soft_ecdsa, test_p256r1_curve_input_256B_verif_invalid_signature_zero)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_ERR_SIGNATURE == result);
 }
 
-TEST(soft_ecdsa, test_p256r1_curve_input_256B_verif_invalid_signature_curve_p)
+TEST(scl_ecdsa, test_p256r1_curve_input_256B_verif_invalid_signature_curve_p)
 {
     int32_t result = 0;
 
@@ -208,13 +212,13 @@ TEST(soft_ecdsa, test_p256r1_curve_input_256B_verif_invalid_signature_curve_p)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_ERR_SIGNATURE == result);
 }
 
-TEST(soft_ecdsa, test_p256r1_curve_input_256B_verif_invalid_signature_curve_n)
+TEST(scl_ecdsa, test_p256r1_curve_input_256B_verif_invalid_signature_curve_n)
 {
     int32_t result = 0;
 
@@ -246,14 +250,14 @@ TEST(soft_ecdsa, test_p256r1_curve_input_256B_verif_invalid_signature_curve_n)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_ERR_SIGNATURE == result);
 }
 
 /* SECP384r1 */
-TEST(soft_ecdsa, test_p384r1_curve_input_384B_verif_success)
+TEST(scl_ecdsa, test_p384r1_curve_input_384B_verif_success)
 {
     int32_t result = 0;
 
@@ -287,13 +291,13 @@ TEST(soft_ecdsa, test_p384r1_curve_input_384B_verif_success)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_OK == result);
 }
 
-TEST(soft_ecdsa, test_p384r1_curve_input_384B_verif_invalid_signature)
+TEST(scl_ecdsa, test_p384r1_curve_input_384B_verif_invalid_signature)
 {
     int32_t result = 0;
 
@@ -327,13 +331,13 @@ TEST(soft_ecdsa, test_p384r1_curve_input_384B_verif_invalid_signature)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_ERR_SIGNATURE == result);
 }
 
-TEST(soft_ecdsa, test_p384r1_curve_input_384B_verif_invalid_signature_zero)
+TEST(scl_ecdsa, test_p384r1_curve_input_384B_verif_invalid_signature_zero)
 {
     int32_t result = 0;
 
@@ -367,13 +371,13 @@ TEST(soft_ecdsa, test_p384r1_curve_input_384B_verif_invalid_signature_zero)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_ERR_SIGNATURE == result);
 }
 
-TEST(soft_ecdsa, test_p384r1_curve_input_384B_verif_invalid_signature_curve_p)
+TEST(scl_ecdsa, test_p384r1_curve_input_384B_verif_invalid_signature_curve_p)
 {
     int32_t result = 0;
 
@@ -407,13 +411,13 @@ TEST(soft_ecdsa, test_p384r1_curve_input_384B_verif_invalid_signature_curve_p)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_ERR_SIGNATURE == result);
 }
 
-TEST(soft_ecdsa, test_p384r1_curve_input_384B_verif_invalid_signature_curve_n)
+TEST(scl_ecdsa, test_p384r1_curve_input_384B_verif_invalid_signature_curve_n)
 {
     int32_t result = 0;
 
@@ -447,14 +451,14 @@ TEST(soft_ecdsa, test_p384r1_curve_input_384B_verif_invalid_signature_curve_n)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_ERR_SIGNATURE == result);
 }
 
 /* SECP521r1 */
-TEST(soft_ecdsa, test_p521r1_curve_input_512B_verif_success)
+TEST(scl_ecdsa, test_p521r1_curve_input_512B_verif_success)
 {
     int32_t result = 0;
 
@@ -501,13 +505,13 @@ TEST(soft_ecdsa, test_p521r1_curve_input_512B_verif_success)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp521r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp521r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_OK == result);
 }
 
-TEST(soft_ecdsa, test_p521r1_curve_input_512B_verif_invalid_signature)
+TEST(scl_ecdsa, test_p521r1_curve_input_512B_verif_invalid_signature)
 {
     int32_t result = 0;
 
@@ -554,13 +558,13 @@ TEST(soft_ecdsa, test_p521r1_curve_input_512B_verif_invalid_signature)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp521r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp521r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_ERR_SIGNATURE == result);
 }
 
-TEST(soft_ecdsa, test_p521r1_curve_input_512B_verif_invalid_signature_zero)
+TEST(scl_ecdsa, test_p521r1_curve_input_512B_verif_invalid_signature_zero)
 {
     int32_t result = 0;
 
@@ -607,13 +611,13 @@ TEST(soft_ecdsa, test_p521r1_curve_input_512B_verif_invalid_signature_zero)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp521r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp521r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_ERR_SIGNATURE == result);
 }
 
-TEST(soft_ecdsa, test_p521r1_curve_input_512B_verif_invalid_signature_curve_p)
+TEST(scl_ecdsa, test_p521r1_curve_input_512B_verif_invalid_signature_curve_p)
 {
     int32_t result = 0;
 
@@ -660,13 +664,13 @@ TEST(soft_ecdsa, test_p521r1_curve_input_512B_verif_invalid_signature_curve_p)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp521r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp521r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_ERR_SIGNATURE == result);
 }
 
-TEST(soft_ecdsa, test_p521r1_curve_input_512B_verif_invalid_signature_curve_n)
+TEST(scl_ecdsa, test_p521r1_curve_input_512B_verif_invalid_signature_curve_n)
 {
     int32_t result = 0;
 
@@ -713,8 +717,8 @@ TEST(soft_ecdsa, test_p521r1_curve_input_512B_verif_invalid_signature_curve_n)
                                                .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp521r1, &pub_key, &signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp521r1, &pub_key, &signature,
+                                    hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_ERR_SIGNATURE == result);
 }
@@ -722,7 +726,7 @@ TEST(soft_ecdsa, test_p521r1_curve_input_512B_verif_invalid_signature_curve_n)
 /* Signature */
 
 /* SECP256r1 */
-TEST(soft_ecdsa, test_p256r1_curve_input_256B_sign)
+TEST(scl_ecdsa, test_p256r1_curve_input_256B_sign)
 {
     int32_t result = 0;
 
@@ -762,8 +766,8 @@ TEST(soft_ecdsa, test_p256r1_curve_input_256B_sign)
     ecdsa_signature_t signature = {.r = signature_r, .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_signature(&scl, &ecc_secp256r1, priv_key, &signature,
-                                  hash, sizeof(hash));
+    result = scl_ecdsa_signature(&scl, &ecc_secp256r1, priv_key, &signature,
+                                 hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_r, signature_r,
@@ -771,14 +775,14 @@ TEST(soft_ecdsa, test_p256r1_curve_input_256B_sign)
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_s, signature_s,
                                  ECC_SECP256R1_BYTESIZE);
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key,
-                                     (ecdsa_signature_const_t *)&signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key,
+                                    (ecdsa_signature_const_t *)&signature, hash,
+                                    sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_OK == result);
 }
 
-TEST(soft_ecdsa, test_p256r1_curve_input_216B_sign)
+TEST(scl_ecdsa, test_p256r1_curve_input_216B_sign)
 {
     int32_t result = 0;
 
@@ -790,16 +794,6 @@ TEST(soft_ecdsa, test_p256r1_curve_input_216B_sign)
     uint8_t signature_r[ECC_SECP256R1_BYTESIZE] = {0};
     uint8_t signature_s[ECC_SECP256R1_BYTESIZE] = {0};
 
-    static const uint8_t expected_signature_r[ECC_SECP256R1_BYTESIZE] = {
-        0x7E, 0x44, 0xE9, 0x6E, 0x91, 0x23, 0x4B, 0xD1, 0xAE, 0xA4, 0x03,
-        0x46, 0xAE, 0x03, 0x15, 0x88, 0xEA, 0x33, 0xE6, 0x4E, 0x73, 0x4F,
-        0xE6, 0x41, 0x65, 0x1F, 0x46, 0xD4, 0x43, 0xFD, 0xEE, 0x3C};
-
-    static const uint8_t expected_signature_s[ECC_SECP256R1_BYTESIZE] = {
-        0xF8, 0xFF, 0x54, 0x13, 0x13, 0x3A, 0xA1, 0x26, 0x3B, 0x1B, 0xF9,
-        0xB5, 0x6A, 0x1A, 0x5F, 0x9F, 0xF7, 0xCD, 0x59, 0x1E, 0x64, 0x5C,
-        0xE4, 0x5B, 0xF0, 0xA7, 0x70, 0x1A, 0x54, 0xFD, 0xAE, 0x58};
-
     static const uint8_t priv_key[ECC_SECP256R1_BYTESIZE] = {
         0xD1, 0xCD, 0x56, 0x34, 0x1B, 0x55, 0x61, 0x9B, 0x32, 0x98, 0x67,
         0xE3, 0x44, 0xF4, 0xF5, 0xD9, 0x7E, 0xEF, 0x63, 0x67, 0x92, 0x00,
@@ -818,23 +812,19 @@ TEST(soft_ecdsa, test_p256r1_curve_input_216B_sign)
     ecdsa_signature_t signature = {.r = signature_r, .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_signature(&scl, &ecc_secp256r1, priv_key, &signature,
-                                  hash, sizeof(hash));
+    result = scl_ecdsa_signature(&scl, &ecc_secp256r1, priv_key, &signature,
+                                 hash, sizeof(hash));
 
-    TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_r, signature_r,
-                                 ECC_SECP256R1_BYTESIZE);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_s, signature_s,
-                                 ECC_SECP256R1_BYTESIZE);
+    TEST_ASSERT_TRUE(SCL_ERR_HASH == result);
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key,
-                                     (ecdsa_signature_const_t *)&signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key,
+                                    (ecdsa_signature_const_t *)&signature, hash,
+                                    sizeof(hash));
 
-    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(SCL_ERR_HASH == result);
 }
 
-TEST(soft_ecdsa, test_p256r1_curve_input_264B_sign)
+TEST(scl_ecdsa, test_p256r1_curve_input_264B_sign)
 {
     int32_t result = 0;
 
@@ -846,16 +836,6 @@ TEST(soft_ecdsa, test_p256r1_curve_input_264B_sign)
     uint8_t signature_r[ECC_SECP256R1_BYTESIZE] = {0};
     uint8_t signature_s[ECC_SECP256R1_BYTESIZE] = {0};
 
-    static const uint8_t expected_signature_r[ECC_SECP256R1_BYTESIZE] = {
-        0x7E, 0x44, 0xE9, 0x6E, 0x91, 0x23, 0x4B, 0xD1, 0xAE, 0xA4, 0x03,
-        0x46, 0xAE, 0x03, 0x15, 0x88, 0xEA, 0x33, 0xE6, 0x4E, 0x73, 0x4F,
-        0xE6, 0x41, 0x65, 0x1F, 0x46, 0xD4, 0x43, 0xFD, 0xEE, 0x3C};
-
-    static const uint8_t expected_signature_s[ECC_SECP256R1_BYTESIZE] = {
-        0xA7, 0xD9, 0x2A, 0xF9, 0x61, 0xB8, 0x50, 0x7B, 0xFA, 0x44, 0x0B,
-        0xD0, 0x26, 0x0F, 0x6A, 0x88, 0x1D, 0xB7, 0x0A, 0x7D, 0xA6, 0x41,
-        0x18, 0x90, 0xC6, 0x05, 0x1E, 0xD9, 0xBF, 0x3E, 0x90, 0x32};
-
     static const uint8_t priv_key[ECC_SECP256R1_BYTESIZE] = {
         0xD1, 0xCD, 0x56, 0x34, 0x1B, 0x55, 0x61, 0x9B, 0x32, 0x98, 0x67,
         0xE3, 0x44, 0xF4, 0xF5, 0xD9, 0x7E, 0xEF, 0x63, 0x67, 0x92, 0x00,
@@ -874,24 +854,20 @@ TEST(soft_ecdsa, test_p256r1_curve_input_264B_sign)
     ecdsa_signature_t signature = {.r = signature_r, .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_signature(&scl, &ecc_secp256r1, priv_key, &signature,
-                                  hash, sizeof(hash));
+    result = scl_ecdsa_signature(&scl, &ecc_secp256r1, priv_key, &signature,
+                                 hash, sizeof(hash));
 
-    TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_r, signature_r,
-                                 ECC_SECP256R1_BYTESIZE);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_s, signature_s,
-                                 ECC_SECP256R1_BYTESIZE);
+    TEST_ASSERT_TRUE(SCL_ERR_HASH == result);
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key,
-                                     (ecdsa_signature_const_t *)&signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp256r1, &pub_key,
+                                    (ecdsa_signature_const_t *)&signature, hash,
+                                    sizeof(hash));
 
-    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(SCL_ERR_HASH == result);
 }
 
 /* SECP384r1 */
-TEST(soft_ecdsa, test_p384r1_curve_input_384B_sign)
+TEST(scl_ecdsa, test_p384r1_curve_input_384B_sign)
 {
     int32_t result = 0;
 
@@ -935,8 +911,8 @@ TEST(soft_ecdsa, test_p384r1_curve_input_384B_sign)
     ecdsa_signature_t signature = {.r = signature_r, .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_signature(&scl, &ecc_secp384r1, priv_key, &signature,
-                                  hash, sizeof(hash));
+    result = scl_ecdsa_signature(&scl, &ecc_secp384r1, priv_key, &signature,
+                                 hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_r, signature_r,
@@ -944,14 +920,14 @@ TEST(soft_ecdsa, test_p384r1_curve_input_384B_sign)
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_s, signature_s,
                                  ECC_SECP384R1_BYTESIZE);
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key,
-                                     (ecdsa_signature_const_t *)&signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key,
+                                    (ecdsa_signature_const_t *)&signature, hash,
+                                    sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_OK == result);
 }
 
-TEST(soft_ecdsa, test_p384r1_curve_input_216B_sign)
+TEST(scl_ecdsa, test_p384r1_curve_input_216B_sign)
 {
     int32_t result = 0;
 
@@ -961,18 +937,6 @@ TEST(soft_ecdsa, test_p384r1_curve_input_216B_sign)
                                      0x70, 0x54, 0x55, 0xA4, 0x20, 0x46};
     uint8_t signature_r[ECC_SECP384R1_BYTESIZE] = {0};
     uint8_t signature_s[ECC_SECP384R1_BYTESIZE] = {0};
-
-    static const uint8_t expected_signature_r[ECC_SECP384R1_BYTESIZE] = {
-        0xA0, 0x40, 0xF4, 0x78, 0x57, 0x49, 0x72, 0xA3, 0x8D, 0x2A, 0x97, 0x84,
-        0xE3, 0x52, 0x3C, 0x1D, 0xE2, 0xE5, 0x64, 0xED, 0x37, 0xC3, 0x44, 0xF9,
-        0x57, 0x1D, 0xBE, 0x72, 0x67, 0xF3, 0x53, 0xA6, 0x86, 0xAF, 0x60, 0xF2,
-        0x74, 0x5C, 0xA9, 0x57, 0x29, 0xFB, 0x90, 0x18, 0x56, 0x2F, 0x82, 0x19};
-
-    static const uint8_t expected_signature_s[ECC_SECP384R1_BYTESIZE] = {
-        0x94, 0x28, 0xB9, 0x55, 0x74, 0x60, 0xBD, 0x70, 0xC6, 0xD5, 0xEA, 0xD2,
-        0x47, 0x9F, 0xDE, 0x51, 0x4A, 0x90, 0x35, 0x2B, 0x3B, 0x41, 0x03, 0x21,
-        0xD4, 0xF0, 0x40, 0xCA, 0xBA, 0x71, 0x9F, 0xC4, 0xD6, 0x10, 0x00, 0x3B,
-        0x97, 0xDD, 0xE9, 0xB4, 0xC3, 0xC1, 0x80, 0x60, 0x0D, 0xC0, 0xC4, 0x03};
 
     static const uint8_t priv_key[ECC_SECP384R1_BYTESIZE] = {
         0x81, 0x88, 0x9C, 0x86, 0xA2, 0x82, 0xB4, 0x15, 0xB2, 0xF4, 0x98, 0xE4,
@@ -994,23 +958,19 @@ TEST(soft_ecdsa, test_p384r1_curve_input_216B_sign)
     ecdsa_signature_t signature = {.r = signature_r, .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_signature(&scl, &ecc_secp384r1, priv_key, &signature,
-                                  hash, sizeof(hash));
+    result = scl_ecdsa_signature(&scl, &ecc_secp384r1, priv_key, &signature,
+                                 hash, sizeof(hash));
 
-    TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_r, signature_r,
-                                 ECC_SECP384R1_BYTESIZE);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_s, signature_s,
-                                 ECC_SECP384R1_BYTESIZE);
+    TEST_ASSERT_TRUE(SCL_ERR_HASH == result);
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key,
-                                     (ecdsa_signature_const_t *)&signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key,
+                                    (ecdsa_signature_const_t *)&signature, hash,
+                                    sizeof(hash));
 
-    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(SCL_ERR_HASH == result);
 }
 
-TEST(soft_ecdsa, test_p384r1_curve_input_385B_sign)
+TEST(scl_ecdsa, test_p384r1_curve_input_385B_sign)
 {
     int32_t result = 0;
 
@@ -1023,18 +983,6 @@ TEST(soft_ecdsa, test_p384r1_curve_input_385B_sign)
     uint8_t signature_r[ECC_SECP384R1_BYTESIZE] = {0};
     uint8_t signature_s[ECC_SECP384R1_BYTESIZE] = {0};
 
-    static const uint8_t expected_signature_r[ECC_SECP384R1_BYTESIZE] = {
-        0xA0, 0x40, 0xF4, 0x78, 0x57, 0x49, 0x72, 0xA3, 0x8D, 0x2A, 0x97, 0x84,
-        0xE3, 0x52, 0x3C, 0x1D, 0xE2, 0xE5, 0x64, 0xED, 0x37, 0xC3, 0x44, 0xF9,
-        0x57, 0x1D, 0xBE, 0x72, 0x67, 0xF3, 0x53, 0xA6, 0x86, 0xAF, 0x60, 0xF2,
-        0x74, 0x5C, 0xA9, 0x57, 0x29, 0xFB, 0x90, 0x18, 0x56, 0x2F, 0x82, 0x19};
-
-    static const uint8_t expected_signature_s[ECC_SECP384R1_BYTESIZE] = {
-        0xB4, 0x37, 0xA4, 0x29, 0xCA, 0x22, 0xE9, 0xA7, 0x69, 0x90, 0x0D, 0x02,
-        0x41, 0x7E, 0xC8, 0xE9, 0xFA, 0xA9, 0x5E, 0xEE, 0x44, 0xDB, 0x18, 0xFA,
-        0xB6, 0xBF, 0x0C, 0x70, 0x94, 0xC7, 0xFE, 0x63, 0xA6, 0xEA, 0x36, 0x95,
-        0xBA, 0xDB, 0x03, 0xC7, 0x11, 0x55, 0xB2, 0x11, 0xB4, 0xC2, 0x3B, 0xD1};
-
     static const uint8_t priv_key[ECC_SECP384R1_BYTESIZE] = {
         0x81, 0x88, 0x9C, 0x86, 0xA2, 0x82, 0xB4, 0x15, 0xB2, 0xF4, 0x98, 0xE4,
         0x4C, 0xA8, 0x79, 0xE6, 0x1B, 0x8C, 0xDF, 0x3F, 0x29, 0xA1, 0xE6, 0x70,
@@ -1055,24 +1003,20 @@ TEST(soft_ecdsa, test_p384r1_curve_input_385B_sign)
     ecdsa_signature_t signature = {.r = signature_r, .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_signature(&scl, &ecc_secp384r1, priv_key, &signature,
-                                  hash, sizeof(hash));
+    result = scl_ecdsa_signature(&scl, &ecc_secp384r1, priv_key, &signature,
+                                 hash, sizeof(hash));
 
-    TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_r, signature_r,
-                                 ECC_SECP384R1_BYTESIZE);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_s, signature_s,
-                                 ECC_SECP384R1_BYTESIZE);
+    TEST_ASSERT_TRUE(SCL_ERR_HASH == result);
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key,
-                                     (ecdsa_signature_const_t *)&signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp384r1, &pub_key,
+                                    (ecdsa_signature_const_t *)&signature, hash,
+                                    sizeof(hash));
 
-    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(SCL_ERR_HASH == result);
 }
 
 /* SECP521r1 */
-TEST(soft_ecdsa, test_p521r1_curve_input_512B_sign)
+TEST(scl_ecdsa, test_p521r1_curve_input_512B_sign)
 {
     int32_t result = 0;
 
@@ -1129,8 +1073,8 @@ TEST(soft_ecdsa, test_p521r1_curve_input_512B_sign)
     ecdsa_signature_t signature = {.r = signature_r, .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_signature(&scl, &ecc_secp521r1, priv_key, &signature,
-                                  hash, sizeof(hash));
+    result = scl_ecdsa_signature(&scl, &ecc_secp521r1, priv_key, &signature,
+                                 hash, sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_r, signature_r,
@@ -1138,14 +1082,14 @@ TEST(soft_ecdsa, test_p521r1_curve_input_512B_sign)
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_s, signature_s,
                                  ECC_SECP521R1_BYTESIZE);
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp521r1, &pub_key,
-                                     (ecdsa_signature_const_t *)&signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp521r1, &pub_key,
+                                    (ecdsa_signature_const_t *)&signature, hash,
+                                    sizeof(hash));
 
     TEST_ASSERT_TRUE(SCL_OK == result);
 }
 
-TEST(soft_ecdsa, test_p521r1_curve_input_216B_sign)
+TEST(scl_ecdsa, test_p521r1_curve_input_216B_sign)
 {
     int32_t result = 0;
 
@@ -1156,21 +1100,6 @@ TEST(soft_ecdsa, test_p521r1_curve_input_216B_sign)
 
     uint8_t signature_r[ECC_SECP521R1_BYTESIZE] = {0};
     uint8_t signature_s[ECC_SECP521R1_BYTESIZE] = {0};
-
-    static const uint8_t expected_signature_r[ECC_SECP521R1_BYTESIZE] = {
-        0x00, 0x6D, 0x5C, 0xC9, 0x62, 0x39, 0xF4, 0x1A, 0xC9, 0x0E, 0x92,
-        0x1E, 0xAA, 0xFA, 0x74, 0x82, 0xAB, 0x18, 0xC2, 0x25, 0x09, 0x9F,
-        0xFE, 0x73, 0x0F, 0xEC, 0x44, 0xBC, 0xD0, 0x42, 0x43, 0x17, 0xC3,
-        0xBB, 0xE7, 0xA9, 0x95, 0x9C, 0xC7, 0xC3, 0xDF, 0x5F, 0x4F, 0x89,
-        0xEE, 0xF6, 0x73, 0xEC, 0x9D, 0xDA, 0xED, 0x9D, 0x89, 0xC9, 0x1F,
-        0x29, 0x9C, 0x86, 0xAD, 0xBD, 0xC3, 0x86, 0xC7, 0x92, 0x5A, 0xE1};
-    static const uint8_t expected_signature_s[ECC_SECP521R1_BYTESIZE] = {
-        0x00, 0x12, 0x18, 0x90, 0x3A, 0xB9, 0xC8, 0xA0, 0xCE, 0x1B, 0x8F,
-        0xEB, 0x83, 0xA7, 0x25, 0x1B, 0x65, 0x98, 0x8B, 0x56, 0x42, 0xB2,
-        0x29, 0xA8, 0x7C, 0x27, 0x46, 0xCB, 0x96, 0xA3, 0x8C, 0xED, 0x1B,
-        0x46, 0x4C, 0x2D, 0x65, 0x14, 0xAB, 0x32, 0x64, 0x80, 0x3E, 0x4A,
-        0x1A, 0xA9, 0x1B, 0x60, 0x78, 0x03, 0x2E, 0xA6, 0xB9, 0x40, 0x4D,
-        0x2A, 0x09, 0xF9, 0x55, 0x31, 0x47, 0x19, 0xFA, 0x17, 0xEE, 0x1C};
 
     static const uint8_t priv_key[ECC_SECP521R1_BYTESIZE] = {
         0x00, 0x61, 0x60, 0xE2, 0x53, 0xDF, 0x77, 0xE9, 0xA3, 0x80, 0xB0,
@@ -1199,18 +1128,14 @@ TEST(soft_ecdsa, test_p521r1_curve_input_216B_sign)
     ecdsa_signature_t signature = {.r = signature_r, .s = signature_s};
     const ecc_affine_const_point_t pub_key = {.x = pub_key_x, .y = pub_key_y};
 
-    result = soft_ecdsa_signature(&scl, &ecc_secp521r1, priv_key, &signature,
-                                  hash, sizeof(hash));
+    result = scl_ecdsa_signature(&scl, &ecc_secp521r1, priv_key, &signature,
+                                 hash, sizeof(hash));
 
-    TEST_ASSERT_TRUE(SCL_OK == result);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_r, signature_r,
-                                 ECC_SECP521R1_BYTESIZE);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_signature_s, signature_s,
-                                 ECC_SECP521R1_BYTESIZE);
+    TEST_ASSERT_TRUE(SCL_ERR_HASH == result);
 
-    result = soft_ecdsa_verification(&scl, &ecc_secp521r1, &pub_key,
-                                     (ecdsa_signature_const_t *)&signature,
-                                     hash, sizeof(hash));
+    result = scl_ecdsa_verification(&scl, &ecc_secp521r1, &pub_key,
+                                    (ecdsa_signature_const_t *)&signature, hash,
+                                    sizeof(hash));
 
-    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(SCL_ERR_HASH == result);
 }

@@ -13,6 +13,7 @@ override SOURCE_DIR = $(CURRENT_DIR)
 override SOURCE_DIRS := $(SOURCE_DIR)
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/sha
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/aes
+override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/asymmetric/ecc
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/bignumbers/software
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/asymmetric/ecc/software
