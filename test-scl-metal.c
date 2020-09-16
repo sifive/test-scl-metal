@@ -18,6 +18,8 @@ void __stack_chk_fail(void) { TEST_FAIL_MESSAGE("Stack smashing detected"); }
 
 static void RunAllTests(void)
 {
+    UnityFixture.Verbose = 1;
+    
     // soft implementation
     RUN_TEST_GROUP(soft_sha_224);
     RUN_TEST_GROUP(soft_sha_256);
