@@ -1,3 +1,13 @@
+/**
+ * @file test-scl-metal.c
+ * @brief Main of the scl-metal tests
+ * @details This run all test group
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
+ */
+
 #include "unity_fixture.h"
 
 #include <stdint.h>
