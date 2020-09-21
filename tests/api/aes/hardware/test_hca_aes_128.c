@@ -11,7 +11,7 @@
 
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
 
-#define CCM_TQ(t, q) ((uint8_t)((uint8_t)(t & 0xF) + (uint8_t)(q << 4)))
+#define CCM_TQ(t, q) ((uint8_t)((uint8_t)((t) & 0xF) + (uint8_t)((q) << 4)))
 
 static const metal_scl_t scl = {
     .hca_base = METAL_SIFIVE_HCA_0_BASE_ADDRESS,
