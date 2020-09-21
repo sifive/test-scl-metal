@@ -1,3 +1,12 @@
+/**
+ * @file test_soft_ecdsa_runner.c
+ * @brief test runner for test_soft_ecdsa.c tests
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
+ */
+
 #include "unity.h"
 #include "unity_fixture.h"
 
