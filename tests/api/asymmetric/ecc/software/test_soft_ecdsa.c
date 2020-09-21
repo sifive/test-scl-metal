@@ -10,7 +10,11 @@
 static int32_t get_data_for_test(const metal_scl_t *const scl,
                                  uint32_t *data_out);
 
-static metal_scl_t scl = {
+/**
+ * We use CRYPTO_CONST_DATA qualifier to allow relocation in RAM to speed up
+ * test
+ */
+CRYPTO_CONST_DATA static const metal_scl_t scl = {
     .trng_func =
         {
             .get_data = get_data_for_test,

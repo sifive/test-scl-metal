@@ -6,7 +6,11 @@
 
 #include <api/software/scl_soft.h>
 
-static metal_scl_t scl = {
+/**
+ * We use CRYPTO_CONST_DATA qualifier to allow relocation in RAM to speed up
+ * test
+ */
+CRYPTO_CONST_DATA static const metal_scl_t scl = {
     .hca_base = 0,
     .bignum_func =
         {
