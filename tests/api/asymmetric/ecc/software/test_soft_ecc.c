@@ -1,3 +1,12 @@
+/**
+ * @file test_soft_ecc.c
+ * @brief test suite for soft_ecc.c
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
+ */
+
 #include "unity.h"
 #include "unity_fixture.h"
 

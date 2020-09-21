@@ -1,4 +1,13 @@
 #include "unity.h"
+/**
+ * @file test_soft_bignumbers.c
+ * @brief test suite for hca_sha.c on sha 224 algorithm
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
+ */
+
 #include "unity_fixture.h"
 
 #include <stdbool.h>

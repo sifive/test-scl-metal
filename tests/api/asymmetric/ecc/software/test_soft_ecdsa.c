@@ -1,3 +1,14 @@
+/**
+ * @file test_soft_ecdsa.c
+ * @brief test suite for soft_ecdsa.c
+ * @details test on signature and signature verification for curves SECP256r1,
+ * SECP384r1 and SECP521r1
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
+ */
+
 #include "unity.h"
 #include "unity_fixture.h"
 
