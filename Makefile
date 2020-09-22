@@ -13,8 +13,10 @@ override SOURCE_DIR = $(CURRENT_DIR)
 override SOURCE_DIRS := $(SOURCE_DIR)
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/sha
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/aes
+override SOURCE_DIRS += $(SOURCE_DIR)/tests/scl/asymmetric/ecc
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/bignumbers/software
+override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/asymmetric/ecc/software
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/software
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/sha/hardware
 override SOURCE_DIRS += $(SOURCE_DIR)/tests/api/aes/hardware
@@ -80,18 +82,22 @@ override LDLIBS := $(filter-out $(FILTER_PATTERN),$(LDLIBS)) -Wl,--end-group
 # ----------------------------------------------------------------------
 # Common def
 # ----------------------------------------------------------------------
-override INCLUDE_DIRS := 	$(CURRENT_DIR) \
-							$(CURRENT_DIR)/tests/sha
+override INCLUDE_DIRS := 	$(CURRENT_DIR) 
 
 override CFLAGS += $(foreach dir,$(INCLUDE_DIRS),-I $(dir))
 override CFLAGS += -Wall -Wextra -fstack-protector-all
+
+override CFLAGS += -Wpedantic -Wcast-qual \
+					-Wunreachable-code -Wstrict-aliasing -Wdangling-else \
+					-Wconversion -Wsign-conversion -Wmissing-include-dirs \
+					-Wduplicated-branches -Wduplicated-cond -Warray-bounds 
 
 LIBSCL_METAL_CFLAGS += -fstack-protector-all
 
 # override CFLAGS += -I $(CURRENT_DIR)
 override ASFLAGS = $(CFLAGS)
 
-override LDFLAGS  += -Wl,--defsym,__stack_size=0xC00
+override LDFLAGS  += -Wl,--defsym,__stack_size=0x2000
 
 # ----------------------------------------------------------------------
 # Macro

@@ -1,3 +1,13 @@
+/**
+ * @file test_scl_aes_256.c
+ * @brief test suite for scl_aes_{ecb, cdc}.c on 256 bits key length
+ * @note These tests use HCA (Hardware Cryptographic Accelerator)
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
+ */
+
 #include "unity.h"
 #include "unity_fixture.h"
 
@@ -14,13 +24,14 @@
 
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
 
-static const metal_scl_t scl = {.hca_base = METAL_SIFIVE_HCA_0_BASE_ADDRESS,
-                                .aes_func = {.setkey = hca_aes_setkey,
-                                             .setiv = hca_aes_setiv,
-                                             .cipher = hca_aes_cipher,
-                                             .auth_init = hca_aes_auth_init, 
-                                             .auth_core = hca_aes_auth_core,
-                                             .auth_finish = hca_aes_auth_finish}};
+static const metal_scl_t scl = {
+    .hca_base = METAL_SIFIVE_HCA_0_BASE_ADDRESS,
+    .aes_func = {.setkey = hca_aes_setkey,
+                 .setiv = hca_aes_setiv,
+                 .cipher = hca_aes_cipher,
+                 .auth_init = hca_aes_auth_init,
+                 .auth_core = hca_aes_auth_core,
+                 .auth_finish = hca_aes_auth_finish}};
 
 TEST_GROUP(scl_aes_256);
 

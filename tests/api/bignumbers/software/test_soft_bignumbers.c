@@ -1,4 +1,13 @@
 #include "unity.h"
+/**
+ * @file test_soft_bignumbers.c
+ * @brief test suite for hca_sha.c on sha 224 algorithm
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
+ */
+
 #include "unity_fixture.h"
 
 #include <stdbool.h>
@@ -18,6 +27,7 @@ static const metal_scl_t scl = {
             .add = soft_bignum_add,
             .sub = soft_bignum_sub,
             .mult = soft_bignum_mult,
+            .square = soft_bignum_square,
             .leftshift = soft_bignum_leftshift,
             .rightshift = soft_bignum_rightshift,
             .msb_set_in_word = soft_bignum_msb_set_in_word,
@@ -29,6 +39,8 @@ static const metal_scl_t scl = {
             .mod_add = soft_bignum_mod_add,
             .mod_sub = soft_bignum_mod_sub,
             .mod_mult = soft_bignum_mod_mult,
+            .mod_inv = soft_bignum_mod_inv,
+            .mod_square = soft_bignum_mod_square,
         },
 };
 
@@ -269,6 +281,50 @@ TEST(soft_bignumbers, soft_bignum_add_in_b_is_output)
 
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, in_b, sizeof(expected_out));
+}
+
+TEST(soft_bignumbers, soft_bignum_add_100_bytes)
+{
+    int32_t result = 0;
+
+    uint8_t in_a[100] __attribute__((aligned(8))) = {
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe0,
+        0xff, 0xff, 0xff, 0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe0,
+        0xff, 0xff, 0xff, 0xdf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f,
+        0x00, 0x00, 0x00, 0x00};
+
+    static const uint8_t in_b[100] __attribute__((aligned(8))) = {
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0,
+        0xff, 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0,
+        0xff, 0xff, 0xff, 0xef, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f,
+        0x00, 0x00, 0x00, 0x00};
+
+    static const uint8_t expected_out[100] = {
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xD0,
+        0xFF, 0xFF, 0xFF, 0x2F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xD0,
+        0xFF, 0xFF, 0xFF, 0xCF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+        0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+        0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x2F};
+
+    result =
+        soft_bignum_add(NULL, (const uint64_t *)in_a, (const uint64_t *)in_b,
+                        (uint64_t *)in_a, sizeof(in_a) / sizeof(uint32_t));
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, in_a, sizeof(expected_out));
 }
 
 /* Substraction */
@@ -817,6 +873,32 @@ TEST(soft_bignumbers, soft_bignum_mult_size_5_identity)
 
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
     TEST_ASSERT_TRUE(SCL_OK == result);
+}
+
+TEST(soft_bignumbers, soft_bignum_mult_size_12)
+{
+    int32_t result = 0;
+
+    static const uint64_t in_a[6] = {0xd7867eec22d47365, 0x9cc6812db2d6d04a,
+                                     0x2bc0315620dd08ae, 0xc2248f1e1c5b3cc6,
+                                     0xd6f2666aff9d26e3, 0x6f77cc3d984a4b9b};
+
+    uint64_t out[12] = {0};
+
+    static const uint8_t expected_out[96] = {
+        0xD9, 0xE5, 0x4B, 0x27, 0x2E, 0x4D, 0xC5, 0xD1, 0xB9, 0x72, 0xD5, 0x7F,
+        0x22, 0x50, 0xE6, 0x63, 0x28, 0xA6, 0xA1, 0x87, 0xDB, 0x20, 0x68, 0x94,
+        0x5B, 0x3B, 0x5A, 0x3F, 0x58, 0xAC, 0x6C, 0xB2, 0x7B, 0x4D, 0x20, 0xD4,
+        0x0B, 0x00, 0xAE, 0x20, 0x59, 0x24, 0x54, 0x21, 0x59, 0x77, 0x23, 0xBD,
+        0x57, 0x26, 0x5C, 0x9C, 0x99, 0xE1, 0xF0, 0xB6, 0xF9, 0x5B, 0xB3, 0x0D,
+        0x0C, 0x03, 0xB3, 0x7B, 0x9C, 0x45, 0x1A, 0x44, 0x49, 0x27, 0x46, 0x81,
+        0x42, 0x52, 0x07, 0x32, 0x2F, 0xFD, 0x64, 0x3C, 0xC6, 0x0E, 0x90, 0x9F,
+        0x5B, 0xC0, 0xC8, 0xC5, 0x2B, 0x3C, 0x46, 0xEE, 0x2C, 0x1B, 0x89, 0x30};
+
+    result = soft_bignum_mult(&scl, in_a, in_a, out, 12);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
 /* Right shift */
@@ -2197,6 +2279,35 @@ TEST(soft_bignumbers, soft_bignum_mod_input_gt_modulus_2)
                                  sizeof(expected_remainder));
 }
 
+TEST(soft_bignumbers, soft_bignum_mod_size_12)
+{
+    int32_t result = 0;
+
+    static const uint8_t in[96] __attribute__((aligned(8))) = {
+        0xD9, 0xE5, 0x4B, 0x27, 0x2E, 0x4D, 0xC5, 0xD1, 0xB9, 0x72, 0xD5, 0x7F,
+        0x22, 0x50, 0xE6, 0x63, 0x28, 0xA6, 0xA1, 0x87, 0xDB, 0x20, 0x68, 0x94,
+        0x5B, 0x3B, 0x5A, 0x3F, 0x58, 0xAC, 0x6C, 0xB2, 0x7B, 0x4D, 0x20, 0xD4,
+        0x0B, 0x00, 0xAE, 0x20, 0x59, 0x24, 0x54, 0x21, 0x59, 0x77, 0x23, 0xBD,
+        0x57, 0x26, 0x5C, 0x9C, 0x99, 0xE1, 0xF0, 0xB6, 0xF9, 0x5B, 0xB3, 0x0D,
+        0x0C, 0x03, 0xB3, 0x7B, 0x9C, 0x45, 0x1A, 0x44, 0x49, 0x27, 0x46, 0x81,
+        0x42, 0x52, 0x07, 0x32, 0x2F, 0xFD, 0x64, 0x3C, 0xC6, 0x0E, 0x90, 0x9F,
+        0x5B, 0xC0, 0xC8, 0xC5, 0x2B, 0x3C, 0x46, 0xEE, 0x2C, 0x1B, 0x89, 0x30};
+
+    uint64_t remainder[6] = {0, 0};
+    static const uint8_t expected_remainder[48] = {
+        0x25, 0xc0, 0x77, 0xf8, 0x02, 0x51, 0x99, 0x6b, 0xeb, 0x47, 0x58, 0x41,
+        0x55, 0x95, 0xcb, 0xb4, 0xf8, 0x85, 0xab, 0x5b, 0xfb, 0x93, 0x16, 0x69,
+        0xe0, 0x37, 0xda, 0xc8, 0x1a, 0xbb, 0x20, 0xad, 0xf8, 0xcb, 0xab, 0xfc,
+        0x2c, 0x2b, 0x34, 0xfa, 0x9a, 0xef, 0x3d, 0xb8, 0x4f, 0x62, 0x5b, 0xdb};
+
+    result = soft_bignum_mod(&scl, (const uint64_t *)in, 24, ecc_secp384r1.p,
+                             12, remainder);
+
+    TEST_ASSERT_TRUE(0 == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
+                                 sizeof(expected_remainder));
+}
+
 /* Modular addition */
 TEST(soft_bignumbers, soft_bignum_mod_add_size_0)
 {
@@ -2998,6 +3109,52 @@ TEST(soft_bignumbers, soft_bignum_mod_mult_size_5_2)
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
 
+TEST(soft_bignumbers, soft_bignum_mod_mult_size_12)
+{
+    int32_t result = 0;
+
+    static const uint8_t in_a[48] __attribute__((aligned(8))) = {
+        0x69, 0xfa, 0x31, 0x41, 0x03, 0xc7, 0x19, 0x89, 0x95, 0x05, 0x80, 0x81,
+        0x6c, 0xe6, 0x99, 0x4b, 0x99, 0xf7, 0x9e, 0x12, 0x59, 0x84, 0xb0, 0x3a,
+        0xd8, 0xfa, 0x7a, 0x70, 0x0c, 0x88, 0xda, 0xfc, 0x7a, 0x99, 0x70, 0x0b,
+        0xc5, 0xce, 0x3b, 0xe7, 0x54, 0x9e, 0x45, 0xf6, 0x27, 0x23, 0x56, 0x40};
+
+    static const uint8_t in_b[48] __attribute__((aligned(8))) = {
+        0x94, 0x68, 0xbc, 0x90, 0xc8, 0x9f, 0x23, 0xe8, 0x87, 0x0d, 0xae, 0x31,
+        0xef, 0xf3, 0x1e, 0xc6, 0xbe, 0x84, 0x96, 0xa5, 0x6c, 0x23, 0xad, 0xc5,
+        0x7a, 0x7e, 0x04, 0x75, 0xeb, 0xe4, 0xbc, 0xba, 0x63, 0xc0, 0x0c, 0x90,
+        0x48, 0x88, 0x5a, 0xa7, 0x20, 0x27, 0xcc, 0x8c, 0xc9, 0xb3, 0x11, 0xa0};
+
+    uint8_t out[48] __attribute__((aligned(8))) = {0};
+
+    static const uint8_t modulus[48] __attribute__((aligned(8))) = {
+        0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0xff, 0xff, 0xff, 0xff, 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+
+    static const uint8_t expected_out[48] = {
+        0x16, 0xB1, 0x59, 0x5C, 0x8C, 0x15, 0x36, 0x26, 0x5D, 0x56, 0xFE, 0x99,
+        0x43, 0xD1, 0x56, 0xD0, 0x73, 0x09, 0xC5, 0x19, 0x02, 0x35, 0x0F, 0xE2,
+        0xAD, 0x74, 0x98, 0xE2, 0x6A, 0xCC, 0x8B, 0xDB, 0x71, 0xDA, 0x71, 0x58,
+        0x85, 0xB1, 0x35, 0xCC, 0x3A, 0x64, 0x1C, 0xB6, 0xA9, 0x80, 0xFA, 0xB0};
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx,
+                                     (const uint64_t *)modulus, 12);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_mult(&scl, &bignum_ctx, (const uint64_t *)in_a,
+                                  (const uint64_t *)in_b, (uint64_t *)out, 12);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}
+
 /* Modular multiplicative inverse */
 TEST(soft_bignumbers, soft_bignum_mod_inv_size_0)
 {
@@ -3113,8 +3270,6 @@ TEST(soft_bignumbers, soft_bignum_mod_inv_size_1_2)
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_TRUE(expected_out == out);
 }
-
-#if 1
 
 TEST(soft_bignumbers, soft_bignum_mod_inv_size_2)
 {
@@ -3238,4 +3393,219 @@ TEST(soft_bignumbers, soft_bignum_mod_inv_size_5_not_inversible)
     TEST_ASSERT_TRUE(SCL_NOT_INVERSIBLE == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
 }
-#endif
+
+/* square */
+TEST(soft_bignumbers, soft_bignum_square_size_0)
+{
+    int32_t result = 0;
+    static const uint64_t in = 0xFFFFFFFFFFFFFFFEUL;
+    uint64_t out[2] = {0};
+    static const uint64_t expected_out[2] = {0};
+
+    result = soft_bignum_square(NULL, &in, out, 0);
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
+}
+
+TEST(soft_bignumbers, soft_bignum_square_size_1)
+{
+    int32_t result = 0;
+    static const uint64_t in = 0x00000000FFFFFFFFUL;
+    uint64_t out = 0;
+    static const uint64_t expected_out = 0xFFFFFFFE00000001UL;
+
+    result = soft_bignum_square(NULL, &in, &out, 1);
+
+    TEST_ASSERT_TRUE(expected_out == out);
+    TEST_ASSERT_TRUE(SCL_OK == result);
+}
+
+TEST(soft_bignumbers, soft_bignum_square_size_2)
+{
+    int32_t result = 0;
+    static const uint64_t in = 0xFFFFFFFFFFFFFFFFUL;
+    uint64_t out[2] = {0};
+    static const uint64_t expected_out[2] = {0x0000000000000001UL,
+                                             0xFFFFFFFFFFFFFFFEUL};
+
+    result = soft_bignum_square(NULL, &in, out, sizeof(in) / sizeof(uint32_t));
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+    TEST_ASSERT_TRUE(SCL_OK == result);
+}
+
+TEST(soft_bignumbers, soft_bignum_square_size_5)
+{
+    int32_t result = 0;
+    static const uint64_t in[3] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                                   0x00000000FFFFFFFFUL};
+
+    uint64_t out[5] = {0};
+    static const uint64_t expected_out[5] = {
+        0x0000000000000001UL, 0x0000000000000000UL, 0xFFFFFFFE00000000UL,
+        0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL};
+
+    result = soft_bignum_square(NULL, in, out, 5);
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+    TEST_ASSERT_TRUE(SCL_OK == result);
+}
+
+TEST(soft_bignumbers, soft_bignum_square_size_5_zero)
+{
+    int32_t result = 0;
+    static const uint64_t in[3] = {0, 0, 0};
+
+    uint64_t out[5] = {0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                       0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
+                       0xFFFFFFFFFFFFFFFFUL};
+    static const uint64_t expected_out[5] = {0, 0, 0, 0, 0};
+
+    result = soft_bignum_square(NULL, in, out, 5);
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+    TEST_ASSERT_TRUE(SCL_OK == result);
+}
+
+/* Modular square */
+TEST(soft_bignumbers, soft_bignum_mod_square_size_0)
+{
+    int32_t result = 0;
+
+    static const uint64_t in = 0xFFFFFFFFFFFFFFFEUL;
+    uint64_t out = 0;
+    static const uint64_t modulus = 0x0000000088888888UL;
+    static const uint64_t expected_out = 0;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_square(&scl, &bignum_ctx, &in, &out, 0);
+
+    TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_square_size_1)
+{
+    int32_t result = 0;
+
+    static const uint64_t in = 0;
+    uint64_t out = 0xFFFFFFFFFFFFFFFFUL;
+    static const uint64_t modulus = 0x0000000088888844UL;
+    static const uint64_t expected_out = 0xFFFFFFFF00000000UL;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_square(&scl, &bignum_ctx, &in, &out, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_square_size_1_2)
+{
+    int32_t result = 0;
+
+    static const uint64_t in = 0xFFFFFFFF00000001UL;
+    uint64_t out = 0xFFFFFFFFFFFFFFFFUL;
+    static const uint64_t modulus = 0x0000000088888888UL;
+    static const uint64_t expected_out = 0xFFFFFFFF00000001UL;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_square(&scl, &bignum_ctx, &in, &out, 1);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_square_size_2)
+{
+    int32_t result = 0;
+
+    static const uint64_t in = 0xFFFFFFFFFFFFFFFFUL;
+    uint64_t out = 0;
+    static const uint64_t modulus = 0x0000008888888844UL;
+    static const uint64_t expected_out = 0x00000087A7E8E865UL;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 2);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_square(&scl, &bignum_ctx, &in, &out, 2);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_square_size_2_2)
+{
+    int32_t result = 0;
+
+    static const uint64_t in = 0x0000008888888844UL;
+    uint64_t out = 0;
+    static const uint64_t modulus = 0x0000008888888844UL;
+    static const uint64_t expected_out = 0;
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, &modulus, 2);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_square(&scl, &bignum_ctx, &in, &out, 2);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_TRUE(expected_out == out);
+}
+
+TEST(soft_bignumbers, soft_bignum_mod_square_size_5)
+{
+    int32_t result = 0;
+
+    static const uint64_t in[3] = {0x648B0FBA30D7C42BUL, 0x5F7F9B9078284709UL,
+                                   0x0000000032DD71F1UL};
+    uint64_t out[3] = {0, 0, 0xFFFFFFFFFFFFFFFFUL};
+    static const uint64_t modulus[3] = {
+        0x624E538619945733UL, 0xA5CC86132415406DUL, 0x00000000CAA1F63BUL};
+    static const uint64_t expected_out[3] = {
+        0xA5B61FF63ABDCDACUL, 0xC058A2976C4F1D7EUL, 0xFFFFFFFF071E8973UL};
+
+    bignum_ctx_t bignum_ctx;
+
+    memset(&bignum_ctx, 0, sizeof(bignum_ctx));
+
+    result = soft_bignum_set_modulus(&scl, &bignum_ctx, modulus, 5);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    result = soft_bignum_mod_square(&scl, &bignum_ctx, in, out, 5);
+
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
+}

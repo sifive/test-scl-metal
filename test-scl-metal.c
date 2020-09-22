@@ -1,3 +1,13 @@
+/**
+ * @file test-scl-metal.c
+ * @brief Main of the scl-metal tests
+ * @details This run all test group
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
+ */
+
 #include "unity_fixture.h"
 
 #include <stdint.h>
@@ -18,6 +28,8 @@ void __stack_chk_fail(void) { TEST_FAIL_MESSAGE("Stack smashing detected"); }
 
 static void RunAllTests(void)
 {
+    UnityFixture.Verbose = 1;
+    
     // soft implementation
     RUN_TEST_GROUP(soft_sha_224);
     RUN_TEST_GROUP(soft_sha_256);
@@ -35,6 +47,13 @@ static void RunAllTests(void)
 
     // software bignumbers
     RUN_TEST_GROUP(soft_bignumbers);
+
+    /* ECC */
+    RUN_TEST_GROUP(soft_ecc);
+
+    /* ECDSA */
+    RUN_TEST_GROUP(soft_ecdsa);
+    RUN_TEST_GROUP(scl_ecdsa);
 
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
     // hardware implementation

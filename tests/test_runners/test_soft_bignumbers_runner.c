@@ -1,3 +1,12 @@
+/**
+ * @file test_soft_bignumbers_runner.c
+ * @brief test runner for test_soft_bignumbers.c
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
+ */
+
 #include "unity.h"
 #include "unity_fixture.h"
 
@@ -16,6 +25,7 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_add_carry_2);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_add_in_a_is_output);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_add_in_b_is_output);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_add_100_bytes);
 
     /* substraction */
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_sub_size_0);
@@ -52,6 +62,7 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mult_size_5);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mult_size_5_zero);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mult_size_5_identity);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mult_size_12);
 
     /* Right shift */
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_rightshift_size_0);
@@ -162,6 +173,7 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_input_lt_modulus);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_input_gt_modulus);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_input_gt_modulus_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_size_12);
 
     /* Modular addition */
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_add_size_0);
@@ -209,6 +221,7 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_2_2);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_5);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_5_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_mult_size_12);
 
     /* Modular multiplicative inverse */
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_0);
@@ -219,7 +232,21 @@ TEST_GROUP_RUNNER(soft_bignumbers)
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_2);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_2_2);
     RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_5);
-    // RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_5_2);
-    // RUN_TEST_CASE(soft_bignumbers,
-    // soft_bignum_mod_inv_size_5_not_inversible);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_5_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_inv_size_5_not_inversible);
+
+    /* square */
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_square_size_0);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_square_size_1);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_square_size_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_square_size_5);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_square_size_5_zero);
+
+    /* Mod square */
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_square_size_0);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_square_size_1);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_square_size_1_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_square_size_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_square_size_2_2);
+    RUN_TEST_CASE(soft_bignumbers, soft_bignum_mod_square_size_5);
 }
